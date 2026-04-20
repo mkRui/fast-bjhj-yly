@@ -1,0 +1,19 @@
+.main {
+    height: calc(100vh - 50px);
+    &.main--aside {
+        width: calc(100vw - 256px);
+        &.main--collapsed {
+            width: calc(100vw - 80px);
+        }
+    }
+}
+.main--content {
+    height: 100%;
+    width: 100%;
+    min-width: 900px;
+    background: #f0f2f5;
+    display: flex ;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+}

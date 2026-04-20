@@ -1,0 +1,36 @@
+@import '~mor-color/theme/theme.less';
+
+.page-tab__container {
+    width: 100%;
+    height: 40px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    &::-webkit-scrollbar{
+        display:none;
+    }
+    > div {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+}
+.container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    height: 40px;
+    background-color: #fff;
+}
+.button {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    margin: 4px;
+    color: #fff;
+    background-color: @primary;
+    border: 0; 
+    border-radius: 50%;
+}

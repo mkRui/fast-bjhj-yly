@@ -1,0 +1,107 @@
+@import '~mor-color/theme/theme.less';
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.header--flex-start {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    // border-bottom: 1px solid transparent;
+}
+
+.header-block_function {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid @border-divider;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+.header-block_user {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: 10px;
+}
+
+.header--title {
+    color: #333;
+    font-size: 14px;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.header__logo {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    width: 256px;
+    height: 100%;
+    padding-left: 24px;
+    background-color: #fff;
+    border: 1px solid @border-divider;
+    border-width: 0 1px 1px 0;
+    box-sizing: border-box;
+
+    &.header__logo--collapsed {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 79px;
+        padding-left: 0;
+        overflow: hidden;
+
+        >span {
+            display: none;
+        }
+
+        >.header-block_icon {
+            margin: 0;
+        }
+    }
+}
+
+.header-block_icon {
+    display: flex;
+    align-items: center;
+    width: 70px;
+    height: 40px;
+    margin-right: 5px;
+    overflow: hidden;
+    border-radius: 5px;
+    margin: 0 auto;
+
+    >img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.header__text {
+    color: @text-primary;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.header-block_trigger {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.header-block_user__container {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}

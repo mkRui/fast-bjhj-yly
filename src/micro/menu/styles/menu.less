@@ -1,0 +1,21 @@
+.menu__container {
+    .ant-menu {
+        .ant-menu-item-selected {
+            color: #2f54eb;
+            &::before {
+                content: '';
+                display: block;
+                width: 2px;
+                height: 100%;
+                background-color: #2f54eb;
+                position: absolute;
+                right: 0;
+            }
+
+        }
+        .ant-menu-item {
+            border-radius: 0;
+            position: relative;
+        }
+    }
+}

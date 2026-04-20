@@ -1,0 +1,57 @@
+@import '~mor-color/theme/theme.less';
+
+
+.upload-list__container {
+    display: flex;
+}
+.upload {
+    width: 128px;
+    height: 128px;
+}
+
+.images__list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.images__container__img {
+    position: relative;
+    width: 128px;
+    height: 128px;
+    border: 1px solid #e3e3e3;
+    &:hover {
+        .images__container--position {
+            display: flex;
+            cursor: pointer;
+        }
+    }
+
+}
+.images__img {
+    width: 100%;
+    height: 100%;
+}
+.images__container--position {
+    position: absolute;
+    top: 0;
+    display: none;
+    justify-content: flex-end;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.3);
+    > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        color: #fff;
+        background-color: @danger;
+        border-radius: 20px;
+        margin: 5px;
+    }
+}

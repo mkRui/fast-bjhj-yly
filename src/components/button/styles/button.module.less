@@ -1,0 +1,206 @@
+@import '~mor-color/theme/theme.less';
+
+.btnTheme(@color) {
+    color: rgb(255, 255, 255);
+    background-color: @color;
+    border: 1px solid @color;
+}
+
+.ghost (@color) {
+    background-color: transparent
+}
+
+.mor-button--reset {
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+}
+
+.mor-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 4px 15px;
+    color: @white;
+    font-size: 14px;
+    white-space: nowrap;
+    border-radius: 6px;
+    cursor: pointer;
+
+    &.mor-button--ghost {
+        background-color: transparent;
+    }
+
+    &:not(.mor-button--disabled):hover {
+        opacity: .9;
+    }
+
+    &:not(.mor-button--disabled):active {
+        opacity: .7;
+    }
+}
+
+.icon {
+    display: flex;
+    justify-content: center;
+    margin-right: 2px;
+    color: currentColor;
+}
+
+.icon-none {
+    display: none;
+}
+
+.mor-button--ghost {
+    &.mor-button--primary {
+        color: @primary;
+
+        &:not(.mor-button--disabled):hover {
+            color: @white;
+            .btnTheme(@primary);
+        }
+    }
+
+    &.mor-button--warning {
+        color: @warning;
+
+        &:not(.mor-button--disabled):hover {
+            color: @white;
+            .btnTheme(@warning);
+        }
+    }
+
+    &.mor-button--success {
+        color: @success;
+
+        &:not(.mor-button--disabled):hover {
+            color: @success;
+            .btnTheme(@success);
+        }
+    }
+
+    &.mor-button--danger {
+        color: @danger;
+
+        &:not(.mor-button--disabled):hover {
+            color: @danger;
+            .btnTheme(@danger);
+        }
+    }
+}
+
+.mor-button--primary {
+    .btnTheme(@primary);
+}
+
+.mor-button--warning {
+    .btnTheme(@warning);
+}
+
+.mor-button--success {
+    .btnTheme(@success);
+}
+
+.mor-button--danger {
+    .btnTheme(@danger);
+}
+
+.mor-button--info {
+    .btnTheme(@black);
+
+    color: @text-primary;
+    background-color: @white;
+}
+
+.mor-button--disabled {
+    cursor: not-allowed;
+    opacity: .7;
+}
+
+.mor-button--small {
+    height: auto;
+    padding: 2px 7px;
+    font-size: 12px;
+}
+
+.mor-button--large {
+    height: auto;
+    padding: 10px 33px;
+    font-size: 16px;
+}
+
+.mor-button--round {
+    border-radius: 20px;
+}
+
+.mor-button--circle {
+    border-radius: 50%;
+}
+
+.mor-button--block {
+    width: 100%;
+}
+
+.mor-link {
+    margin: 0;
+    padding: 0;
+    color: @primary;
+    white-space: nowrap;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+
+    &:not(.mor-link--disabled):hover {
+        opacity: .9;
+    }
+
+    &:not(.mor-link--disabled):active {
+        opacity: .7;
+    }
+
+    &.mor-link--disabled {
+        cursor: not-allowed;
+        opacity: .7;
+    }
+
+    &.mor-link--small {
+        font-size: 12px;
+    }
+
+    &.mor-link--large {
+        font-size: 16px;
+    }
+
+    &.mor-link--primary {
+        color: @primary;
+
+        &:not(.mor-link--disabled):hover {
+            color: @primary;
+        }
+    }
+
+    &.mor-link--warning {
+        color: @warning;
+
+        &:not(.mor-link--disabled):hover {
+            color: @warning;
+        }
+    }
+
+    &.mor-link--success {
+        color: @success;
+
+        &:not(.mor-link--disabled):hover {
+            color: @success;
+        }
+    }
+
+    &.mor-link--danger {
+        color: @danger;
+
+        &:not(.mor-link--disabled):hover {
+            color: @danger;
+        }
+    }
+}

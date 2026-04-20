@@ -1,0 +1,42 @@
+@import '~mor-color/theme/theme.less';
+
+.tab__container {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    height: 40px;
+    padding: 5px 16px;
+    box-sizing: border-box;
+    border: 1px solid #e3e3e3;
+    border-radius: 5px 5px 0 0;
+    margin: 0 2px;
+    cursor: pointer;
+    background-color: #fafafa;
+    > em {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        margin-right: 5px;
+        background-color: #ccc;
+        border-radius: 50%;
+    }
+    > i {
+        font-style: normal;
+        margin-right: 4px;
+        font-size: 14px;
+        vertical-align: middle;
+    }
+    > span {
+        vertical-align: middle;
+    }
+    &.tab--active {
+        border-bottom: 1px solid transparent;
+        background-color: #fff;
+        > i {
+            color: @primary;
+        }
+        > em {
+            background-color: @primary;
+        }
+    }
+}
