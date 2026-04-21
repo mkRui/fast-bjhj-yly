@@ -30,6 +30,8 @@ const LayoutHeader: FC = () => {
       void handleLogout();
     } else if (key === "reset-password") {
       changePassword();
+    } else if (key === "personal-info") {
+      navigate("/personal-info");
     }
   };
 
@@ -69,6 +71,7 @@ const LayoutHeader: FC = () => {
 
   const MenuList = (
     <Menu onClick={click}>
+      <Menu.Item key="personal-info">个人信息</Menu.Item>
       <Menu.Item key="reset-password">修改密码</Menu.Item>
       <Menu.Item key="logout">退出登录</Menu.Item>
     </Menu>

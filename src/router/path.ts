@@ -17,6 +17,7 @@ enum FullPath {
   business = "/business",
   sort = "/sort",
   product = "/product",
+  tms = "/tms",
 }
 
 enum BasePath {
@@ -26,6 +27,7 @@ enum BasePath {
   BUSINESS = "/business/*",
   SORT = "/sort/*",
   PRODUCT = "/product/*",
+  TMS = "/tms/*",
   BASE = "/*",
   WELCOME = "/welcome",
 }

@@ -18,7 +18,7 @@ export default defineConfig({
     server: {
         proxy: {
             "/webapi": {
-                target: "http://aqzoracms.liangwannian.cn",
+                target: " http://yly.bjhj.com.cn",
                 changeOrigin: true,
                 rewrite: function (path) {
                     return path;

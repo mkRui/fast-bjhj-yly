@@ -16,6 +16,7 @@ import OperationRouter from "@/views/operation/router/routes";
 import BusinessRouter from "@/views/business/router/routes";
 import SortRouter from "@/views/sort/router/routes";
 import ProductRouter from "@/views/product/router/routes";
+import TmsRouter from "@/views/tms/router/routes";
 
 export interface RouteTypes {
   path: string;
@@ -41,6 +42,13 @@ export const mainRoutes: RouteTypes[] = [
   },
   { path: BasePath.SORT, component: Pages.Sort, children: SortRouter },
   { path: BasePath.PRODUCT, component: Pages.Product, children: ProductRouter },
+  { path: BasePath.TMS, component: Pages.Tms, children: TmsRouter },
+  {
+    path: "/personal-info",
+    component: Pages.PersonalInfo,
+    title: "个人信息",
+    fullPath: "/personal-info",
+  },
   {
     path: BasePath.WELCOME,
     component: Pages.Welcome,

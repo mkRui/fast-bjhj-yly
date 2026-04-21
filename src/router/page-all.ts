@@ -19,6 +19,8 @@ const Business = dynamicImport(() => import("@/views/business"));
 const Sort = dynamicImport(() => import("@/views/sort"));
 const Product = dynamicImport(() => import("@/views/product"));
 const Welcome = dynamicImport(() => import("@/views/welcome"));
+const PersonalInfo = dynamicImport(() => import("@/views/personal-info"));
+const Tms = dynamicImport(() => import("@/views/tms"));
 
 export default {
   Login,
@@ -31,4 +33,6 @@ export default {
   Sort,
   Product,
   Welcome,
+  PersonalInfo,
+  Tms,
 };

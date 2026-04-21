@@ -8,6 +8,7 @@ import {
 import { BusinessFullPath, BusinessPath } from "@/views/business/router/path";
 import { SortFullPath, SortPath } from "@/views/sort/router/path";
 import { ProductFullPath, ProductPath } from "@/views/product/router/path";
+import { TmsFullPath, TmsPath } from "@/views/tms/router/path";
 
 const SysMenuList: MenuType[] = [
   {
@@ -111,6 +112,23 @@ const ProductMenuList: MenuType[] = [
   },
 ];
 
+const TmsMenuList: MenuType[] = [
+  {
+    name: "教师",
+    href: TmsFullPath.TEACHER,
+    code: "sys",
+    id: "9000000000000001",
+    parentId: "9000000000000000",
+  },
+  {
+    name: "课时",
+    href: TmsFullPath.WORK,
+    code: "sys",
+    id: "9000000000000002",
+    parentId: "9000000000000000",
+  },
+];
+
 const MenuList: MenuType[] = [
   {
     name: "系统设置",
@@ -158,6 +176,14 @@ const MenuList: MenuType[] = [
     code: "sys",
     children: ProductMenuList,
     id: "7962062274848769",
+    parentId: "0",
+  },
+  {
+    name: "教师管理",
+    href: TmsPath.LINE,
+    code: "sys",
+    children: TmsMenuList,
+    id: "9000000000000000",
     parentId: "0",
   },
 ];

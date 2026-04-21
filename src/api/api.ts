@@ -11,7 +11,7 @@ export class Api extends Request {
    * 获取系统初始化信息
    */
   public async init(): Promise<API.Init.Response> {
-    return await this.get<API.Init.Data>(`/sso/init`);
+    return await this.get<API.Init.Data>(`/auth/init`);
   }
 
   /**
@@ -19,7 +19,7 @@ export class Api extends Request {
    * 用户登出系统
    */
   public async logout(): Promise<API.Logout.Response> {
-    return await this.post<API.Logout.Data>(`/sso/logout`, {});
+    return await this.post<API.Logout.Data>(`/auth/logout`, {});
   }
 
   /**
