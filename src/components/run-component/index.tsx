@@ -1,5 +1,7 @@
 import React from "react";
 import { createRoot, Root } from "react-dom/client";
+import RootContext from "@/stores/root-context";
+import { root as rootStore } from "@/stores/root";
 
 interface Options<State> {
   state?: State;
@@ -60,7 +62,9 @@ export default class RenderComponent<State> {
     const { render } = this.options;
 
     // React 18+ 特性
-    this.root.render(render(this.state));
+    this.root.render(
+      <RootContext.Provider value={rootStore}>{render(this.state)}</RootContext.Provider>
+    );
 
     // React 17 特性
     // ReactDOM.render(render(this.state), this.container, callback);
