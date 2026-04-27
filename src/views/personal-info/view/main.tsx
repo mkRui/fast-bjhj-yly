@@ -240,7 +240,7 @@ const PersonalInfoMain: FC = () => {
               >
                 <Divider orientation="left">教师</Divider>
                 <div className="grid grid-cols-2 gap-4">
-                  <Item label="教师账号ID" name={["teacher", "id"]}>
+                  <Item label="教师ID" name={["teacher", "id"]}>
                     <Input disabled />
                   </Item>
                   <Item

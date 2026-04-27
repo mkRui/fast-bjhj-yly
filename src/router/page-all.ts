@@ -21,6 +21,7 @@ const Product = dynamicImport(() => import("@/views/product"));
 const Welcome = dynamicImport(() => import("@/views/welcome"));
 const PersonalInfo = dynamicImport(() => import("@/views/personal-info"));
 const Tms = dynamicImport(() => import("@/views/tms"));
+const Sms = dynamicImport(() => import("@/views/sms"));
 
 export default {
   Login,
@@ -35,4 +36,5 @@ export default {
   Welcome,
   PersonalInfo,
   Tms,
+  Sms,
 };

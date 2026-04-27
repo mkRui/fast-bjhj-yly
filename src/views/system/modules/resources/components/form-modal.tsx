@@ -33,6 +33,7 @@ const NoticeModal: FC<NoticeModalComponentType> = (props) => {
     if (info?.id) {
       form.setFieldsValue({
         ...info,
+        code: info.selfCode
       });
     }
   }, [info]);

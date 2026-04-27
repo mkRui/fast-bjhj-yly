@@ -9,6 +9,7 @@ import { BusinessFullPath, BusinessPath } from "@/views/business/router/path";
 import { SortFullPath, SortPath } from "@/views/sort/router/path";
 import { ProductFullPath, ProductPath } from "@/views/product/router/path";
 import { TmsFullPath, TmsPath } from "@/views/tms/router/path";
+import { SmsFullPath, SmsPath } from "@/views/sms/router/path";
 
 const SysMenuList: MenuType[] = [
   {
@@ -114,18 +115,35 @@ const ProductMenuList: MenuType[] = [
 
 const TmsMenuList: MenuType[] = [
   {
-    name: "教师",
+    name: "教师管理",
     href: TmsFullPath.TEACHER,
     code: "sys",
     id: "9000000000000001",
     parentId: "9000000000000000",
   },
   {
-    name: "课时",
+    name: "课时管理",
     href: TmsFullPath.WORK,
     code: "sys",
     id: "9000000000000002",
     parentId: "9000000000000000",
+  },
+  {
+    name: "请假管理",
+    href: TmsFullPath.LEAVE,
+    code: "sys",
+    id: "9000000000000003",
+    parentId: "9000000000000000",
+  },
+];
+
+const SmsMenuList: MenuType[] = [
+  {
+    name: "周期管理",
+    href: SmsFullPath.PERIOD,
+    code: "sys",
+    id: "9100000000000001",
+    parentId: "9100000000000000",
   },
 ];
 
@@ -184,6 +202,14 @@ const MenuList: MenuType[] = [
     code: "sys",
     children: TmsMenuList,
     id: "9000000000000000",
+    parentId: "0",
+  },
+  {
+    name: "后台管理",
+    href: SmsPath.LINE,
+    code: "sys",
+    children: SmsMenuList,
+    id: "9100000000000000",
     parentId: "0",
   },
 ];

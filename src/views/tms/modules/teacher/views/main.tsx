@@ -18,7 +18,6 @@ const TeacherMain: FC = () => {
   const [keyword, setKeyword] = useState<string>(store.params.keyword || "");
 
   const columns = [
-    { title: "教师账号id", dataIndex: "id", width: 120 },
     { title: "姓名", dataIndex: "name" },
     { title: "性别", dataIndex: "gender", width: 120 },
     { title: "民族", dataIndex: "ethnicity" },
@@ -72,6 +71,16 @@ const TeacherMain: FC = () => {
     void store.getList();
   };
 
+  const handleChange = (current: number): void => {
+    store.$setParams({ current });
+    void store.getList();
+  };
+
+  const handlePageSize = (current: number, size: number): void => {
+    store.$setParams({ current, size });
+    void store.getList();
+  };
+
   const handleEdit = async (id: number): Promise<void> => {
     const info = await store.getInfo(Number(id));
     if (!info) {
@@ -109,27 +118,24 @@ const TeacherMain: FC = () => {
     <Content style={{ flex: 1 }}>
       <Content.Layout style={{ height: "100%" }}>
         <Content.Header>
-          <HeaderTitle
-            insert={
-              <Space>
-                <Input
-                  value={keyword}
-                  placeholder="请输入关键词"
-                  onChange={(e) => setKeyword(e.target.value)}
-                  style={{ width: 260 }}
-                  onPressEnter={handleSearch}
-                  allowClear
-                />
-                <Button action="search" onClick={handleSearch}>
-                  查询
-                </Button>
-              </Space>
-            }
-          >
-            教师管理
-          </HeaderTitle>
+          <HeaderTitle>教师管理</HeaderTitle>
         </Content.Header>
-        <Content.Main style={{ overflow: "unset" }}>
+        <Content.Header>
+          <Space>
+            <Input
+              value={keyword}
+              placeholder="请输入关键词"
+              onChange={(e) => setKeyword(e.target.value)}
+              style={{ width: 260 }}
+              onPressEnter={handleSearch}
+              allowClear
+            />
+            <Button action="search" onClick={handleSearch}>
+              查询
+            </Button>
+          </Space>
+        </Content.Header>
+        <Content.Main>
           <MorTable
             bordered
             pagination={false}
@@ -138,23 +144,33 @@ const TeacherMain: FC = () => {
             rowKey={(record: any) => record.id}
             loading={store.loading}
           />
-          <div className="flex justify-end mt-4">
-            <Pagination
-              current={store.params.current}
-              pageSize={store.params.size}
-              total={store.data.total || 0}
-              showSizeChanger
-              onChange={(current, pageSize) => {
-                store.$setParams({ current, size: pageSize });
-                void store.getList();
-              }}
-            />
-          </div>
         </Content.Main>
       </Content.Layout>
+      <Content.Footer>
+        <div
+          style={{
+            height: "49px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "0px 12px",
+            boxSizing: "border-box",
+          }}
+        >
+          <div></div>
+          <Pagination
+            showTotal={(total) => `共有 ${total} 条`}
+            showSizeChanger={true}
+            showQuickJumper={true}
+            onChange={handleChange}
+            onShowSizeChange={handlePageSize}
+            total={store.data.total}
+            current={store.data.current}
+          />
+        </div>
+      </Content.Footer>
     </Content>
   );
 };
 
 export default observer(TeacherMain);
-

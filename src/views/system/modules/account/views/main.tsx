@@ -29,14 +29,6 @@ const AccountMain: FC = () => {
       dataIndex: "account",
     },
     {
-      title: "手机号码",
-      dataIndex: "phone",
-    },
-    {
-      title: "邮箱",
-      dataIndex: "email",
-    },
-    {
       title: "创建时间",
       dataIndex: "createdTime",
       render: (time: string) => {

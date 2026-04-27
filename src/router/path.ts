@@ -18,6 +18,7 @@ enum FullPath {
   sort = "/sort",
   product = "/product",
   tms = "/tms",
+  sms = "/sms",
 }
 
 enum BasePath {
@@ -28,6 +29,7 @@ enum BasePath {
   SORT = "/sort/*",
   PRODUCT = "/product/*",
   TMS = "/tms/*",
+  SMS = "/sms/*",
   BASE = "/*",
   WELCOME = "/welcome",
 }
