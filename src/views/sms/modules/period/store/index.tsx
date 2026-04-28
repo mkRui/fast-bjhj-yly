@@ -59,6 +59,14 @@ export class PeriodStore extends Store<Api> {
     }
   }
 
+  public async getSetting(periodId: number): Promise<API.Setting.Data | null> {
+    this.$setLoading(true);
+    const [err, data] = await this.api.getSetting({ periodId });
+    this.$setLoading(false);
+    if (!err) return data;
+    return null;
+  }
+
   public async delItem(id: number): Promise<boolean> {
     this.$setLoading(true);
     const [err] = await this.api.del({ id });
@@ -96,4 +104,3 @@ export class PeriodStore extends Store<Api> {
 const PeriodContext = createContext<PeriodStore>({} as PeriodStore);
 
 export default PeriodContext;
-

@@ -240,9 +240,6 @@ const PersonalInfoMain: FC = () => {
               >
                 <Divider orientation="left">教师</Divider>
                 <div className="grid grid-cols-2 gap-4">
-                  <Item label="教师ID" name={["teacher", "id"]}>
-                    <Input disabled />
-                  </Item>
                   <Item
                     label="姓名"
                     name={["teacher", "name"]}
@@ -269,9 +266,6 @@ const PersonalInfoMain: FC = () => {
 
                 <Divider orientation="left">教师信息</Divider>
                 <div className="grid grid-cols-2 gap-4">
-                  <Item label="教师信息ID" name={["teacherInfo", "id"]}>
-                    <Input disabled />
-                  </Item>
                   <Item label="出生日期" name={["teacherInfo", "dateOfBirth"]}>
                     <Input placeholder="请输入出生日期（字符串）" />
                   </Item>
@@ -400,6 +394,10 @@ const PersonalInfoMain: FC = () => {
                   <Item label="培训经历" name={["teacherInfo", "trainingExperience"]}>
                     <Input.TextArea rows={3} placeholder="请输入培训经历" />
                   </Item>
+                </div>
+
+                <Divider orientation="left">银行信息</Divider>
+                <div className="grid grid-cols-2 gap-4">
                   <Item label="银行账号" name={["teacherInfo", "financialBankAccount"]}>
                     <Input placeholder="请输入银行账号" />
                   </Item>

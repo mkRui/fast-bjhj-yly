@@ -7,6 +7,7 @@ import HeaderTitle from "@/components/card-header";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
+import { toast } from "@/components/message";
 
 import StoreContext from "../store";
 import AddModal from "../components/add-modal";
@@ -35,14 +36,38 @@ const PeriodMain: FC = () => {
     });
   };
 
-  const handleSetting = (record: SmsPeriodEntity): void => {
+  const handleSetting = async (record: SmsPeriodEntity): Promise<void> => {
+    const data = await store.getSetting(record.id);
+    if (!data) {
+      toast("error", "获取周期设置失败");
+      return;
+    }
+
+    const init: Partial<API.SettingEdit.Params> = {
+      id: Number(data.id || record.id),
+      leaveMinUnit: Number(data.leaveMinUnit || 0),
+      leaveMinNum: Number(data.leaveMinNum || 0),
+      leaveMaxNum: Number(data.leaveMaxNum || 0),
+      bonusPerUnit: Number(data.bonusPerUnit || 0),
+      bonusMaxLimitPerYear: Number(data.bonusMaxLimitPerYear || 0),
+      bonusMaxLimitPerMonth: Number(data.bonusMaxLimitPerMonth || 0),
+      salaryMorningReading: Number(data.salaryMorningReading || 0),
+      salaryEveningStudy: Number(data.salaryEveningStudy || 0),
+      salaryClassHour: Number(data.salaryClassHour || 0),
+      salaryChalkbox: Number(data.salaryChalkbox || 0),
+      salaryOralPractice: Number(data.salaryOralPractice || 0),
+      salaryCollegeCounseling: Number(data.salaryCollegeCounseling || 0),
+      salaryOvertime: Number(data.salaryOvertime || 0),
+      salaryExhibition: Number(data.salaryExhibition || 0),
+    };
+
     const modal = new RunComponents({
       state: { loading: false },
       render: (state) => (
         <SettingModal
           {...state}
           title={`编辑周期：${record.name}`}
-          init={{ id: record.id }}
+          init={init}
           onCancel={() => modal.unmount()}
           onOk={async (params: API.SettingEdit.Params) => {
             modal.setState({ loading: true });

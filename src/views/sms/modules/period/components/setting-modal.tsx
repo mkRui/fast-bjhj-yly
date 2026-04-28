@@ -1,6 +1,6 @@
 import { FC, useEffect } from "react";
 import { observer } from "mobx-react";
-import { Form, InputNumber, Modal, Row, Col } from "antd";
+import { Col, Divider, Form, InputNumber, Modal, Row } from "antd";
 import type { ModalProps } from "antd/lib/modal";
 
 import { API } from "../types/api";
@@ -21,6 +21,7 @@ const SettingModal: FC<SettingModalProps> = (props) => {
 
   useEffect(() => {
     form.setFieldsValue({
+      leaveMinUnit: 0,
       leaveMinNum: 0,
       leaveMaxNum: 0,
       bonusPerUnit: 0,
@@ -28,6 +29,7 @@ const SettingModal: FC<SettingModalProps> = (props) => {
       bonusMaxLimitPerMonth: 0,
       salaryMorningReading: 0,
       salaryEveningStudy: 0,
+      salaryClassHour: 0,
       salaryChalkbox: 0,
       salaryOralPractice: 0,
       salaryCollegeCounseling: 0,
@@ -41,6 +43,7 @@ const SettingModal: FC<SettingModalProps> = (props) => {
     void form.validateFields().then(async (values: any) => {
       await onOk({
         id: Number(values.id || 0),
+        leaveMinUnit: Number(values.leaveMinUnit || 0),
         leaveMinNum: Number(values.leaveMinNum || 0),
         leaveMaxNum: Number(values.leaveMaxNum || 0),
         bonusPerUnit: Number(values.bonusPerUnit || 0),
@@ -48,6 +51,7 @@ const SettingModal: FC<SettingModalProps> = (props) => {
         bonusMaxLimitPerMonth: Number(values.bonusMaxLimitPerMonth || 0),
         salaryMorningReading: Number(values.salaryMorningReading || 0),
         salaryEveningStudy: Number(values.salaryEveningStudy || 0),
+        salaryClassHour: Number(values.salaryClassHour || 0),
         salaryChalkbox: Number(values.salaryChalkbox || 0),
         salaryOralPractice: Number(values.salaryOralPractice || 0),
         salaryCollegeCounseling: Number(values.salaryCollegeCounseling || 0),
@@ -72,12 +76,22 @@ const SettingModal: FC<SettingModalProps> = (props) => {
         <Item name="id" hidden>
           <InputNumber />
         </Item>
+        <Divider orientation="left">请假规则</Divider>
         <Row gutter={16}>
           <Col span={12}>
             <Item
               label="请假最小天数"
-              name="leaveMinNum"
+              name="leaveMinUnit"
               rules={[{ required: true, message: "请输入请假最小天数" }]}
+            >
+              <InputNumber style={{ width: "100%" }} min={0} />
+            </Item>
+          </Col>
+          <Col span={12}>
+            <Item
+              label="请假最小扣钱天数"
+              name="leaveMinNum"
+              rules={[{ required: true, message: "请输入请假最小扣钱天数" }]}
             >
               <InputNumber style={{ width: "100%" }} min={0} />
             </Item>
@@ -91,21 +105,29 @@ const SettingModal: FC<SettingModalProps> = (props) => {
               <InputNumber style={{ width: "100%" }} min={0} />
             </Item>
           </Col>
+        </Row>
+
+        <Divider orientation="left">奖金规则</Divider>
+        <Row gutter={16}>
           <Col span={12}>
-            <Item label="每单位奖金" name="bonusPerUnit">
+            <Item label="请假一天扣除全勤奖金额" name="bonusPerUnit">
               <InputNumber style={{ width: "100%" }} min={0} />
             </Item>
           </Col>
           <Col span={12}>
-            <Item label="每年奖金上限" name="bonusMaxLimitPerYear">
+            <Item label="每年请假全勤奖天数阈值" name="bonusMaxLimitPerYear">
               <InputNumber style={{ width: "100%" }} min={0} />
             </Item>
           </Col>
           <Col span={12}>
-            <Item label="每月奖金上限" name="bonusMaxLimitPerMonth">
+            <Item label="每月请假全勤奖天数阈值" name="bonusMaxLimitPerMonth">
               <InputNumber style={{ width: "100%" }} min={0} />
             </Item>
           </Col>
+        </Row>
+
+        <Divider orientation="left">工资规则</Divider>
+        <Row gutter={16}>
           <Col span={12}>
             <Item label="工资-早读" name="salaryMorningReading">
               <InputNumber style={{ width: "100%" }} min={0} />
@@ -113,6 +135,11 @@ const SettingModal: FC<SettingModalProps> = (props) => {
           </Col>
           <Col span={12}>
             <Item label="工资-晚自习" name="salaryEveningStudy">
+              <InputNumber style={{ width: "100%" }} min={0} />
+            </Item>
+          </Col>
+          <Col span={12}>
+            <Item label="工资-课时" name="salaryClassHour">
               <InputNumber style={{ width: "100%" }} min={0} />
             </Item>
           </Col>
@@ -148,4 +175,3 @@ const SettingModal: FC<SettingModalProps> = (props) => {
 };
 
 export default observer(SettingModal);
-

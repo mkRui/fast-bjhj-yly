@@ -197,9 +197,6 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
         <Form form={form} layout="vertical">
           <Divider orientation="left">教师</Divider>
           <div className="grid grid-cols-2 gap-4">
-            <Item label="教师ID" name={["teacher", "id"]}>
-              <Input disabled />
-            </Item>
             <Item
               label="姓名"
               name={["teacher", "name"]}
@@ -220,9 +217,6 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
 
           <Divider orientation="left">教师信息</Divider>
           <div className="grid grid-cols-2 gap-4">
-            <Item label="教师信息ID" name={["teacherInfo", "id"]}>
-              <Input disabled />
-            </Item>
             <Item label="出生日期" name={["teacherInfo", "dateOfBirth"]}>
               <Input placeholder="请输入出生日期（字符串）" />
             </Item>

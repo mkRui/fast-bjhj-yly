@@ -212,6 +212,13 @@ const MenuList: MenuType[] = [
     id: "9100000000000000",
     parentId: "0",
   },
+  {
+    name: "教师信息上报",
+    href: "/personal-info",
+    code: "sys",
+    id: "9200000000000000",
+    parentId: "0",
+  },
 ];
 
 export { MenuList };

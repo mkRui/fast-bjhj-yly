@@ -6,6 +6,10 @@ export class Api extends Request {
     return await this.get<API.Page.Data>("/sms/period/page", params);
   }
 
+  public async getSetting(params: API.Setting.Params): Promise<API.Setting.Response> {
+    return await this.get<API.Setting.Data>("/sms/period/setting", params);
+  }
+
   public async del(params: API.Del.Params): Promise<API.Del.Response> {
     return await this.post<API.Del.Data>("/sms/period/del", params);
   }
@@ -18,4 +22,3 @@ export class Api extends Request {
     return await this.post<API.SettingEdit.Data>("/sms/period/setting/edit", params);
   }
 }
-

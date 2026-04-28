@@ -7,6 +7,24 @@ export interface SmsPeriodEntity {
   currentFlag?: boolean;
 }
 
+export interface SmsPeriodSettingEntity {
+  id: number;
+  leaveMinUnit?: number;
+  leaveMinNum?: number;
+  leaveMaxNum?: number;
+  bonusPerUnit?: number;
+  bonusMaxLimitPerYear?: number;
+  bonusMaxLimitPerMonth?: number;
+  salaryMorningReading?: number;
+  salaryEveningStudy?: number;
+  salaryClassHour?: number;
+  salaryChalkbox?: number;
+  salaryOralPractice?: number;
+  salaryCollegeCounseling?: number;
+  salaryOvertime?: number;
+  salaryExhibition?: number;
+}
+
 export declare namespace API {
   export namespace Page {
     export interface Params {
@@ -43,9 +61,19 @@ export declare namespace API {
     export type Response = BaseRequest.Response<Data>;
   }
 
+  export namespace Setting {
+    export interface Params {
+      periodId: number;
+    }
+
+    export type Data = SmsPeriodSettingEntity;
+    export type Response = BaseRequest.Response<Data>;
+  }
+
   export namespace SettingEdit {
     export interface Params {
       id: number;
+      leaveMinUnit: number;
       leaveMinNum: number;
       leaveMaxNum: number;
       bonusPerUnit?: number;
@@ -53,6 +81,7 @@ export declare namespace API {
       bonusMaxLimitPerMonth?: number;
       salaryMorningReading?: number;
       salaryEveningStudy?: number;
+      salaryClassHour?: number;
       salaryChalkbox?: number;
       salaryOralPractice?: number;
       salaryCollegeCounseling?: number;
@@ -64,4 +93,3 @@ export declare namespace API {
     export type Response = BaseRequest.Response<Data>;
   }
 }
-
