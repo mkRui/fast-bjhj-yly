@@ -30,7 +30,7 @@ const CheckLeaveModal: FC<CheckLeaveModalProps> = (props) => {
   const handleOk = (): void => {
     void form.validateFields().then(async (values: any) => {
       await onOk({
-        id: Number(values.id || 0),
+        id: values.id,
         checkedFlag: !!values.checkedFlag,
         checkedComment: String(values.checkedComment || ""),
       });

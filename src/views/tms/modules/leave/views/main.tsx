@@ -19,8 +19,17 @@ const LeaveMain: FC = () => {
   const store = useContext(StoreContext);
 
   useEffect(() => {
-    void store.fetchPeriodList();
-    void store.fetchPage();
+    const init = async (): Promise<void> => {
+      await store.fetchPeriodList();
+      if (!store.params.periodId && store.periodList.length > 0) {
+        const first = store.periodList.find((i) => i.currentFlag) || store.periodList[0];
+        if (first?.id !== undefined && first?.id !== null) {
+          store.$setParams({ periodId: String(first.id), current: "0" });
+        }
+      }
+      await store.fetchPage();
+    };
+    void init();
   }, [store]);
 
   const periodOptions = useMemo(() => {
@@ -41,7 +50,7 @@ const LeaveMain: FC = () => {
           title="审核请假申请"
           init={{
             id: record.id,
-            checkedFlag: true,
+            checkedFlag: record.checkedFlag ?? true,
             checkedComment: record.checkedComment || "",
           }}
           onCancel={() => modal.unmount()}
@@ -75,7 +84,13 @@ const LeaveMain: FC = () => {
       dataIndex: "checkedFlag",
       width: 120,
       render: (val: any) =>
-        val ? <Tag color="green">已审核</Tag> : <Tag color="orange">未审核</Tag>,
+        val === null ? (
+          <Tag color="orange">未审核</Tag>
+        ) : val ? (
+          <Tag color="green">审核通过</Tag>
+        ) : (
+          <Tag color="red">审核失败</Tag>
+        ),
     },
     { title: "审核人", dataIndex: "checkedUserName", width: 140 },
     { title: "审核意见", dataIndex: "checkedComment", width: 200 },
@@ -83,14 +98,16 @@ const LeaveMain: FC = () => {
       title: "操作",
       width: 120,
       render: (_: any, record: API.Page.RecordItem) => (
-        <Button
-          type="link"
-          onClick={() => {
-            openCheckModal(record);
-          }}
-        >
-          审核
-        </Button>
+        record.checkedFlag === null ? null : (
+          <Button
+            type="link"
+            onClick={() => {
+              openCheckModal(record);
+            }}
+          >
+            审核
+          </Button>
+        )
       ),
     },
   ];
@@ -148,13 +165,23 @@ const LeaveMain: FC = () => {
             <Button
               action="reset"
               onClick={() => {
-                store.$setParams({
-                  periodId: undefined,
-                  checkedFlag: undefined,
-                  current: "0",
-                  size: "10",
-                });
-                void Promise.all([store.fetchPeriodList(), store.fetchPage()]);
+                const reset = async (): Promise<void> => {
+                  store.$setParams({
+                    periodId: undefined,
+                    checkedFlag: undefined,
+                    current: "0",
+                    size: "10",
+                  });
+                  await store.fetchPeriodList();
+                  if (store.periodList.length > 0) {
+                    const first = store.periodList.find((i) => i.currentFlag) || store.periodList[0];
+                    if (first?.id !== undefined && first?.id !== null) {
+                      store.$setParams({ periodId: String(first.id), current: "0" });
+                    }
+                  }
+                  await store.fetchPage();
+                };
+                void reset();
               }}
             >
               重置
@@ -170,6 +197,7 @@ const LeaveMain: FC = () => {
               columns={columns as any}
               rowKey={(record: any) => record.id}
               loading={store.loading}
+              auto
             />
           </Spin>
         </Content.Main>

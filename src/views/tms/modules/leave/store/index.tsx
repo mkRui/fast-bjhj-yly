@@ -83,4 +83,3 @@ export class LeaveStore extends Store<Api> {
 const LeaveContext = createContext<LeaveStore>({} as LeaveStore);
 
 export default LeaveContext;
-

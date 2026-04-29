@@ -1,15 +1,28 @@
 import { FC, useEffect, useMemo, useState } from "react";
 import { observer } from "mobx-react";
-import { Form, Input, InputNumber, Modal } from "antd";
+import { Form, Input, InputNumber, Modal, TimePicker } from "antd";
 import type { ModalProps } from "antd/lib/modal";
+import dayjs from "dayjs";
 
 import DatePicker from "@/components/date-picker";
 import LeavePeriodSelect from "@/micro/leave-period-list";
 import LeavePeriodSetting from "@/micro/leave-period-setting";
 import { API as PeriodSettingAPI } from "@/micro/leave-period-setting/types";
+import SelectEnum from "@/micro/select-enum";
 import { API } from "../types/api";
 
 const Item = Form.Item;
+const TIME_FORMAT = "HH:mm";
+
+const toTimeValue = (value?: string) => {
+  if (!value) return null;
+  const parts = String(value).split(":");
+  const hour = Number(parts[0] || 0);
+  const minute = Number(parts[1] || 0);
+  const second = Number(parts[2] || 0);
+  if (Number.isNaN(hour) || Number.isNaN(minute) || Number.isNaN(second)) return null;
+  return dayjs().hour(hour).minute(minute).second(second);
+};
 
 export interface LeaveSubmitModalProps {
   title: string;
@@ -25,7 +38,12 @@ const LeaveSubmitModal: FC<LeaveSubmitModalProps> = (props) => {
   const [setting, setSetting] = useState<PeriodSettingAPI.PeriodSetting.Data | null>(null);
 
   useEffect(() => {
-    if (init) form.setFieldsValue(init);
+    if (init) {
+      form.setFieldsValue({
+        ...init,
+        leaveType: init.leaveType === null || init.leaveType === undefined ? undefined : String(init.leaveType),
+      });
+    }
   }, [init, form]);
 
   const periodId = Form.useWatch("periodId", form);
@@ -41,11 +59,11 @@ const LeaveSubmitModal: FC<LeaveSubmitModalProps> = (props) => {
   const handleOk = (): void => {
     void form.validateFields().then(async (values: any) => {
       await onOk({
-        periodId: Number(values.periodId || 0),
+        periodId: values.periodId,
         leaveNum: Number(values.leaveNum || 0),
         leaveDate: String(values.leaveDate || ""),
-        leaveStartTime: String(values.leaveStartTime || ""),
-        leaveEndTime: String(values.leaveEndTime || ""),
+        leaveStartTime: `${values.leaveStartTime || ""}:00`,
+        leaveEndTime: `${values.leaveEndTime || ""}:00`,
         leaveType: Number(values.leaveType || 0),
         leaveReason: String(values.leaveReason || ""),
       });
@@ -70,8 +88,8 @@ const LeaveSubmitModal: FC<LeaveSubmitModalProps> = (props) => {
         >
           <LeavePeriodSelect
             allowClear
-            onInitChange={(v?: number) => form.setFieldValue("periodId", v)}
-            onChange={(v?: number) => form.setFieldValue("periodId", v)}
+            onInitChange={(v?: string) => form.setFieldValue("periodId", v)}
+            onChange={(v?: string) => form.setFieldValue("periodId", v)}
           />
         </Item>
 
@@ -115,43 +133,42 @@ const LeaveSubmitModal: FC<LeaveSubmitModalProps> = (props) => {
         <Item
           label="开始时间"
           name="leaveStartTime"
-          rules={[
-            { required: true, message: "请输入开始时间" },
-            {
-              validator: async (_rule, value) => {
-                if (!value) return;
-                const ok = /^\d{2}:\d{2}(:\d{2})?$/.test(String(value));
-                if (!ok) throw new Error("时间格式示例：08:30 或 08:30:00");
-              },
-            },
-          ]}
+          rules={[{ required: true, message: "请选择开始时间" }]}
+          getValueProps={(value) => ({ value: toTimeValue(value) })}
+          getValueFromEvent={(_time: any, timeString: string) => timeString || ""}
         >
-          <Input placeholder="例如：08:30" />
+          <TimePicker
+            format={TIME_FORMAT}
+            placeholder="请选择开始时间"
+            style={{ width: "100%" }}
+          />
         </Item>
 
         <Item
           label="结束时间"
           name="leaveEndTime"
-          rules={[
-            { required: true, message: "请输入结束时间" },
-            {
-              validator: async (_rule, value) => {
-                if (!value) return;
-                const ok = /^\d{2}:\d{2}(:\d{2})?$/.test(String(value));
-                if (!ok) throw new Error("时间格式示例：17:30 或 17:30:00");
-              },
-            },
-          ]}
+          rules={[{ required: true, message: "请选择结束时间" }]}
+          getValueProps={(value) => ({ value: toTimeValue(value) })}
+          getValueFromEvent={(_time: any, timeString: string) => timeString || ""}
         >
-          <Input placeholder="例如：17:30" />
+          <TimePicker
+            format={TIME_FORMAT}
+            placeholder="请选择结束时间"
+            style={{ width: "100%" }}
+          />
         </Item>
 
         <Item
           label="请假类型"
           name="leaveType"
-          rules={[{ required: true, message: "请输入请假类型" }]}
+          rules={[{ required: true, message: "请选择请假类型" }]}
         >
-          <InputNumber style={{ width: "100%" }} min={0} />
+          <SelectEnum
+            name="TEACHER_LEAVE_TYPE"
+            allowClear
+            handleInitChange={(v: string) => form.setFieldValue("leaveType", v)}
+            onChange={(v: string) => form.setFieldValue("leaveType", v)}
+          />
         </Item>
 
         <Item

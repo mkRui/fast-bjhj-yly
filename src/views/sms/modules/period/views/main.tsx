@@ -44,7 +44,7 @@ const PeriodMain: FC = () => {
     }
 
     const init: Partial<API.SettingEdit.Params> = {
-      id: Number(data.id || record.id),
+      id: data.id ?? record.id,
       leaveMinUnit: Number(data.leaveMinUnit || 0),
       leaveMinNum: Number(data.leaveMinNum || 0),
       leaveMaxNum: Number(data.leaveMaxNum || 0),

@@ -2,13 +2,13 @@
 import { BaseRequest } from "mor-request";
 
 export interface SmsPeriodEntity {
-  id: number;
+  id: string;
   name: string;
   currentFlag?: boolean;
 }
 
 export interface SmsPeriodSettingEntity {
-  id: number;
+  id: string;
   leaveMinUnit?: number;
   leaveMinNum?: number;
   leaveMaxNum?: number;
@@ -45,7 +45,7 @@ export declare namespace API {
 
   export namespace Del {
     export interface Params {
-      id: number;
+      id: string;
     }
 
     export type Data = null;
@@ -63,7 +63,7 @@ export declare namespace API {
 
   export namespace Setting {
     export interface Params {
-      periodId: number;
+      periodId: string;
     }
 
     export type Data = SmsPeriodSettingEntity;
@@ -72,7 +72,7 @@ export declare namespace API {
 
   export namespace SettingEdit {
     export interface Params {
-      id: number;
+      id: string;
       leaveMinUnit: number;
       leaveMinNum: number;
       leaveMaxNum: number;

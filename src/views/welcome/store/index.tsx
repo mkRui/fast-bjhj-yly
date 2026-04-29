@@ -14,7 +14,7 @@ export interface FilterParams {
 }
 
 export interface LeaveFilterParams {
-  periodId?: number;
+  periodId?: string;
   current: number;
   size: number;
 }
@@ -157,7 +157,7 @@ export class WelcomeStore extends Store<Api> {
   }
 
   public async fetchLeavePage(): Promise<void> {
-    const periodId = Number(this.leaveFilter.periodId || 0);
+    const periodId = this.leaveFilter.periodId;
     if (!periodId) return;
     this.$setLeaveLoading(true);
     const [err, data] = await this.api.getLeavePage({

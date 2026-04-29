@@ -48,10 +48,10 @@ export declare namespace API {
     }
 
     export interface RecordItem {
-      id: number;
-      teacherId: number;
-      periodId: number;
-      subject: number;
+      id: string;
+      teacherId: string;
+      periodId: string;
+      subject: string;
       date: string;
       year: number;
       month: number;
@@ -71,7 +71,7 @@ export declare namespace API {
 
   export namespace LeavePeriodList {
     export interface Item {
-      id: number;
+      id: string;
       name: string;
       currentFlag: boolean;
     }
@@ -82,11 +82,11 @@ export declare namespace API {
 
   export namespace LeavePeriodSetting {
     export interface Params {
-      periodId: number;
+      periodId: string;
     }
 
     export interface Data {
-      id: number;
+      id: string;
       leaveMinUnit: number;
       leaveMinNum: number;
       bonusPerUnit: number;
@@ -106,7 +106,7 @@ export declare namespace API {
 
   export namespace LeaveSubmit {
     export interface Params {
-      periodId: number;
+      periodId: string;
       leaveNum: number;
       leaveDate: string;
       leaveStartTime: string;
@@ -121,15 +121,15 @@ export declare namespace API {
 
   export namespace LeavePage {
     export interface Params {
-      periodId: number;
+      periodId: string;
       current: number;
       size: number;
     }
 
     export interface RecordItem {
-      id: number;
-      teacherId: number;
-      periodId: number;
+      id: string;
+      teacherId: string;
+      periodId: string;
       leaveDate: string;
       leaveStartTime: string;
       leaveEndTime: string;
@@ -137,7 +137,7 @@ export declare namespace API {
       leaveType: number;
       leaveReason: string;
       checkedFlag: boolean;
-      checkedUserId?: number;
+      checkedUserId?: string;
       checkedUserName?: string;
       checkedComment?: string;
     }

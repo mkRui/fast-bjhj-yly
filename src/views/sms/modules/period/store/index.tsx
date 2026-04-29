@@ -59,7 +59,7 @@ export class PeriodStore extends Store<Api> {
     }
   }
 
-  public async getSetting(periodId: number): Promise<API.Setting.Data | null> {
+  public async getSetting(periodId: string): Promise<API.Setting.Data | null> {
     this.$setLoading(true);
     const [err, data] = await this.api.getSetting({ periodId });
     this.$setLoading(false);
@@ -67,7 +67,7 @@ export class PeriodStore extends Store<Api> {
     return null;
   }
 
-  public async delItem(id: number): Promise<boolean> {
+  public async delItem(id: string): Promise<boolean> {
     this.$setLoading(true);
     const [err] = await this.api.del({ id });
     this.$setLoading(false);

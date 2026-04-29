@@ -4,8 +4,8 @@ import { Select, Space } from "antd";
 import type { Teacher } from "@/views/personal-info/types/api";
 
 export interface SelectTeacherProps {
-  value?: number;
-  onChange?: (value?: number) => void;
+  value?: string;
+  onChange?: (value?: string) => void;
   options: Teacher[];
   loading?: boolean;
   placeholder?: string;

@@ -4,11 +4,11 @@ import { BaseRequest } from "mor-request";
 export declare namespace API {
   export namespace PeriodSetting {
     export interface Params {
-      periodId: number;
+      periodId: string;
     }
 
     export interface Data {
-      id: number;
+      id: string;
       leaveMinUnit: number;
       leaveMinNum: number;
       bonusPerUnit: number;

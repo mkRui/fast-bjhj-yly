@@ -42,7 +42,7 @@ const SettingModal: FC<SettingModalProps> = (props) => {
   const handleOk = (): void => {
     void form.validateFields().then(async (values: any) => {
       await onOk({
-        id: Number(values.id || 0),
+        id: String(values.id || ""),
         leaveMinUnit: Number(values.leaveMinUnit || 0),
         leaveMinNum: Number(values.leaveMinNum || 0),
         leaveMaxNum: Number(values.leaveMaxNum || 0),

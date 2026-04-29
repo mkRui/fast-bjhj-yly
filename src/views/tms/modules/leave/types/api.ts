@@ -30,7 +30,7 @@ export declare namespace API {
       leaveNum: number;
       leaveType: number;
       leaveReason: string;
-      checkedFlag: boolean;
+      checkedFlag: boolean | null;
       checkedUserId?: number;
       checkedUserName?: string;
       checkedComment?: string;
@@ -58,4 +58,3 @@ export declare namespace API {
     export type Response = BaseRequest.Response<Data>;
   }
 }
-

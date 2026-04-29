@@ -13,7 +13,7 @@ import { API } from "../types/api";
 import ReportWorkModal from "@/views/welcome/components/report-work-modal";
 
 interface WorkRecordsModalProps {
-  teacherId: number;
+  teacherId: string;
   teacherName?: string;
   onCancel: ModalProps["onCancel"];
   fetchPage: (params: API.WorkPage.Params) => Promise<API.WorkPage.Data | null>;
@@ -64,7 +64,7 @@ const WorkRecordsModal: FC<WorkRecordsModalProps> = (props) => {
   const runQuery = async (next?: Partial<API.WorkPage.Params>): Promise<void> => {
     setLoading(true);
     const data = await fetchPage({
-      teacherId,
+      teacherId: teacherId,
       keyword: keyword || undefined,
       year,
       month,
@@ -195,4 +195,3 @@ const WorkRecordsModal: FC<WorkRecordsModalProps> = (props) => {
 };
 
 export default observer(WorkRecordsModal);
-

@@ -4,7 +4,7 @@ import { BaseRequest } from "mor-request";
 export declare namespace API {
   export namespace PeriodList {
     export interface Data {
-      id: number;
+      id: string;
       name: string;
       currentFlag: boolean;
     }

@@ -23,7 +23,7 @@ export class LeavePeriodSettingStore extends Store<Api> {
     this.data = data;
   }
 
-  public async getData(periodId: number): Promise<void> {
+  public async getData(periodId: string): Promise<void> {
     const [, data] = await this.api.getSetting({ periodId });
     if (data) this.$setData(data);
   }

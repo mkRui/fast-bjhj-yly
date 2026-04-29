@@ -15,7 +15,7 @@ const WorkMain: FC = () => {
   const store = useContext(StoreContext);
   const root = useContext(RootContext);
 
-  const [teacherId, setTeacherId] = useState<number | undefined>(undefined);
+  const [teacherId, setTeacherId] = useState<string | undefined>(undefined);
   const [year, setYear] = useState<number>(new Date().getFullYear());
   const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
   const [current, setCurrent] = useState(1);
@@ -64,7 +64,7 @@ const WorkMain: FC = () => {
       const nextSize = next?.size ?? size;
 
       const data = await store.getWorkPage({
-        teacherId,
+        teacherId: String(teacherId),
         keyword: undefined,
         year: nextYear,
         month: nextMonth,
@@ -210,7 +210,7 @@ const WorkMain: FC = () => {
                   </div>
                 </div>
 
-                <div className="p-6 bg-white rounded shadow">
+                <div className="p-6 bg-white rounded shadow h-[300px]">
                   <div className="text-base font-semibold mb-4">工时记录</div>
                   <MorTable
                     bordered
@@ -218,6 +218,7 @@ const WorkMain: FC = () => {
                     columns={columns as any}
                     dataSource={page.records || []}
                     pagination={false}
+                    auto={true}
                   />
                 </div>
               </>

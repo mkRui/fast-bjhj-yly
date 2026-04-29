@@ -32,8 +32,6 @@ const LeaveTab: FC = () => {
           title="提交请假"
           init={{
             leaveDate: date,
-            leaveNum: 0,
-            leaveType: 0,
           }}
           onCancel={() => modal.unmount()}
           onOk={async (params: API.LeaveSubmit.Params) => {
@@ -104,11 +102,11 @@ const LeaveTab: FC = () => {
                 value={store.leaveFilter.periodId}
                 allowClear
                 onInitChange={(v?: number) => {
-                  store.$setLeaveFilter({ periodId: v, current: 1 });
+                  store.$setLeaveFilter({ periodId: v === undefined ? undefined : String(v), current: 1 });
                   void store.fetchLeavePage();
                 }}
                 onChange={(v?: number) => {
-                  store.$setLeaveFilter({ periodId: v, current: 1 });
+                  store.$setLeaveFilter({ periodId: v === undefined ? undefined : String(v), current: 1 });
                   void store.fetchLeavePage();
                 }}
               />
@@ -117,7 +115,7 @@ const LeaveTab: FC = () => {
         </div>
       </div>
 
-      <div className="p-6 bg-white rounded shadow">
+      <div className="p-6 bg-white rounded shadow h-[300px]">
         <div className="text-base font-semibold mb-4">请假记录</div>
         <MorTable
           rowKey="id"
@@ -143,4 +141,3 @@ const LeaveTab: FC = () => {
 };
 
 export default observer(LeaveTab);
-

@@ -23,7 +23,7 @@ export declare namespace API {
 
   export namespace WorkPage {
     export interface Params {
-      teacherId: number;
+      teacherId: string;
       keyword?: string;
       year?: number;
       month?: number;
@@ -32,9 +32,9 @@ export declare namespace API {
     }
 
     export interface RecordItem {
-      id: number;
-      teacherId: number;
-      periodId: number;
+      id: string;
+      teacherId: string;
+      periodId: string;
       subject: number;
       date: string;
       year: number;

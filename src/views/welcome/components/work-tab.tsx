@@ -66,7 +66,6 @@ const WorkTab: FC = () => {
             date,
             year: store.filter.year || yyyy,
             month: store.filter.month || mm,
-            subject: 0,
             num: 0,
           }}
           onCancel={() => modal.unmount()}
@@ -124,43 +123,41 @@ const WorkTab: FC = () => {
       </div>
 
       <div className="p-6 bg-white rounded shadow mb-4">
-        <div className="grid grid-cols-4 gap-4">
-          <div className="col-span-4 md:col-span-2">
-            <div className="text-sm text-gray-600 mb-2">筛选</div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <div className="text-sm text-gray-600 mb-1">年份</div>
-                <InputNumber
-                  style={{ width: "100%" }}
-                  value={store.filter.year}
-                  onChange={(val) => {
-                    void handleFilter({ year: Number(val || 0), current: 1 });
-                  }}
-                  min={2000}
-                  max={2100}
-                />
-              </div>
-              <div>
-                <div className="text-sm text-gray-600 mb-1">月份</div>
-                <InputNumber
-                  style={{ width: "100%" }}
-                  value={store.filter.month}
-                  onChange={(val) => {
-                    void handleFilter({ month: Number(val || 0), current: 1 });
-                  }}
-                  min={1}
-                  max={12}
-                />
-              </div>
-            </div>
+        <div className="text-sm text-gray-600 mb-2">筛选</div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <div className="text-sm text-gray-600 mb-1">年份</div>
+            <InputNumber
+              style={{ width: "100%" }}
+              value={store.filter.year}
+              onChange={(val) => {
+                void handleFilter({ year: Number(val || 0), current: 1 });
+              }}
+              min={2000}
+              max={2100}
+            />
           </div>
-          <div className="col-span-4 md:col-span-2">
-            <WorkStatisticsChart title="当前用户工时统计（按科目）" data={statisticsData} />
+          <div>
+            <div className="text-sm text-gray-600 mb-1">月份</div>
+            <InputNumber
+              style={{ width: "100%" }}
+              value={store.filter.month}
+              onChange={(val) => {
+                void handleFilter({ month: Number(val || 0), current: 1 });
+              }}
+              min={1}
+              max={12}
+            />
           </div>
         </div>
       </div>
 
-      <div className="p-6 bg-white rounded shadow">
+
+       <div className="mb-2">
+          <WorkStatisticsChart title="当前用户工时统计（按科目）" data={statisticsData} />
+       </div>
+
+      <div className="p-6 bg-white rounded shadow h-[300px]">
         <div className="text-base font-semibold mb-4">工时记录</div>
         <MorTable rowKey="id" columns={columns as any} dataSource={store.page.records || []} pagination={false} />
         <div className="flex justify-end mt-4">
@@ -181,4 +178,3 @@ const WorkTab: FC = () => {
 };
 
 export default observer(WorkTab);
-

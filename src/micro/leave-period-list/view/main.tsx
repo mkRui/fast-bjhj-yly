@@ -7,9 +7,9 @@ import StoreContext from "../store";
 const Option = Select.Option;
 
 export interface LeavePeriodSelectProps extends JSX.IntrinsicAttributes {
-  value?: number;
-  onChange?: (value?: number) => void;
-  onInitChange?: (value?: number, list?: any[]) => void;
+  value?: string;
+  onChange?: (value?: string) => void;
+  onInitChange?: (value?: string, list?: any[]) => void;
   placeholder?: string;
   allowClear?: boolean;
 }
@@ -34,7 +34,7 @@ const LeavePeriodSelect: FC<LeavePeriodSelectProps> = (props) => {
   return (
     <Select
       value={value}
-      onChange={(v) => props.onChange?.(typeof v === "number" ? v : undefined)}
+      onChange={(v) => props.onChange?.(typeof v === "string" ? v : undefined)}
       style={{ width: "100%", minWidth: "200px" }}
       placeholder={placeholder || "请选择周期"}
       allowClear={allowClear}

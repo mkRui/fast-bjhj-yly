@@ -2,7 +2,7 @@
 import { BaseRequest } from "mor-request";
 
 export interface Teacher {
-  id: number;
+  id: string;
   name: string;
   gender: number;
   ethnicity: string;
@@ -10,7 +10,7 @@ export interface Teacher {
 }
 
 export interface TeacherInfo {
-  id: number;
+  id: string;
   dateOfBirth: Record<string, unknown>;
   idNo: string;
   registeredAddress: string;
@@ -151,7 +151,7 @@ export declare namespace API {
 
   export namespace EditTeacherInfo {
     export interface Params {
-      id: number;
+      id: string;
       teacher: Omit<Teacher, "id">;
       teacherInfo: EditTeacherInfoBody;
       familyMember: EditFamilyMember[];
