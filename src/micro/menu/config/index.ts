@@ -145,6 +145,20 @@ const SmsMenuList: MenuType[] = [
     id: "9100000000000001",
     parentId: "9100000000000000",
   },
+  {
+    name: "资产分类",
+    href: SmsFullPath.AMS_CATEGORY,
+    code: "sys",
+    id: "9100000000000002",
+    parentId: "9100000000000000",
+  },
+  {
+    name: "固定资产",
+    href: SmsFullPath.AMS_ASSETS,
+    code: "sys",
+    id: "9100000000000003",
+    parentId: "9100000000000000",
+  },
 ];
 
 const MenuList: MenuType[] = [

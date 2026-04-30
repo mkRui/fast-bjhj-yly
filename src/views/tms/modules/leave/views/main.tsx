@@ -89,7 +89,7 @@ const LeaveMain: FC = () => {
         ) : val ? (
           <Tag color="green">审核通过</Tag>
         ) : (
-          <Tag color="red">审核失败</Tag>
+          <Tag color="red">审核驳回</Tag>
         ),
     },
     { title: "审核人", dataIndex: "checkedUserName", width: 140 },
