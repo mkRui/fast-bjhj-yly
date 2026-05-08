@@ -13,22 +13,22 @@ import AssetsCategorySelect from "@/micro/assets-category-select";
 
 import StoreContext from "../store";
 import { API } from "../types/api";
-import AssetsFormModal from "../components/form-modal";
+import ConsumablesFormModal from "../components/form-modal";
 import StockInModal from "../components/stockin-modal";
-import AssetsItemListsModal from "../components/item-lists-modal";
+import ConsumablesApplyListModal from "../components/apply-list-modal";
 
 const Item = Form.Item;
 
-const AmsAssetsMain: FC = () => {
+const AmsConsumablesMain: FC = () => {
   const store = useContext(StoreContext);
 
   const handleAdd = (): void => {
     const modal = new RunComponents({
       state: { loading: false },
       render: (state) => (
-        <AssetsFormModal
+        <ConsumablesFormModal
           {...state}
-          title="新增固定资产"
+          title="新增易耗品"
           init={{ categoryId: store.params.categoryId }}
           onCancel={() => modal.unmount()}
           onOk={async (params) => {
@@ -49,9 +49,9 @@ const AmsAssetsMain: FC = () => {
     const modal = new RunComponents({
       state: { loading: false },
       render: (state) => (
-        <AssetsFormModal
+        <ConsumablesFormModal
           {...state}
-          title="编辑固定资产"
+          title="编辑易耗品"
           init={record}
           onCancel={() => modal.unmount()}
           onOk={async (params) => {
@@ -74,8 +74,8 @@ const AmsAssetsMain: FC = () => {
       render: (state) => (
         <StockInModal
           {...state}
-          title="固定资产入库"
-          init={{ assetsId: record.id }}
+          title="易耗品入库"
+          init={{ consumablesId: record.id }}
           onCancel={() => modal.unmount()}
           onOk={async (params) => {
             modal.setState({ loading: true });
@@ -91,13 +91,13 @@ const AmsAssetsMain: FC = () => {
     });
   };
 
-  const handleOpenItemLists = (record: API.Page.RecordItem): void => {
+  const handleApplyList = (record: API.Page.RecordItem): void => {
     const modal = new RunComponents({
       state: {},
       render: () => (
-        <AssetsItemListsModal
-          title={`列表操作：${record.name || record.selfCode || record.id}`}
-          assetId={record.id}
+        <ConsumablesApplyListModal
+          title={`易耗品申请：${record.name || record.selfCode || record.id}`}
+          consumablesId={record.id}
           onCancel={() => modal.unmount()}
         />
       ),
@@ -105,18 +105,12 @@ const AmsAssetsMain: FC = () => {
   };
 
   const columns = [
-    {
-      title: "资产分类",
-      width: 160,
-      render: (_: any, record: API.Page.RecordItem) => record.categoryName || record.categoryId || "-",
-    },
-    { title: "固定资产名称", dataIndex: "name", width: 220 },
-    { title: "固定资产代码", dataIndex: "selfCode", width: 180 },
-    {
-      title: "库存数量",
-      width: 120,
-      render: (_: any, record: any) => record.stockNum ?? record.num ?? record.stock ?? "-",
-    },
+    { title: "资产分类", dataIndex: "categoryId", width: 160 },
+    { title: "易耗品名称", dataIndex: "name", width: 220 },
+    { title: "易耗品代码", dataIndex: "selfCode", width: 180 },
+    { title: "完整代码", dataIndex: "fullCode", width: 200 },
+    { title: "库存总数", dataIndex: "totalNum", width: 120 },
+    { title: "可借数量", dataIndex: "availableNum", width: 120 },
     { title: "备注", dataIndex: "remark" },
     {
       title: "操作",
@@ -141,8 +135,8 @@ const AmsAssetsMain: FC = () => {
           <Button type="link" onClick={() => handleStockIn(record)}>
             入库
           </Button>
-          <Button type="link" onClick={() => handleOpenItemLists(record)}>
-            新增
+          <Button type="link" onClick={() => handleApplyList(record)}>
+            申请列表
           </Button>
         </Button.Group>
       ),
@@ -180,11 +174,11 @@ const AmsAssetsMain: FC = () => {
           <HeaderTitle
             insert={
               <Button type="primary" onClick={handleAdd}>
-                新增固定资产
+                新增易耗品
               </Button>
             }
           >
-            固定资产
+            易耗品管理
           </HeaderTitle>
         </Content.Header>
         <Content.Header>
@@ -204,7 +198,7 @@ const AmsAssetsMain: FC = () => {
               />
             </Item>
             <Item name="keyword">
-              <Input placeholder="请输入固定资产名称/代码关键字" allowClear />
+              <Input placeholder="请输入易耗品名称/代码关键字" allowClear />
             </Item>
           </OverallSituationSearch>
         </Content.Header>
@@ -246,4 +240,5 @@ const AmsAssetsMain: FC = () => {
   );
 };
 
-export default observer(AmsAssetsMain);
+export default observer(AmsConsumablesMain);
+

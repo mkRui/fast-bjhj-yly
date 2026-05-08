@@ -6,6 +6,14 @@ export class Api extends Request {
     return await this.get<API.Page.Data>("/ams/assets/page", params);
   }
 
+  public async getItemPage(params: API.ItemPage.Params): Promise<API.ItemPage.Response> {
+    return await this.get<API.ItemPage.Data>("/ams/assets/item/page", params);
+  }
+
+  public async getItemApplyPage(params: API.ItemApplyPage.Params): Promise<API.ItemApplyPage.Response> {
+    return await this.get<API.ItemApplyPage.Data>("/ams/assets/item/apply/page", params);
+  }
+
   public async add(params: API.Add.Params): Promise<API.Add.Response> {
     return await this.post<API.Add.Data>("/ams/assets/add", params);
   }
@@ -21,5 +29,12 @@ export class Api extends Request {
   public async stockIn(params: API.StockIn.Params): Promise<API.StockIn.Response> {
     return await this.post<API.StockIn.Data>("/ams/assets/stockIn", params);
   }
-}
 
+  public async applyCheck(params: API.ApplyCheck.Params): Promise<API.ApplyCheck.Response> {
+    return await this.post<API.ApplyCheck.Data>("/ams/assets/apply/check", params);
+  }
+
+  public async disposeCheck(params: API.DisposeCheck.Params): Promise<API.DisposeCheck.Response> {
+    return await this.post<API.DisposeCheck.Data>("/ams/assets/dispose/check", params);
+  }
+}

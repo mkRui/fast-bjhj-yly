@@ -4,6 +4,7 @@ import { SmsFullPath, SmsPath } from "./path";
 import Period from "../modules/period";
 import AmsCategory from "../modules/ams-category";
 import AmsAssets from "../modules/ams-assets";
+import AmsConsumables from "../modules/ams-consumables";
 
 const Routes: RouteTypes[] = [
   {
@@ -23,6 +24,12 @@ const Routes: RouteTypes[] = [
     component: AmsAssets,
     title: "固定资产",
     fullPath: SmsFullPath.AMS_ASSETS,
+  },
+  {
+    path: SmsPath.AMS_CONSUMABLES,
+    component: AmsConsumables,
+    title: "易耗品管理",
+    fullPath: SmsFullPath.AMS_CONSUMABLES,
   },
 ];
 

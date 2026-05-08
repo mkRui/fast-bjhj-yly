@@ -152,4 +152,210 @@ export declare namespace API {
 
     export type Response = BaseRequest.Response<Data>;
   }
+
+  export namespace AssetsCategoryList {
+    export interface Item {
+      id: string;
+      name: string;
+      code?: string;
+    }
+
+    export type Data = Item[];
+    export type Response = BaseRequest.Response<Data>;
+  }
+
+  export namespace ConsumablesPage {
+    export interface Params {
+      categoryId: string;
+      keyword?: string;
+      current: number;
+      size: number;
+    }
+
+    export interface RecordItem {
+      id: string;
+      categoryId?: string;
+      name?: string;
+      remark?: string;
+      selfCode?: string;
+      fullCode?: string;
+      totalNum?: number;
+      availableNum?: number;
+    }
+
+    export interface Data {
+      size: number;
+      pages: number;
+      total: number;
+      records: RecordItem[];
+      current: number;
+    }
+
+    export type Response = BaseRequest.Response<Data>;
+  }
+
+  export namespace ConsumablesApplyPage {
+    export interface Params {
+      consumablesId: string;
+      current: number;
+      size: number;
+    }
+
+    export interface RecordItem {
+      id: string;
+      categoryId?: string;
+      consumablesId?: string;
+      applyNum?: number;
+      applyTime?: string;
+      applyReason?: string;
+      applyUserId?: string;
+      applyUserName?: string;
+      applyCheckedFlag?: boolean;
+      applyCheckedUserId?: string;
+      applyCheckedUserName?: string;
+      applyCheckedComment?: string;
+    }
+
+    export interface Data {
+      size: number;
+      pages: number;
+      total: number;
+      records: RecordItem[];
+      current: number;
+    }
+
+    export type Response = BaseRequest.Response<Data>;
+  }
+
+  export namespace ConsumablesApply {
+    export interface Params {
+      consumablesId: string;
+      applyReason: string;
+      applyNum: number;
+    }
+
+    export type Data = null;
+    export type Response = BaseRequest.Response<Data>;
+  }
+
+  export namespace AssetsPage {
+    export interface Params {
+      categoryId: string;
+      keyword?: string;
+      current: number;
+      size: number;
+    }
+
+    export interface RecordItem {
+      id: string;
+      categoryId?: string;
+      name?: string;
+      remark?: string;
+      selfCode?: string;
+      fullCode?: string;
+      totalNum?: number;
+      availableNum?: number;
+    }
+
+    export interface Data {
+      size: number;
+      pages: number;
+      total: number;
+      records: RecordItem[];
+      current: number;
+    }
+
+    export type Response = BaseRequest.Response<Data>;
+  }
+
+  export namespace AssetsItemPage {
+    export interface Params {
+      assetId: string;
+      keyword?: string;
+      current: number;
+      size: number;
+    }
+
+    export interface RecordItem {
+      id: string;
+      categoryId?: string;
+      categoryName?: string;
+      assetId?: string;
+      assetName?: string;
+      fullCode?: string;
+      status?: number;
+      remark?: string;
+      stockInTime?: string;
+      currentApplyId?: string;
+      lastApplyId?: string;
+    }
+
+    export interface Data {
+      size: number;
+      pages: number;
+      total: number;
+      records: RecordItem[];
+      current: number;
+    }
+
+    export type Response = BaseRequest.Response<Data>;
+  }
+
+  export namespace AssetsItemApplyPage {
+    export interface Params {
+      itemId: string;
+      current: number;
+      size: number;
+    }
+
+    export interface RecordItem {
+      id: string;
+      categoryId?: string;
+      assetId?: string;
+      itemId?: string;
+      applyTime?: string;
+      applyReason?: string;
+      applyUserId?: string;
+      applyUserName?: string;
+      applyCheckedFlag?: boolean;
+      applyCheckedUserId?: string;
+      applyCheckedUserName?: string;
+      applyCheckedComment?: string;
+      dispose?: number;
+      disposeCheckedFlag?: boolean;
+      disposeCheckedUserId?: string;
+      disposeCheckedUserName?: string;
+      disposeCheckedComment?: string;
+    }
+
+    export interface Data {
+      size: number;
+      pages: number;
+      total: number;
+      records: RecordItem[];
+      current: number;
+    }
+
+    export type Response = BaseRequest.Response<Data>;
+  }
+
+  export namespace AssetsItemApply {
+    export interface Params {
+      itemId: string;
+      applyReason: string;
+    }
+
+    export type Data = null;
+    export type Response = BaseRequest.Response<Data>;
+  }
+
+  export namespace AssetsItemDispose {
+    export interface Params {
+      applyId: string;
+      dispose: number;
+    }
+
+    export type Data = null;
+    export type Response = BaseRequest.Response<Data>;
+  }
 }

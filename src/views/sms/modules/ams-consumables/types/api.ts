@@ -13,11 +13,12 @@ export declare namespace API {
     export interface RecordItem {
       id: string;
       categoryId?: string;
-      categoryName?: string;
       name?: string;
       remark?: string;
       selfCode?: string;
-      stockNum?: number;
+      fullCode?: string;
+      totalNum?: number;
+      availableNum?: number;
     }
 
     export interface Data {
@@ -33,7 +34,22 @@ export declare namespace API {
 
   export namespace Add {
     export interface Params {
-      assetsDTO: {
+      consumablesDTO: {
+        categoryId: string;
+        name: string;
+        remark?: string;
+        selfCode?: string;
+      };
+    }
+
+    export type Data = null;
+    export type Response = BaseRequest.Response<Data>;
+  }
+
+  export namespace Edit {
+    export interface Params {
+      id: string;
+      consumables: {
         categoryId: string;
         name: string;
         remark?: string;
@@ -54,24 +70,9 @@ export declare namespace API {
     export type Response = BaseRequest.Response<Data>;
   }
 
-  export namespace Edit {
-    export interface Params {
-      id: string;
-      assets: {
-        categoryId: string;
-        name: string;
-        remark?: string;
-        selfCode?: string;
-      };
-    }
-
-    export type Data = null;
-    export type Response = BaseRequest.Response<Data>;
-  }
-
   export namespace StockIn {
     export interface Params {
-      assetsId: string;
+      consumablesId: string;
       num: number;
     }
 
@@ -79,64 +80,24 @@ export declare namespace API {
     export type Response = BaseRequest.Response<Data>;
   }
 
-  export namespace ItemPage {
+  export namespace ApplyPage {
     export interface Params {
-      assetId: string;
-      keyword?: string;
+      consumablesId: string;
       current: number;
       size: number;
     }
 
     export interface RecordItem {
       id: string;
-      categoryId?: string;
-      categoryName?: string;
-      assetId?: string;
-      assetName?: string;
-      fullCode?: string;
-      status?: number;
-      remark?: string;
-      stockInTime?: string;
-      currentApplyId?: string;
-      lastApplyId?: string;
-    }
-
-    export interface Data {
-      size: number;
-      pages: number;
-      total: number;
-      records: RecordItem[];
-      current: number;
-    }
-
-    export type Response = BaseRequest.Response<Data>;
-  }
-
-  export namespace ItemApplyPage {
-    export interface Params {
-      itemId: string;
-      current: number;
-      size: number;
-    }
-
-    export interface RecordItem {
-      id: string;
-      categoryId?: string;
-      assetId?: string;
-      itemId?: string;
+      consumablesId?: string;
       applyTime?: string;
       applyReason?: string;
       applyUserId?: string;
       applyUserName?: string;
-      applyCheckedFlag?: boolean;
-      applyCheckedUserId?: string;
-      applyCheckedUserName?: string;
-      applyCheckedComment?: string;
-      disposeType?: number;
-      disposeCheckedFlag?: boolean;
-      disposeCheckedUserId?: string;
-      disposeCheckedUserName?: string;
-      disposeCheckedComment?: string;
+      checkedFlag?: boolean;
+      checkedUserId?: string;
+      checkedUserName?: string;
+      checkedComment?: string;
     }
 
     export interface Data {
@@ -160,15 +121,5 @@ export declare namespace API {
     export type Data = null;
     export type Response = BaseRequest.Response<Data>;
   }
-
-  export namespace DisposeCheck {
-    export interface Params {
-      applyId: string;
-      checkedFlag: boolean;
-      comment?: string;
-    }
-
-    export type Data = null;
-    export type Response = BaseRequest.Response<Data>;
-  }
 }
+
