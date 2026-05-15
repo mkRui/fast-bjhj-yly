@@ -77,4 +77,20 @@ export class Api extends Request {
   public async disposeAssetsItem(params: API.AssetsItemDispose.Params): Promise<API.AssetsItemDispose.Response> {
     return await this.post<API.AssetsItemDispose.Data>("/user/assets/assets/item/dispose", params);
   }
+
+  public async getCarList(): Promise<API.CarList.Response> {
+    return await this.get<API.CarList.Data>("/user/car/list");
+  }
+
+  public async getCarPurposeList(params: API.CarPurposeList.Params): Promise<API.CarPurposeList.Response> {
+    return await this.get<API.CarPurposeList.Data>("/user/car/purpose/list", params);
+  }
+
+  public async applyCar(params: API.CarApply.Params): Promise<API.CarApply.Response> {
+    return await this.post<API.CarApply.Data>("/user/car/apply", params);
+  }
+
+  public async getCarApplyPage(params: API.CarApplyPage.Params): Promise<API.CarApplyPage.Response> {
+    return await this.get<API.CarApplyPage.Data>("/user/car/apply/page", params);
+  }
 }

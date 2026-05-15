@@ -7,6 +7,7 @@ import { Tabs } from "antd";
 import WorkTab from "../components/work-tab";
 import LeaveTab from "../components/leave-tab";
 import AssetsTab from "../components/assets-tab";
+import CarTab from "../components/car-tab";
 
 const WelcomeMain: FC = () => {
   return (
@@ -21,6 +22,7 @@ const WelcomeMain: FC = () => {
               { key: "work", label: "工时", children: <WorkTab /> },
               { key: "leave", label: "请假", children: <LeaveTab /> },
               { key: "assets", label: "资产", children: <AssetsTab /> },
+              { key: "car", label: "用车", children: <CarTab /> },
             ]}
           />
         </Content.Main>
