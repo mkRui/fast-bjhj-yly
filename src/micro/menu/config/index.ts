@@ -160,6 +160,13 @@ const SmsMenuList: MenuType[] = [
     parentId: "9100000000000000",
   },
   {
+    name: "车辆管理",
+    href: SmsFullPath.CAR,
+    code: "sys",
+    id: "9100000000000005",
+    parentId: "9100000000000000",
+  },
+  {
     name: "易耗品管理",
     href: SmsFullPath.AMS_CONSUMABLES,
     code: "sys",
