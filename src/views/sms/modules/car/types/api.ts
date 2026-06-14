@@ -27,11 +27,9 @@ export declare namespace API {
   export namespace Edit {
     export interface Params {
       id: string;
-      car: {
-        name: string;
-        minPassengerNum: number;
-        maxPassengerNum: number;
-      };
+      name: string;
+      minPassengerNum: number;
+      maxPassengerNum: number;
     }
 
     export type Data = null;
@@ -77,11 +75,9 @@ export declare namespace API {
   export namespace PurposeEdit {
     export interface Params {
       id: string;
-      purpose: {
-        carId: string;
-        purpose: string;
-        price: number;
-      };
+      carId: string;
+      purpose: string;
+      price: number;
     }
 
     export type Data = null;

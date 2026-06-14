@@ -6,6 +6,7 @@ import AmsCategory from "../modules/ams-category";
 import AmsAssets from "../modules/ams-assets";
 import AmsConsumables from "../modules/ams-consumables";
 import Car from "../modules/car";
+import CarApply from "../modules/car-apply";
 
 const Routes: RouteTypes[] = [
   {
@@ -35,8 +36,14 @@ const Routes: RouteTypes[] = [
   {
     path: SmsPath.CAR,
     component: Car,
-    title: "车辆管理",
+    title: "车型管理",
     fullPath: SmsFullPath.CAR,
+  },
+  {
+    path: SmsPath.CAR_APPLY,
+    component: CarApply,
+    title: "用车审核",
+    fullPath: SmsFullPath.CAR_APPLY,
   },
 ];
 

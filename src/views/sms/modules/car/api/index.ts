@@ -33,12 +33,4 @@ export class Api extends Request {
   public async delPurpose(params: API.PurposeDel.Params): Promise<API.PurposeDel.Response> {
     return await this.post<API.PurposeDel.Data>("/crms/car/purpose/del", params);
   }
-
-  public async getApplyPage(params: API.ApplyPage.Params): Promise<API.ApplyPage.Response> {
-    return await this.get<API.ApplyPage.Data>("/crms/car/apply/page", params);
-  }
-
-  public async applyCheck(params: API.ApplyCheck.Params): Promise<API.ApplyCheck.Response> {
-    return await this.post<API.ApplyCheck.Data>("/crms/car/apply/check", params);
-  }
 }
