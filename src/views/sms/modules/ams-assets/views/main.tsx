@@ -8,7 +8,7 @@ import MorTable from "@/components/table";
 import Button from "@/components/button";
 import OverallSituationSearch from "@/components/overall-situation-search";
 import RunComponents from "@/components/run-component";
-import { toast } from "@/components/message";
+import { toastActionResult } from "@/utils/common/mutation-success";
 import AssetsCategorySelect from "@/micro/assets-category-select";
 
 import StoreContext from "../store";
@@ -35,8 +35,7 @@ const AmsAssetsMain: FC = () => {
             modal.setState({ loading: true });
             const ok = await store.addItem(params as API.Add.Params);
             modal.setState({ loading: false });
-            if (ok) {
-              toast("success", "保存成功");
+            if (toastActionResult(ok, "保存成功", "保存失败")) {
               modal.unmount();
             }
           }}
@@ -58,8 +57,7 @@ const AmsAssetsMain: FC = () => {
             modal.setState({ loading: true });
             const ok = await store.editItem(params as API.Edit.Params);
             modal.setState({ loading: false });
-            if (ok) {
-              toast("success", "保存成功");
+            if (toastActionResult(ok, "保存成功", "保存失败")) {
               modal.unmount();
             }
           }}
@@ -75,14 +73,13 @@ const AmsAssetsMain: FC = () => {
         <StockInModal
           {...state}
           title="固定资产入库"
-          init={{ assetsId: record.id }}
+          init={{ assetId: record.id }}
           onCancel={() => modal.unmount()}
           onOk={async (params) => {
             modal.setState({ loading: true });
             const ok = await store.stockIn(params);
             modal.setState({ loading: false });
-            if (ok) {
-              toast("success", "入库成功");
+            if (toastActionResult(ok, "入库成功", "入库失败")) {
               modal.unmount();
             }
           }}
@@ -91,13 +88,18 @@ const AmsAssetsMain: FC = () => {
     });
   };
 
-  const handleOpenItemLists = (record: API.Page.RecordItem): void => {
+  const handleOpenItemLists = (
+    record: API.Page.RecordItem,
+    tab: "items" | "applies" = "items"
+  ): void => {
+    const name = record.name || record.selfCode || record.id;
     const modal = new RunComponents({
       state: {},
       render: () => (
         <AssetsItemListsModal
-          title={`列表操作：${record.name || record.selfCode || record.id}`}
+          title={tab === "applies" ? `申请列表：${name}` : `实体列表：${name}`}
           assetId={record.id}
+          initialActiveKey={tab}
           onCancel={() => modal.unmount()}
         />
       ),
@@ -105,11 +107,6 @@ const AmsAssetsMain: FC = () => {
   };
 
   const columns = [
-    {
-      title: "资产分类",
-      width: 160,
-      render: (_: any, record: API.Page.RecordItem) => record.categoryName || record.categoryId || "-",
-    },
     { title: "固定资产名称", dataIndex: "name", width: 220 },
     { title: "固定资产代码", dataIndex: "selfCode", width: 180 },
     {
@@ -120,7 +117,7 @@ const AmsAssetsMain: FC = () => {
     { title: "备注", dataIndex: "remark" },
     {
       title: "操作",
-      width: 320,
+      width: 380,
       fixed: "right" as const,
       render: (_: any, record: API.Page.RecordItem) => (
         <Button.Group>
@@ -133,7 +130,7 @@ const AmsAssetsMain: FC = () => {
             action="del"
             onConfirm={async () => {
               const ok = await store.delItem(record.id);
-              if (ok) toast("success", "删除成功");
+              toastActionResult(ok, "删除成功", "删除失败");
             }}
           >
             删除
@@ -141,8 +138,11 @@ const AmsAssetsMain: FC = () => {
           <Button type="link" onClick={() => handleStockIn(record)}>
             入库
           </Button>
-          <Button type="link" onClick={() => handleOpenItemLists(record)}>
-            新增
+          <Button type="link" onClick={() => handleOpenItemLists(record, "items")}>
+            查看实体
+          </Button>
+          <Button type="link" onClick={() => handleOpenItemLists(record, "applies")}>
+            查看申请
           </Button>
         </Button.Group>
       ),

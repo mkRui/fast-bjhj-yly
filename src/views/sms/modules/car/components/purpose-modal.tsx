@@ -6,7 +6,7 @@ import type { ModalProps } from "antd/lib/modal";
 import axios from "@/api";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
-import { toast } from "@/components/message";
+import { toastRequestResult } from "@/utils/common/mutation-success";
 import { Api } from "../api";
 import { API } from "../types/api";
 
@@ -43,7 +43,9 @@ const PurposeFormModal: FC<PurposeFormModalProps> = (props) => {
       if (id) {
         await onOk({
           id,
-          purpose: { carId, purpose, price },
+          carId,
+          purpose,
+          price,
         } as API.PurposeEdit.Params);
       } else {
         await onOk({
@@ -143,8 +145,7 @@ const CarPurposeModal: FC<CarPurposeModalProps> = (props) => {
               const id = String(record.id || "");
               if (!id) return;
               const [err] = await api.delPurpose({ id });
-              if (!err) {
-                toast("success", "删除成功");
+              if (toastRequestResult(err, "删除成功", "删除失败")) {
                 await load();
               }
             }}
@@ -198,8 +199,7 @@ const CarPurposeModal: FC<CarPurposeModalProps> = (props) => {
                 ? await api.editPurpose(params as API.PurposeEdit.Params)
                 : await api.addPurpose(params as API.PurposeAdd.Params);
             setFormLoading(false);
-            if (err) return;
-            toast("success", "保存成功");
+            if (!toastRequestResult(err, "保存成功", "保存失败")) return;
             setFormOpen(false);
             await load();
           }}

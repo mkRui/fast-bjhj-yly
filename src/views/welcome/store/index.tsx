@@ -3,6 +3,7 @@ import { Store } from "mor-request";
 import { createContext } from "react";
 
 import axios from "@/api";
+import { resolveMutation } from "@/utils/common/mutation-success";
 import { Api } from "../api";
 import { API } from "../types/api";
 
@@ -145,15 +146,11 @@ export class WelcomeStore extends Store<Api> {
     await Promise.all([this.refreshWork(), this.fetchLeavePage()]);
   }
 
-  public async submitWork(params: API.SubmitWork.Params): Promise<boolean> {
+  public async submitWork(params: API.SubmitWork.Params) {
     this.$setLoading(true);
     const [err] = await this.api.submitWork(params);
     this.$setLoading(false);
-    if (!err) {
-      await this.refreshWork();
-      return true;
-    }
-    return false;
+    return resolveMutation(err, () => this.refreshWork());
   }
 
   public async fetchLeavePage(): Promise<void> {
@@ -171,15 +168,11 @@ export class WelcomeStore extends Store<Api> {
     }
   }
 
-  public async submitLeave(params: API.LeaveSubmit.Params): Promise<boolean> {
+  public async submitLeave(params: API.LeaveSubmit.Params) {
     this.$setLeaveLoading(true);
     const [err] = await this.api.submitLeave(params);
     this.$setLeaveLoading(false);
-    if (!err) {
-      await this.fetchLeavePage();
-      return true;
-    }
-    return false;
+    return resolveMutation(err, () => this.fetchLeavePage());
   }
 }
 

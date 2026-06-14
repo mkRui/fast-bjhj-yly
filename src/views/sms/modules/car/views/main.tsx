@@ -6,13 +6,12 @@ import RunComponents from "@/components/run-component";
 import HeaderTitle from "@/components/card-header";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
-import { toast } from "@/components/message";
+import { toastActionResult } from "@/utils/common/mutation-success";
 
 import StoreContext from "../store";
 import { API } from "../types/api";
 import CarFormModal from "../components/form-modal";
 import CarPurposeModal from "../components/purpose-modal";
-import CarApplyAuditModal from "../components/apply-audit-modal";
 
 const CarMain: FC = () => {
   const store = useContext(StoreContext);
@@ -23,14 +22,13 @@ const CarMain: FC = () => {
       render: (state) => (
         <CarFormModal
           {...state}
-          title="新增车辆"
+          title="新增车型"
           onCancel={() => modal.unmount()}
           onOk={async (params) => {
             modal.setState({ loading: true });
             const ok = await store.addItem(params as API.Add.Params);
             modal.setState({ loading: false });
-            if (ok) {
-              toast("success", "保存成功");
+            if (toastActionResult(ok, "保存成功", "保存失败")) {
               modal.unmount();
             }
           }}
@@ -45,15 +43,14 @@ const CarMain: FC = () => {
       render: (state) => (
         <CarFormModal
           {...state}
-          title="编辑车辆"
+          title="编辑车型"
           info={record}
           onCancel={() => modal.unmount()}
           onOk={async (params) => {
             modal.setState({ loading: true });
             const ok = await store.editItem(params as API.Edit.Params);
             modal.setState({ loading: false });
-            if (ok) {
-              toast("success", "保存成功");
+            if (toastActionResult(ok, "保存成功", "保存失败")) {
               modal.unmount();
             }
           }}
@@ -75,19 +72,6 @@ const CarMain: FC = () => {
     });
   };
 
-  const handleAudit = (record: API.List.Data): void => {
-    const modal = new RunComponents({
-      state: {},
-      render: () => (
-        <CarApplyAuditModal
-          carId={record.id}
-          carName={record.name}
-          onCancel={() => modal.unmount()}
-        />
-      ),
-    });
-  };
-
   const columns = [
     { title: "车型名称", dataIndex: "name" },
     { title: "最小乘车人数", dataIndex: "minPassengerNum", width: 140 },
@@ -95,15 +79,12 @@ const CarMain: FC = () => {
     {
       title: "操作",
       dataIndex: "",
-      width: 220,
+      width: 180,
       fixed: "right" as const,
       render: (_: any, record: API.List.Data) => (
         <Button.Group>
           <Button type="link" onClick={() => handlePurpose(record)}>
-            用途
-          </Button>
-          <Button type="link" onClick={() => handleAudit(record)}>
-            审核
+            管理用途
           </Button>
           <Button type="link" linkType="warning" onClick={() => handleEdit(record)}>
             编辑
@@ -114,7 +95,7 @@ const CarMain: FC = () => {
             action="del"
             onConfirm={async () => {
               const ok = await store.delItem(record.id);
-              if (ok) toast("success", "删除成功");
+              toastActionResult(ok, "删除成功", "删除失败");
             }}
           >
             删除
@@ -135,11 +116,11 @@ const CarMain: FC = () => {
           <HeaderTitle
             insert={
               <Button type="primary" onClick={handleAdd}>
-                新增车辆
+                新增车型
               </Button>
             }
           >
-            车辆管理
+            车型管理
           </HeaderTitle>
         </Content.Header>
         <Content.Main>

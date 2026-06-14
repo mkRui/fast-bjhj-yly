@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { Path } from "@/router/path";
 
 import SetPassword from "@/micro/set-password";
+import { toastActionResult } from "@/utils/common/mutation-success";
 
 const LayoutHeader: FC = () => {
   const { collapsed, setCollapsed } = useContext(AppContext);
@@ -41,7 +42,7 @@ const LayoutHeader: FC = () => {
       title: "确认退出登录吗?",
       onOk: async () => {
         const res = await root.logout();
-        if (res) {
+        if (toastActionResult(res, "退出成功", "退出失败")) {
           navigate(Path.LOGIN);
         }
       },
@@ -72,7 +73,7 @@ const LayoutHeader: FC = () => {
 
   const MenuList = (
     <Menu onClick={click}>
-      <Menu.Item key="personal-info">信息上报</Menu.Item>
+      <Menu.Item key="personal-info">教师信息</Menu.Item>
       <Menu.Item key="reset-password">修改密码</Menu.Item>
       <Menu.Item key="logout">退出登录</Menu.Item>
     </Menu>

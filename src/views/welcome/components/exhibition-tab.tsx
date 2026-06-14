@@ -6,7 +6,7 @@ import axios from "@/api";
 import Button from "@/components/button";
 import MorTable from "@/components/table";
 import RunComponents from "@/components/run-component";
-import { toast } from "@/components/message";
+import { toastRequestResult } from "@/utils/common/mutation-success";
 
 import { Api } from "../api";
 import { API } from "../types/api";
@@ -58,8 +58,7 @@ const ExhibitionTab: FC = () => {
             modal.setState({ loading: true });
             const [err] = await api.addExhibition(values);
             modal.setState({ loading: false });
-            if (!err) {
-              toast("success", "新增成功");
+            if (toastRequestResult(err, "新增成功", "新增失败")) {
               modal.unmount();
               await load({ current: 0 });
             }
@@ -86,11 +85,10 @@ const ExhibitionTab: FC = () => {
             modal.setState({ loading: true });
             const [err] = await api.editExhibition({
               id: record.id,
-              exhibition: values,
+              ...values,
             });
             modal.setState({ loading: false });
-            if (!err) {
-              toast("success", "修改成功");
+            if (toastRequestResult(err, "修改成功", "修改失败")) {
               modal.unmount();
               await load();
             }
@@ -138,7 +136,7 @@ const ExhibitionTab: FC = () => {
       render: (_: unknown, record: API.ExhibitionPage.RecordItem) => (
         <Button.Group>
           <Button type="link" onClick={() => openAttachmentModal(record)}>
-            附件
+            查看附件
           </Button>
           <Button type="link" linkType="warning" onClick={() => openEditModal(record)}>
             编辑
@@ -149,8 +147,7 @@ const ExhibitionTab: FC = () => {
             action="del"
             onConfirm={async () => {
               const [err] = await api.delExhibition({ id: record.id });
-              if (!err) {
-                toast("success", "删除成功");
+              if (toastRequestResult(err, "删除成功", "删除失败")) {
                 await load();
               }
             }}

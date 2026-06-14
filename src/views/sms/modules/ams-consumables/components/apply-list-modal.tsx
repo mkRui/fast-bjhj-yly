@@ -6,7 +6,7 @@ import type { ModalProps } from "antd/lib/modal";
 import axios from "@/api";
 import Button from "@/components/button";
 import MorTable from "@/components/table";
-import { toast } from "@/components/message";
+import { toastRequestResult } from "@/utils/common/mutation-success";
 import { Api } from "../api";
 import { API } from "../types/api";
 
@@ -65,8 +65,7 @@ const ConsumablesApplyListModal: FC<ConsumablesApplyListModalProps> = (props) =>
       setCheckLoading(true);
       const [err] = await api.applyCheck({ applyId, checkedFlag, comment });
       setCheckLoading(false);
-      if (err) return;
-      toast("success", "审核成功");
+      if (!toastRequestResult(err, "审核成功", "审核失败")) return;
       setCheckModal({ open: false, applyId: "" });
       await loadList();
     });

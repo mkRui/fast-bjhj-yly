@@ -8,7 +8,7 @@ import MorTable from "@/components/table";
 import Button from "@/components/button";
 import OverallSituationSearch from "@/components/overall-situation-search";
 import RunComponents from "@/components/run-component";
-import { toast } from "@/components/message";
+import { toastActionResult } from "@/utils/common/mutation-success";
 
 import StoreContext from "../store";
 import { API } from "../types/api";
@@ -31,8 +31,7 @@ const AmsCategoryMain: FC = () => {
             modal.setState({ loading: true });
             const ok = await store.addItem(params as API.Add.Params);
             modal.setState({ loading: false });
-            if (ok) {
-              toast("success", "保存成功");
+            if (toastActionResult(ok, "保存成功", "保存失败")) {
               modal.unmount();
             }
           }}
@@ -54,8 +53,7 @@ const AmsCategoryMain: FC = () => {
             modal.setState({ loading: true });
             const ok = await store.editItem(params as API.Edit.Params);
             modal.setState({ loading: false });
-            if (ok) {
-              toast("success", "保存成功");
+            if (toastActionResult(ok, "保存成功", "保存失败")) {
               modal.unmount();
             }
           }}
@@ -82,7 +80,7 @@ const AmsCategoryMain: FC = () => {
             action="del"
             onConfirm={async () => {
               const ok = await store.delItem(record.id);
-              if (ok) toast("success", "删除成功");
+              toastActionResult(ok, "删除成功", "删除失败");
             }}
           >
             删除

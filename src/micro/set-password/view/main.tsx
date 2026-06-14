@@ -4,6 +4,7 @@ import { ModalProps } from "antd/lib/modal";
 import { observer } from "mobx-react";
 
 import { toast } from "@/components/message";
+import { toastActionResult } from "@/utils/common/mutation-success";
 
 import Store from "../store";
 
@@ -33,8 +34,7 @@ const RoleResourceModal: FC<ModalContainer> = (props) => {
         newPassword,
         oldPassword,
       });
-      if (res) {
-        toast("success", "修改成功");
+      if (toastActionResult(res, "修改成功", "修改失败")) {
         onOk();
       }
     });

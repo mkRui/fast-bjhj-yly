@@ -10,6 +10,7 @@
 import { makeObservable, observable, action } from "mobx";
 import { Store } from "mor-request";
 import axios from "@/api";
+import { resolveMutation } from "@/utils/common/mutation-success";
 // 全局
 import { Api } from "@/api/api";
 import { API } from "@/api/type";
@@ -81,7 +82,7 @@ class RootStore extends Store<Api> {
   // 退出登录
   public async logout() {
     const [err] = await this.api.logout();
-    if (!err) return true;
+    return resolveMutation(err);
   }
 
   // 获取枚举

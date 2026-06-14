@@ -6,6 +6,7 @@ import RunComponents from "@/components/run-component";
 import HeaderTitle from "@/components/card-header";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
+import { toastActionResult } from "@/utils/common/mutation-success";
 
 import AccountStore from "../store";
 import { API } from "../types/api";
@@ -36,7 +37,7 @@ const ResourcesMain: FC = () => {
               linkType="primary"
               onClick={() => handleAdd(record)}
             >
-              新增
+              新增子资源
             </Button>
             <Button
               type="link"
@@ -49,7 +50,10 @@ const ResourcesMain: FC = () => {
               type="link"
               linkType="danger"
               action="del"
-              onConfirm={() => store.delItem({ id: record.id })}
+              onConfirm={async () => {
+                const ok = await store.delItem({ id: record.id });
+                toastActionResult(ok, "删除成功", "删除失败");
+              }}
             >
               删除
             </Button>
@@ -79,7 +83,7 @@ const ResourcesMain: FC = () => {
               parentId: item?.id,
             });
             modal.setState({ loading: false });
-            if (res) {
+            if (toastActionResult(res, "新增成功", "新增失败")) {
               modal.unmount();
             }
           }}
@@ -109,7 +113,7 @@ const ResourcesMain: FC = () => {
               resId: item.id,
             });
             modal.setState({ loading: false });
-            if (res) {
+            if (toastActionResult(res, "编辑成功", "编辑失败")) {
               modal.unmount();
             }
           }}

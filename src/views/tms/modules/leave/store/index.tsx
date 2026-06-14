@@ -3,6 +3,7 @@ import { Store } from "mor-request";
 import { createContext } from "react";
 
 import axios from "@/api";
+import { resolveMutation } from "@/utils/common/mutation-success";
 import { Api } from "../api";
 import { API } from "../types/api";
 
@@ -68,15 +69,11 @@ export class LeaveStore extends Store<Api> {
     if (!err) this.$setPage(data);
   }
 
-  public async checkLeave(params: API.Check.Params): Promise<boolean> {
+  public async checkLeave(params: API.Check.Params) {
     this.$setLoading(true);
     const [err] = await this.api.check(params);
     this.$setLoading(false);
-    if (!err) {
-      await this.fetchPage();
-      return true;
-    }
-    return false;
+    return resolveMutation(err, () => this.fetchPage());
   }
 }
 

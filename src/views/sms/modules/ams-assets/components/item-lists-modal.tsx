@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { observer } from "mobx-react";
 import { Form, Input, Modal, Pagination, Radio, Tabs } from "antd";
 import type { ModalProps } from "antd/lib/modal";
@@ -6,7 +6,7 @@ import type { ModalProps } from "antd/lib/modal";
 import axios from "@/api";
 import Button from "@/components/button";
 import MorTable from "@/components/table";
-import { toast } from "@/components/message";
+import { toastRequestResult } from "@/utils/common/mutation-success";
 import { Api } from "../api";
 import { API } from "../types/api";
 
@@ -17,6 +17,7 @@ type CheckType = "apply" | "dispose";
 export interface AssetsItemListsModalProps {
   title: string;
   assetId: string;
+  initialActiveKey?: "items" | "applies";
   loading?: boolean;
   onCancel: ModalProps["onCancel"];
 }
@@ -28,11 +29,12 @@ interface CheckModalState {
 }
 
 const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
-  const { title, assetId, onCancel } = props;
+  const { title, assetId, initialActiveKey = "items", onCancel } = props;
 
   const api = useMemo(() => new Api(axios), []);
+  const shouldAutoOpenApplies = useRef(initialActiveKey === "applies");
 
-  const [activeKey, setActiveKey] = useState<"items" | "applies">("items");
+  const [activeKey, setActiveKey] = useState<"items" | "applies">(initialActiveKey);
 
   const [itemParams, setItemParams] = useState<API.ItemPage.Params>({
     assetId,
@@ -80,6 +82,14 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
     if (err) return;
     setItemParams(params);
     setItemData(data);
+
+    if (shouldAutoOpenApplies.current && data.records?.length) {
+      shouldAutoOpenApplies.current = false;
+      const firstId = String(data.records[0].id);
+      setSelectedItemId(firstId);
+      setActiveKey("applies");
+      await loadApplyList({ itemId: firstId, current: 1 });
+    }
   };
 
   const loadApplyList = async (next?: Partial<API.ItemApplyPage.Params>) => {
@@ -124,8 +134,7 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
           ? await api.disposeCheck({ applyId, checkedFlag, comment })
           : await api.applyCheck({ applyId, checkedFlag, comment });
       setCheckLoading(false);
-      if (err) return;
-      toast("success", "操作成功");
+      if (!toastRequestResult(err, "操作成功", "操作失败")) return;
       setCheckModal((s) => ({ ...s, open: false }));
       await loadApplyList();
     });
@@ -153,7 +162,7 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
       render: (_: any, record: API.ItemPage.RecordItem) => (
         <Button.Group>
           <Button type="link" onClick={() => openApplyTabByItem(record.id)}>
-            申请列表
+            查看申请
           </Button>
         </Button.Group>
       ),

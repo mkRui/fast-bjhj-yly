@@ -5,7 +5,7 @@ import { Pagination, Space, Spin, Tag } from "antd";
 import Button from "@/components/button";
 import MorTable from "@/components/table";
 import RunComponents from "@/components/run-component";
-import { toast } from "@/components/message";
+import { toastActionResult } from "@/utils/common/mutation-success";
 import LeavePeriodSelect from "@/micro/leave-period-list";
 
 import StoreContext from "../store";
@@ -41,8 +41,7 @@ const LeaveTab: FC = () => {
             modal.setState({ loading: true });
             const ok = await store.submitLeave(params);
             modal.setState({ loading: false });
-            if (ok) {
-              toast("success", "提交成功");
+            if (toastActionResult(ok, "提交成功", "提交失败")) {
               modal.unmount();
             }
           }}
@@ -80,10 +79,7 @@ const LeaveTab: FC = () => {
     <Spin spinning={store.leaveLoading}>
       <div className="theme-panel p-6 mb-4">
         <div className="flex items-center justify-between gap-4">
-          <div>
-            <div className="text-xl font-semibold mb-1">请假</div>
-            <div className="text-gray-600">请选择周期后查看记录</div>
-          </div>
+          <div className="text-gray-600">请选择周期后查看记录</div>
           <Space>
             <Button type="primary" action="add" onClick={openLeaveModal}>
               提交请假

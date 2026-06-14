@@ -4,7 +4,7 @@ import { InputNumber, Pagination, Space, Spin } from "antd";
 
 import Button from "@/components/button";
 import MorTable from "@/components/table";
-import { toast } from "@/components/message";
+import { toastActionResult } from "@/utils/common/mutation-success";
 import RootContext from "@/stores/root-context";
 import { DictCode } from "@/constants/dict-code";
 import { getDictLabel } from "@/utils/common/dict";
@@ -67,8 +67,7 @@ const WorkTab: FC = () => {
             modal.setState({ loading: true });
             const ok = await store.submitWork(params);
             modal.setState({ loading: false });
-            if (ok) {
-              toast("success", "上报成功");
+            if (toastActionResult(ok, "上报成功", "上报失败")) {
               modal.unmount();
             }
           }}
@@ -93,12 +92,9 @@ const WorkTab: FC = () => {
     <Spin spinning={store.loading}>
       <div className="theme-panel p-6 mb-4">
         <div className="flex items-center justify-between gap-4">
-          <div>
-            <div className="text-xl font-semibold mb-1">工时上报</div>
-            <div className="text-gray-600">
-              当前周期：{store.period?.name || "-"}
-              {store.period?.currentFlag ? "（当前）" : ""}
-            </div>
+          <div className="text-gray-600">
+            当前周期：{store.period?.name || "-"}
+            {store.period?.currentFlag ? "（当前）" : ""}
           </div>
           <Space>
             <Button type="primary" action="add" onClick={openReportModal}>

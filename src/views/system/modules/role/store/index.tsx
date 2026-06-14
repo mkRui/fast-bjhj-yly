@@ -1,6 +1,7 @@
 import { makeObservable, observable, action } from "mobx";
 import { createContext } from "react";
 import axios from "@/api";
+import { resolveMutation } from "@/utils/common/mutation-success";
 import { Store } from "mor-request";
 
 import { Api } from "../api";
@@ -42,36 +43,19 @@ export class RoleStore extends Store<Api> {
   }
 
   // 删除
-  public async delItem(
-    params?: API.DelRole.Params
-  ): Promise<boolean | undefined> {
+  public async delItem(params?: API.DelRole.Params) {
     const [err] = await this.api.delRole(params);
-    if (!err) {
-      this.getList();
-      return true;
-    }
+    return resolveMutation(err, () => this.getList());
   }
 
-  // 删除
-  public async setItem(
-    params?: API.SetRole.Params
-  ): Promise<boolean | undefined> {
+  public async setItem(params?: API.SetRole.Params) {
     const [err] = await this.api.setRole(params);
-    if (!err) {
-      this.getList();
-      return true;
-    }
+    return resolveMutation(err, () => this.getList());
   }
 
-  // 删除
-  public async addItem(
-    params?: API.AddRole.Params
-  ): Promise<boolean | undefined> {
+  public async addItem(params?: API.AddRole.Params) {
     const [err] = await this.api.addRole(params);
-    if (!err) {
-      this.getList();
-      return true;
-    }
+    return resolveMutation(err, () => this.getList());
   }
 }
 

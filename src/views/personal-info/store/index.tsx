@@ -3,6 +3,7 @@ import { Store } from "mor-request";
 import { createContext } from "react";
 
 import axios from "@/api";
+import { resolveMutation } from "@/utils/common/mutation-success";
 import { Api } from "../api";
 import { API } from "../types/api";
 
@@ -39,15 +40,11 @@ export class PersonalInfoStore extends Store<Api> {
     return null;
   }
 
-  public async editInfo(params: API.EditTeacherInfo.Params): Promise<boolean> {
+  public async editInfo(params: API.EditTeacherInfo.Params) {
     this.$setLoading(true);
     const [err] = await this.api.editTeacherInfo(params);
     this.$setLoading(false);
-    if (!err) {
-      await this.getInfo();
-      return true;
-    }
-    return false;
+    return resolveMutation(err, () => this.getInfo());
   }
 }
 

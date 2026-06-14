@@ -7,7 +7,7 @@ import HeaderTitle from "@/components/card-header";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
-import { toast } from "@/components/message";
+import { toastActionResult } from "@/utils/common/mutation-success";
 
 import StoreContext from "../store";
 import { API } from "../types/api";
@@ -61,8 +61,7 @@ const LeaveMain: FC = () => {
             modal.setState({ loading: true });
             const ok = await store.checkLeave(params);
             modal.setState({ loading: false });
-            if (ok) {
-              toast("success", "审核成功");
+            if (toastActionResult(ok, "审核成功", "审核失败")) {
               modal.unmount();
             }
           }}

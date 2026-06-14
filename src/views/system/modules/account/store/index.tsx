@@ -1,6 +1,7 @@
 import { makeObservable, observable, action } from "mobx";
 import { createContext } from "react";
 import axios from "@/api";
+import { resolveMutation } from "@/utils/common/mutation-success";
 import { Store } from "mor-request";
 
 import { Api } from "../api";
@@ -60,45 +61,24 @@ export class AccountStore extends Store<Api> {
   }
 
   // 删除
-  public async delItem(id: string): Promise<API.DelAccount.Data | undefined> {
-    const [err, data] = await this.api.delAccount({ id });
-    if (!err) {
-      this.getList();
-      return data;
-    }
+  public async delItem(id: string) {
+    const [err] = await this.api.delAccount({ id });
+    return resolveMutation(err, () => this.getList());
   }
 
-  // 新增
-  public async addItem(
-    params: API.AddAccount.Params
-  ): Promise<API.AddAccount.Data | undefined> {
-    const [err, data] = await this.api.addAccount(params);
-    if (!err) {
-      this.getList();
-      return data;
-    }
+  public async addItem(params: API.AddAccount.Params) {
+    const [err] = await this.api.addAccount(params);
+    return resolveMutation(err, () => this.getList());
   }
 
-  // 编辑
-  public async setItem(
-    params: API.EditAccount.Params
-  ): Promise<API.EditAccount.Data | undefined> {
-    const [err, data] = await this.api.editAccount(params);
-    if (!err) {
-      this.getList();
-      return data;
-    }
+  public async setItem(params: API.EditAccount.Params) {
+    const [err] = await this.api.editAccount(params);
+    return resolveMutation(err, () => this.getList());
   }
 
-  // 重置密码
-  public async resetPassword(
-    params: API.setAccountPassword.Params
-  ): Promise<API.setAccountPassword.Data | undefined> {
-    const [err, data] = await this.api.setAccountPassword(params);
-    if (!err) {
-      this.getList();
-      return data;
-    }
+  public async resetPassword(params: API.setAccountPassword.Params) {
+    const [err] = await this.api.setAccountPassword(params);
+    return resolveMutation(err, () => this.getList());
   }
 }
 

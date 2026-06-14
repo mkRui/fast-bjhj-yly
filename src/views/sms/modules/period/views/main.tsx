@@ -8,6 +8,7 @@ import MorTable from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
 import { toast } from "@/components/message";
+import { toastActionResult } from "@/utils/common/mutation-success";
 
 import StoreContext from "../store";
 import AddModal from "../components/add-modal";
@@ -29,7 +30,7 @@ const PeriodMain: FC = () => {
             modal.setState({ loading: true });
             const ok = await store.addItem(params);
             modal.setState({ loading: false });
-            if (ok) modal.unmount();
+            if (toastActionResult(ok, "新增成功", "新增失败")) modal.unmount();
           }}
         />
       ),
@@ -73,7 +74,7 @@ const PeriodMain: FC = () => {
             modal.setState({ loading: true });
             const ok = await store.settingEdit(params);
             modal.setState({ loading: false });
-            if (ok) modal.unmount();
+            if (toastActionResult(ok, "保存成功", "保存失败")) modal.unmount();
           }}
         />
       ),
@@ -106,7 +107,10 @@ const PeriodMain: FC = () => {
             type="link"
             linkType="danger"
             action="del"
-            onConfirm={() => store.delItem(record.id)}
+            onConfirm={async () => {
+              const ok = await store.delItem(record.id);
+              toastActionResult(ok, "删除成功", "删除失败");
+            }}
           >
             删除
           </Button>

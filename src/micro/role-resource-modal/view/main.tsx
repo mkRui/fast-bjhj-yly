@@ -6,7 +6,7 @@ import { observer } from "mobx-react";
 import { Tree as TreeFn } from "@/utils/data-structure/tree";
 
 import Store from "../store";
-import { toast } from "@/components/message";
+import { toastActionResult } from "@/utils/common/mutation-success";
 
 export interface ModalContainer extends JSX.IntrinsicAttributes {
   onCancel: ModalProps["onCancel"];
@@ -41,9 +41,7 @@ const RoleResourceModal: FC<ModalContainer> = (props) => {
       resId,
       act: checked ? "ASSOCIATION" : "DISASSOCIATION",
     });
-    if (res) {
-      toast("success", "操作成功");
-    }
+    toastActionResult(res, "操作成功", "操作失败");
   };
 
   const onCheck = (checkedKeys: any, info: any): void => {

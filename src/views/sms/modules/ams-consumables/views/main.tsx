@@ -8,7 +8,7 @@ import MorTable from "@/components/table";
 import Button from "@/components/button";
 import OverallSituationSearch from "@/components/overall-situation-search";
 import RunComponents from "@/components/run-component";
-import { toast } from "@/components/message";
+import { toastActionResult } from "@/utils/common/mutation-success";
 import AssetsCategorySelect from "@/micro/assets-category-select";
 
 import StoreContext from "../store";
@@ -35,8 +35,7 @@ const AmsConsumablesMain: FC = () => {
             modal.setState({ loading: true });
             const ok = await store.addItem(params as API.Add.Params);
             modal.setState({ loading: false });
-            if (ok) {
-              toast("success", "保存成功");
+            if (toastActionResult(ok, "保存成功", "保存失败")) {
               modal.unmount();
             }
           }}
@@ -58,8 +57,7 @@ const AmsConsumablesMain: FC = () => {
             modal.setState({ loading: true });
             const ok = await store.editItem(params as API.Edit.Params);
             modal.setState({ loading: false });
-            if (ok) {
-              toast("success", "保存成功");
+            if (toastActionResult(ok, "保存成功", "保存失败")) {
               modal.unmount();
             }
           }}
@@ -81,8 +79,7 @@ const AmsConsumablesMain: FC = () => {
             modal.setState({ loading: true });
             const ok = await store.stockIn(params);
             modal.setState({ loading: false });
-            if (ok) {
-              toast("success", "入库成功");
+            if (toastActionResult(ok, "入库成功", "入库失败")) {
               modal.unmount();
             }
           }}
@@ -96,7 +93,7 @@ const AmsConsumablesMain: FC = () => {
       state: {},
       render: () => (
         <ConsumablesApplyListModal
-          title={`易耗品申请：${record.name || record.selfCode || record.id}`}
+          title={`查看申请：${record.name || record.selfCode || record.id}`}
           consumablesId={record.id}
           onCancel={() => modal.unmount()}
         />
@@ -105,7 +102,6 @@ const AmsConsumablesMain: FC = () => {
   };
 
   const columns = [
-    { title: "资产分类", dataIndex: "categoryId", width: 160 },
     { title: "易耗品名称", dataIndex: "name", width: 220 },
     { title: "易耗品代码", dataIndex: "selfCode", width: 180 },
     { title: "完整代码", dataIndex: "fullCode", width: 200 },
@@ -127,7 +123,7 @@ const AmsConsumablesMain: FC = () => {
             action="del"
             onConfirm={async () => {
               const ok = await store.delItem(record.id);
-              if (ok) toast("success", "删除成功");
+              toastActionResult(ok, "删除成功", "删除失败");
             }}
           >
             删除
@@ -136,7 +132,7 @@ const AmsConsumablesMain: FC = () => {
             入库
           </Button>
           <Button type="link" onClick={() => handleApplyList(record)}>
-            申请列表
+            查看申请
           </Button>
         </Button.Group>
       ),

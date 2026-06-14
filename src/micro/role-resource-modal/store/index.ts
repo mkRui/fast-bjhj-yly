@@ -5,6 +5,8 @@ import { action, makeObservable, observable } from "mobx";
 import { Store } from "mor-request";
 import { createContext } from "react";
 
+import { resolveMutation } from "@/utils/common/mutation-success";
+
 import Api from "../api";
 import { API } from "../types";
 export class RoleStore extends Store<Api> {
@@ -53,20 +55,16 @@ export class RoleStore extends Store<Api> {
   }
 
   public async getData(): Promise<void> {
-    const [,data] = await this.api.getRoleList(this.params);
-    if (data) {
+    const [err, data] = await this.api.getRoleList(this.params);
+    if (!err && data) {
       this.$resetData();
       this.$setData(data);
     }
   }
 
-  public async setData(
-    params: API.SetRoleResource.Params
-  ): Promise<API.SetRoleResource.Response | undefined> {
-    const [,data] = await this.api.setRoleRes(params);
-    if (data) {
-      return data;
-    }
+  public async setData(params: API.SetRoleResource.Params) {
+    const [err] = await this.api.setRoleRes(params);
+    return resolveMutation(err);
   }
 }
 

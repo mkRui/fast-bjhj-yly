@@ -3,6 +3,7 @@ import { Store } from "mor-request";
 import { createContext } from "react";
 
 import axios from "@/api";
+import { resolveMutation } from "@/utils/common/mutation-success";
 import { Api } from "../api";
 import { API } from "../types/api";
 
@@ -63,22 +64,14 @@ export class SalaryCalcStore extends Store<Api> {
     return data || [];
   }
 
-  public async addSubject(params: API.SubjectAdd.Params): Promise<boolean> {
+  public async addSubject(params: API.SubjectAdd.Params) {
     const [err] = await this.api.addSubject(params);
-    if (!err) {
-      await this.fetchPage();
-      return true;
-    }
-    return false;
+    return resolveMutation(err, () => this.fetchPage());
   }
 
-  public async delSubject(id: number): Promise<boolean> {
+  public async delSubject(id: number) {
     const [err] = await this.api.delSubject({ id });
-    if (!err) {
-      await this.fetchPage();
-      return true;
-    }
-    return false;
+    return resolveMutation(err, () => this.fetchPage());
   }
 }
 

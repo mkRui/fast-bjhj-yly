@@ -5,6 +5,8 @@ import { makeObservable } from "mobx";
 import { Store } from "mor-request";
 import { createContext } from "react";
 
+import { resolveMutation } from "@/utils/common/mutation-success";
+
 import Api from "../api";
 import { API } from "../types";
 
@@ -14,13 +16,9 @@ export class ChangPasswordStore extends Store<Api> {
     makeObservable(this, {});
   }
 
-  public async changePassword(
-    params: API.ChangePassword.Params
-  ): Promise<boolean | undefined> {
+  public async changePassword(params: API.ChangePassword.Params) {
     const [err] = await this.api.changePassword(params);
-    if (!err) {
-      return true;
-    }
+    return resolveMutation(err);
   }
 }
 

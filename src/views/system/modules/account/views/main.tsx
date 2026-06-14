@@ -8,7 +8,7 @@ import HeaderTitle from "@/components/card-header";
 import MorTable from "@/components/table";
 import { fullDateFormat } from "@/utils/common/time-format";
 import Button from "@/components/button";
-import { toast } from "@/components/message";
+import { toastActionResult } from "@/utils/common/mutation-success";
 
 import AccountStore from "../store/index";
 import { API } from "../types/api";
@@ -62,7 +62,10 @@ const AccountMain: FC = () => {
               type="link"
               linkType="danger"
               action="del"
-              onConfirm={() => store.delItem(record.id)}
+              onConfirm={async () => {
+                const ok = await store.delItem(record.id);
+                toastActionResult(ok, "删除成功", "删除失败");
+              }}
             >
               删除
             </Button>
@@ -85,8 +88,7 @@ const AccountMain: FC = () => {
             const res = await store.addItem({
               ...params,
             });
-            if (res) {
-              toast("success", "新增成功");
+            if (toastActionResult(res, "新增成功", "新增失败")) {
               modal.unmount();
             }
           }}
@@ -109,10 +111,9 @@ const AccountMain: FC = () => {
           onOk={async (params: API.AddAccount.Params): Promise<void> => {
             const res = await store.setItem({
               id: item.id,
-              user: params,
+              ...params,
             });
-            if (res) {
-              toast("success", "编辑成功");
+            if (toastActionResult(res, "编辑成功", "编辑失败")) {
               modal.unmount();
             }
           }}
@@ -123,9 +124,7 @@ const AccountMain: FC = () => {
 
   const handleResetAccountPassword = async (id: string): Promise<void> => {
     const res = await store.resetPassword({ id });
-    if (res) {
-      toast("success", "重置密码成功");
-    }
+    toastActionResult(res, "重置密码成功", "重置密码失败");
   };
 
   const handleChange = (page: number): void => {

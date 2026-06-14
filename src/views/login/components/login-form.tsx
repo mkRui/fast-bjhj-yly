@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import RootContext from "@/stores/root-context";
 import Button from "@/components/button";
 import morStorage from "@/utils/common/local-storage";
-import { toast } from "@/components/message";
+import { toastActionResult } from "@/utils/common/mutation-success";
 
 import context from "../store";
 import { API } from "../types/api";
@@ -39,11 +39,10 @@ const LoginForm: FC<LoginFormTypes> = () => {
   const handleSubmit = async (form: API.Login.Params): Promise<void> => {
     loginStore.$setParams(form);
     const res = await loginStore.login();
-    if (res) {
+    if (toastActionResult(res, "登录成功", "登录失败")) {
       morStorage.setItem("token", res);
       await store.getInit();
       navigate(BasePath.WELCOME);
-      toast("success", "登录成功");
     }
   };
 

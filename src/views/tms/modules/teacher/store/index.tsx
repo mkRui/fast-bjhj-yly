@@ -3,6 +3,7 @@ import { Store } from "mor-request";
 import { createContext } from "react";
 
 import axios from "@/api";
+import { resolveMutation } from "@/utils/common/mutation-success";
 import { Api } from "../api";
 import { API } from "../types/api";
 
@@ -68,26 +69,18 @@ export class TeacherStore extends Store<Api> {
     return null;
   }
 
-  public async edit(params: API.Edit.Params): Promise<boolean> {
+  public async edit(params: API.Edit.Params) {
     this.$setLoading(true);
     const [err] = await this.api.edit(params);
     this.$setLoading(false);
-    if (!err) {
-      await this.getList();
-      return true;
-    }
-    return false;
+    return resolveMutation(err, () => this.getList());
   }
 
-  public async del(id: number): Promise<boolean> {
+  public async del(id: number) {
     this.$setLoading(true);
     const [err] = await this.api.del({ id });
     this.$setLoading(false);
-    if (!err) {
-      await this.getList();
-      return true;
-    }
-    return false;
+    return resolveMutation(err, () => this.getList());
   }
 }
 

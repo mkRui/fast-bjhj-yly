@@ -5,7 +5,7 @@ import type { ModalProps } from "antd/lib/modal";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
-import { toast } from "@/components/message";
+import { toastActionResult, type MutationResult } from "@/utils/common/mutation-success";
 
 import { API } from "../types/api";
 import SubjectAddModal from "./subject-add-modal";
@@ -15,8 +15,8 @@ interface SubjectModalProps {
   year: number;
   month: number;
   fetchSubjects: (params: API.SubjectList.Params) => Promise<API.SubjectList.Data[]>;
-  addSubject: (params: API.SubjectAdd.Params) => Promise<boolean>;
-  delSubject: (id: number) => Promise<boolean>;
+  addSubject: (params: API.SubjectAdd.Params) => Promise<MutationResult>;
+  delSubject: (id: number) => Promise<MutationResult>;
   onCancel: ModalProps["onCancel"];
 }
 
@@ -54,8 +54,7 @@ const SubjectModal: FC<SubjectModalProps> = (props) => {
             modal.setState({ loading: true });
             const ok = await addSubject(params);
             modal.setState({ loading: false });
-            if (ok) {
-              toast("success", "新增成功");
+            if (toastActionResult(ok, "新增成功", "新增失败")) {
               modal.unmount();
               await load();
             }
@@ -78,8 +77,7 @@ const SubjectModal: FC<SubjectModalProps> = (props) => {
           action="del"
           onConfirm={async () => {
             const ok = await delSubject(item.id);
-            if (ok) {
-              toast("success", "删除成功");
+            if (toastActionResult(ok, "删除成功", "删除失败")) {
               await load();
             }
           }}

@@ -3,6 +3,7 @@ import { Store } from "mor-request";
 import { createContext } from "react";
 
 import axios from "@/api";
+import { resolveMutation } from "@/utils/common/mutation-success";
 import { Api } from "../api";
 import { API } from "../types/api";
 
@@ -35,37 +36,25 @@ export class CarStore extends Store<Api> {
     if (!err) this.$setList(data);
   }
 
-  public async addItem(params: API.Add.Params): Promise<boolean> {
+  public async addItem(params: API.Add.Params) {
     this.$setLoading(true);
     const [err] = await this.api.add(params);
     this.$setLoading(false);
-    if (!err) {
-      await this.getList();
-      return true;
-    }
-    return false;
+    return resolveMutation(err, () => this.getList());
   }
 
-  public async editItem(params: API.Edit.Params): Promise<boolean> {
+  public async editItem(params: API.Edit.Params) {
     this.$setLoading(true);
     const [err] = await this.api.edit(params);
     this.$setLoading(false);
-    if (!err) {
-      await this.getList();
-      return true;
-    }
-    return false;
+    return resolveMutation(err, () => this.getList());
   }
 
-  public async delItem(id: string): Promise<boolean> {
+  public async delItem(id: string) {
     this.$setLoading(true);
     const [err] = await this.api.del({ id });
     this.$setLoading(false);
-    if (!err) {
-      await this.getList();
-      return true;
-    }
-    return false;
+    return resolveMutation(err, () => this.getList());
   }
 }
 

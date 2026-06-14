@@ -7,7 +7,7 @@ import HeaderTitle from "@/components/card-header";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
-import { toast } from "@/components/message";
+import { toastActionResult } from "@/utils/common/mutation-success";
 
 import StoreContext from "../store";
 import { API } from "../types/api";
@@ -51,8 +51,7 @@ const SalaryBaseMain: FC = () => {
             modal.setState({ loading: true });
             const ok = await store.editItem(params);
             modal.setState({ loading: false });
-            if (ok) {
-              toast("success", "保存成功");
+            if (toastActionResult(ok, "保存成功", "保存失败")) {
               modal.unmount();
             }
           }}

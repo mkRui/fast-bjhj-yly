@@ -5,7 +5,7 @@ import type { ModalProps } from "antd/lib/modal";
 import Button from "@/components/button";
 import MorTable from "@/components/table";
 import Upload from "@/components/upload";
-import { toast } from "@/components/message";
+import { toastActionResult } from "@/utils/common/mutation-success";
 import { API } from "../types/api";
 
 interface ExhibitionAttachmentModalProps {
@@ -49,8 +49,7 @@ const ExhibitionAttachmentModal: FC<ExhibitionAttachmentModalProps> = (props) =>
     setUploading(true);
     const ok = await addAttachment({ exhibitionId, dist });
     setUploading(false);
-    if (ok) {
-      toast("success", "附件上传成功");
+    if (toastActionResult(ok, "附件上传成功", "附件上传失败")) {
       await load();
     }
   };
@@ -69,8 +68,7 @@ const ExhibitionAttachmentModal: FC<ExhibitionAttachmentModalProps> = (props) =>
           action="del"
           onConfirm={async () => {
             const ok = await delAttachment(record.id);
-            if (ok) {
-              toast("success", "删除成功");
+            if (toastActionResult(ok, "删除成功", "删除失败")) {
               await load();
             }
           }}

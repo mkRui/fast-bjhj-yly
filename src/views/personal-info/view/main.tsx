@@ -4,7 +4,7 @@ import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
 import { Divider, Form, Input, InputNumber, Space, Spin, Switch } from "antd";
 import Button from "@/components/button";
-import { toast } from "@/components/message";
+import { toastActionResult } from "@/utils/common/mutation-success";
 import Upload from "@/components/upload";
 import SelectEnum from "@/micro/select-enum";
 import { DictCode } from "@/constants/dict-code";
@@ -219,9 +219,7 @@ const PersonalInfoMain: FC = () => {
     if (!store.data) return;
     const payload = buildEditBody(store.data, values);
     const ok = await store.editInfo(payload);
-    if (ok) {
-      toast("success", "保存成功");
-    }
+    toastActionResult(ok, "保存成功", "保存失败");
   };
 
   return (

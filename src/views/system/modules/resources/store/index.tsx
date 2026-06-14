@@ -1,6 +1,7 @@
 import { makeObservable, observable, action } from "mobx";
 import { createContext } from "react";
 import axios from "@/api";
+import { resolveMutation } from "@/utils/common/mutation-success";
 import { Store } from "mor-request";
 
 import { Api } from "../api";
@@ -42,36 +43,19 @@ export class ResourcesStore extends Store<Api> {
   }
 
   // 删除
-  public async delItem(
-    params?: API.DelRes.Params
-  ): Promise<boolean | undefined> {
+  public async delItem(params?: API.DelRes.Params) {
     const [err] = await this.api.delRes(params);
-    if (!err) {
-      this.getList();
-      return true;
-    }
+    return resolveMutation(err, () => this.getList());
   }
 
-  // 删除
-  public async setItem(
-    params?: API.SetRes.Params
-  ): Promise<boolean | undefined> {
+  public async setItem(params?: API.SetRes.Params) {
     const [err] = await this.api.setRes(params);
-    if (!err) {
-      this.getList();
-      return true;
-    }
+    return resolveMutation(err, () => this.getList());
   }
 
-  // 删除
-  public async addItem(
-    params?: API.AddRes.Params
-  ): Promise<boolean | undefined> {
+  public async addItem(params?: API.AddRes.Params) {
     const [err] = await this.api.addRes(params);
-    if (!err) {
-      this.getList();
-      return true;
-    }
+    return resolveMutation(err, () => this.getList());
   }
 }
 

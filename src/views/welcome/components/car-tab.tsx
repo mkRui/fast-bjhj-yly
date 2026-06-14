@@ -8,7 +8,7 @@ import Button from "@/components/button";
 import DatePicker from "@/components/date-picker";
 import MorTable from "@/components/table";
 import RunComponents from "@/components/run-component";
-import { toast } from "@/components/message";
+import { toastRequestResult } from "@/utils/common/mutation-success";
 
 import { Api } from "../api";
 import { API } from "../types/api";
@@ -179,8 +179,7 @@ const CarTab: FC = () => {
             modal.setState({ loading: true });
             const [err] = await api.applyCar(p);
             modal.setState({ loading: false });
-            if (!err) {
-              toast("success", "申请成功");
+            if (toastRequestResult(err, "申请成功", "申请失败")) {
               modal.unmount();
               await load({ current: 1, carId: filterCarId || undefined });
             }
@@ -218,9 +217,8 @@ const CarTab: FC = () => {
     <Spin spinning={loading}>
       <div className="theme-panel p-6 mb-4">
         <div className="flex items-center justify-between gap-4">
-          <div>
-            <div className="text-xl font-semibold mb-1">用车申请</div>
-            <div className="text-gray-600">选择车型筛选申请记录，点击按钮提交申请</div>
+          <div className="text-gray-600">
+            选择车型筛选申请记录，点击按钮提交申请
           </div>
           <Space>
             <Button type="primary" action="add" onClick={openApplyModal}>

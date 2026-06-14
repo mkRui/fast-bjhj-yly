@@ -8,6 +8,7 @@ import MorTable from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
 import { toast } from "@/components/message";
+import { toastActionResult } from "@/utils/common/mutation-success";
 
 import StoreContext from "../store";
 import { API } from "../types/api";
@@ -58,8 +59,7 @@ const SalaryCalcMain: FC = () => {
             modal.setState({ loading: true });
             const ok = await store.addSubject(params);
             modal.setState({ loading: false });
-            if (ok) {
-              toast("success", "新增成功");
+            if (toastActionResult(ok, "新增成功", "新增失败")) {
               modal.unmount();
             }
           }}
@@ -148,7 +148,7 @@ const SalaryCalcMain: FC = () => {
               </Button>
             </Space>
             <Button type="primary" action="add" onClick={openAddModal}>
-              新增
+              新增工资明细
             </Button>
           </div>
         </Content.Header>

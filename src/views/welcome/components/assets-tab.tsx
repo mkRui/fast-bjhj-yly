@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { observer } from "mobx-react";
 import { Form, Input, InputNumber, Modal, Pagination, Select, Space, Spin, Tabs } from "antd";
 import type { ModalProps } from "antd/lib/modal";
@@ -7,7 +7,7 @@ import axios from "@/api";
 import Button from "@/components/button";
 import MorTable from "@/components/table";
 import RunComponents from "@/components/run-component";
-import { toast } from "@/components/message";
+import { toastRequestResult } from "@/utils/common/mutation-success";
 
 import { Api } from "../api";
 import { API } from "../types/api";
@@ -246,14 +246,16 @@ const AssetsItemDisposeModal: FC<AssetsItemDisposeModalProps> = (props) => {
 export interface AssetsItemListsModalProps {
   title: string;
   assetId: string;
+  initialActiveKey?: "items" | "applies";
   onCancel: ModalProps["onCancel"];
 }
 
 const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
-  const { title, assetId, onCancel } = props;
+  const { title, assetId, initialActiveKey = "items", onCancel } = props;
   const api = useMemo(() => new Api(axios), []);
+  const shouldAutoOpenApplies = useRef(initialActiveKey === "applies");
 
-  const [activeKey, setActiveKey] = useState<"items" | "applies">("items");
+  const [activeKey, setActiveKey] = useState<"items" | "applies">(initialActiveKey);
 
   const [itemParams, setItemParams] = useState<API.AssetsItemPage.Params>({
     assetId,
@@ -293,6 +295,14 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
     if (err) return;
     setItemParams(params);
     setItemData(data);
+
+    if (shouldAutoOpenApplies.current && data.records?.length) {
+      shouldAutoOpenApplies.current = false;
+      const firstId = String(data.records[0].id);
+      setSelectedItemId(firstId);
+      setActiveKey("applies");
+      await loadApplyList({ itemId: firstId, current: 1 });
+    }
   };
 
   const loadApplyList = async (next?: Partial<API.AssetsItemApplyPage.Params>) => {
@@ -331,8 +341,7 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
             modal.setState({ loading: true });
             const [err] = await api.applyAssetsItem(params);
             modal.setState({ loading: false });
-            if (!err) {
-              toast("success", "申请成功");
+            if (toastRequestResult(err, "申请成功", "申请失败")) {
               modal.unmount();
               await openApplyTabByItem(record.id);
             }
@@ -355,8 +364,7 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
             modal.setState({ loading: true });
             const [err] = await api.disposeAssetsItem(params);
             modal.setState({ loading: false });
-            if (!err) {
-              toast("success", "提交成功");
+            if (toastRequestResult(err, "提交成功", "提交失败")) {
               modal.unmount();
               await loadApplyList();
             }
@@ -393,7 +401,7 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
             申请
           </Button>
           <Button type="link" onClick={() => openApplyTabByItem(record.id)}>
-            申请记录
+            查看申请
           </Button>
         </Button.Group>
       ),
@@ -658,8 +666,7 @@ const AssetsTab: FC = () => {
             modal.setState({ loading: true });
             const [err] = await api.applyConsumables(params);
             modal.setState({ loading: false });
-            if (!err) {
-              toast("success", "申请成功");
+            if (toastRequestResult(err, "申请成功", "申请失败")) {
               modal.unmount();
             }
           }}
@@ -698,7 +705,7 @@ const AssetsTab: FC = () => {
             申请
           </Button>
           <Button type="link" onClick={() => openApplyListModal(record)}>
-            申请记录
+            查看申请
           </Button>
         </Button.Group>
       ),
@@ -711,13 +718,18 @@ const AssetsTab: FC = () => {
     return map;
   }, [categories]);
 
-  const openAssetsItemListsModal = (record: API.AssetsPage.RecordItem): void => {
+  const openAssetsItemListsModal = (
+    record: API.AssetsPage.RecordItem,
+    tab: "items" | "applies" = "items"
+  ): void => {
+    const name = record.name || record.selfCode || record.id;
     const modal = new RunComponents({
       state: {},
       render: () => (
         <AssetsItemListsModal
-          title={`固定资产：${record.name || record.selfCode || record.id}`}
+          title={tab === "applies" ? `申请列表：${name}` : `实体列表：${name}`}
           assetId={record.id}
+          initialActiveKey={tab}
           onCancel={() => modal.unmount()}
         />
       ),
@@ -738,12 +750,15 @@ const AssetsTab: FC = () => {
     { title: "备注", dataIndex: "remark" },
     {
       title: "操作",
-      width: 160,
+      width: 220,
       fixed: "right" as const,
       render: (_: any, record: API.AssetsPage.RecordItem) => (
         <Button.Group>
-          <Button type="link" onClick={() => openAssetsItemListsModal(record)}>
-            实体列表
+          <Button type="link" onClick={() => openAssetsItemListsModal(record, "items")}>
+            查看实体
+          </Button>
+          <Button type="link" onClick={() => openAssetsItemListsModal(record, "applies")}>
+            查看申请
           </Button>
         </Button.Group>
       ),
@@ -760,10 +775,7 @@ const AssetsTab: FC = () => {
             <Spin spinning={loading}>
               <div className="theme-panel p-6 mb-4">
                 <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <div className="text-xl font-semibold mb-1">易耗品申请</div>
-                    <div className="text-gray-600">选择分类后查询并提交申请</div>
-                  </div>
+                  <div className="text-gray-600">选择分类后查询并提交申请</div>
                   <Space>
                     <Button
                       action="reset"
@@ -866,9 +878,8 @@ const AssetsTab: FC = () => {
             <Spin spinning={assetsLoading}>
               <div className="theme-panel p-6 mb-4">
                 <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <div className="text-xl font-semibold mb-1">固定资产申请</div>
-                    <div className="text-gray-600">选择分类后查询并进入实体列表提交申请</div>
+                  <div className="text-gray-600">
+                    选择分类后查询并进入实体列表提交申请
                   </div>
                   <Space>
                     <Button
