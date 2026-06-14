@@ -22,7 +22,7 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid @border-divider;
-    background-color: #fff;
+    background-color: @bg-block;
     box-sizing: border-box;
 }
 
@@ -34,7 +34,7 @@
 }
 
 .header--title {
-    color: #333;
+    color: @text-primary;
     font-size: 14px;
     margin-left: 10px;
     font-weight: bold;
@@ -47,7 +47,7 @@
     width: 256px;
     height: 100%;
     padding-left: 24px;
-    background-color: #fff;
+    background-color: var(--theme-bg-sider);
     border: 1px solid @border-divider;
     border-width: 0 1px 1px 0;
     box-sizing: border-box;
@@ -98,6 +98,7 @@
     justify-content: flex-start;
     margin-left: 10px;
     cursor: pointer;
+    color: @text-primary;
 }
 
 .header-block_user__container {

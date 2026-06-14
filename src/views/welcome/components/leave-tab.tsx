@@ -11,9 +11,12 @@ import LeavePeriodSelect from "@/micro/leave-period-list";
 import StoreContext from "../store";
 import { API } from "../types/api";
 import LeaveSubmitModal from "./leave-submit-modal";
+import { DictCode } from "@/constants/dict-code";
+import { useDict } from "@/hooks/use-dict";
 
 const LeaveTab: FC = () => {
   const store = useContext(StoreContext);
+  const leaveTypeDict = useDict(DictCode.LEAVE_TYPE);
 
   const openLeaveModal = (): void => {
     const now = new Date();
@@ -57,7 +60,12 @@ const LeaveTab: FC = () => {
       width: 180,
     },
     { title: "请假数量", dataIndex: "leaveNum", width: 120 },
-    { title: "类型", dataIndex: "leaveType", width: 120 },
+    {
+      title: "类型",
+      dataIndex: "leaveType",
+      width: 120,
+      render: (val: unknown) => leaveTypeDict.label(val),
+    },
     { title: "原因", dataIndex: "leaveReason" },
     {
       title: "审核状态",
@@ -70,7 +78,7 @@ const LeaveTab: FC = () => {
 
   return (
     <Spin spinning={store.leaveLoading}>
-      <div className="p-6 bg-white rounded shadow mb-4">
+      <div className="theme-panel p-6 mb-4">
         <div className="flex items-center justify-between gap-4">
           <div>
             <div className="text-xl font-semibold mb-1">请假</div>
@@ -92,7 +100,7 @@ const LeaveTab: FC = () => {
         </div>
       </div>
 
-      <div className="p-6 bg-white rounded shadow mb-4">
+      <div className="theme-panel p-6 mb-4">
         <div className="grid grid-cols-4 gap-4">
           <div className="col-span-4 md:col-span-2">
             <div className="text-sm text-gray-600 mb-2">筛选</div>
@@ -115,7 +123,7 @@ const LeaveTab: FC = () => {
         </div>
       </div>
 
-      <div className="p-6 bg-white rounded shadow h-[300px]">
+      <div className="theme-panel p-6 h-[300px]">
         <div className="text-base font-semibold mb-4">请假记录</div>
         <MorTable
           rowKey="id"

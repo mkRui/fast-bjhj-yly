@@ -6,6 +6,7 @@ import { observer } from "mobx-react";
 import Avatar from "@/components/avatar";
 import RootContext from "@/stores/root-context";
 import Screen from "@/components/screen";
+import ThemeSwitch from "@/components/theme-switch";
 import { AppContext } from "../main";
 import Style from "../style/header.module.less";
 import RunComponents from "@/components/run-component";
@@ -71,7 +72,7 @@ const LayoutHeader: FC = () => {
 
   const MenuList = (
     <Menu onClick={click}>
-      <Menu.Item key="personal-info">个人信息</Menu.Item>
+      <Menu.Item key="personal-info">信息上报</Menu.Item>
       <Menu.Item key="reset-password">修改密码</Menu.Item>
       <Menu.Item key="logout">退出登录</Menu.Item>
     </Menu>
@@ -98,6 +99,7 @@ const LayoutHeader: FC = () => {
         </div>
         <div className={Style["header-block_user__container"]}>
           <Screen />
+          <ThemeSwitch />
           <Dropdown trigger={["click"]} overlay={MenuList}>
             <div className={Style["header-block_user"]}>
               <Avatar />

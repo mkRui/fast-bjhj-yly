@@ -6,6 +6,8 @@ import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
 import MorTable from "@/components/table";
 import RootContext from "@/stores/root-context";
+import { DictCode } from "@/constants/dict-code";
+import { getDictLabel } from "@/utils/common/dict";
 
 import StoreContext from "../store";
 import WorkStatisticsChart, { WorkStatisticsItem } from "@/views/welcome/components/work-statistics-chart";
@@ -29,19 +31,11 @@ const WorkMain: FC = () => {
   });
 
   const subjectDict = useMemo(() => {
-    const list = root.getEnumData("TEACHER_WORK_SUBJECT") || [];
-    const map = new Map<string, string>();
-    list.forEach((item) => map.set(String(item.code), String(item.desc)));
-    return map;
-  }, [root]);
-
-  const subjectLabel = useCallback(
-    (value: unknown): string => {
-      const key = String(value ?? "");
-      return subjectDict.get(key) || key || "-";
-    },
-    [subjectDict]
-  );
+    const list = root.getEnumData(DictCode.WORK_SUBJECT) || [];
+    return {
+      label: (value: unknown) => getDictLabel(list, value),
+    };
+  }, [root.enumList]);
 
   const statisticsData: WorkStatisticsItem[] = useMemo(() => {
     const map = new Map<string, number>();
@@ -50,10 +44,10 @@ const WorkMain: FC = () => {
       map.set(k, (map.get(k) || 0) + Number(r.num || 0));
     });
     return Array.from(map.entries()).map(([k, v]) => ({
-      label: subjectLabel(k),
+      label: subjectDict.label(k),
       value: v,
     }));
-  }, [page.records, subjectLabel]);
+  }, [page.records, subjectDict]);
 
   const loadRecords = useCallback(
     async (next?: Partial<{ year: number; month: number; current: number; size: number }>) => {
@@ -101,7 +95,7 @@ const WorkMain: FC = () => {
     {
       title: "上报科目",
       dataIndex: "subject",
-      render: (val: any) => subjectLabel(val),
+      render: (val: any) => subjectDict.label(val),
     },
     { title: "上报数量", dataIndex: "num", width: 120 },
   ];
@@ -145,7 +139,7 @@ const WorkMain: FC = () => {
         </Content.Header>
         <Content.Main style={{ overflow: "unset" }}>
           <Spin spinning={store.loading}>
-            <div className="p-6 bg-white rounded shadow mb-4">
+            <div className="theme-panel p-6 mb-4">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <div className="text-xl font-semibold mb-1">教师课时</div>
@@ -167,7 +161,7 @@ const WorkMain: FC = () => {
 
             {teacherId ? (
               <>
-                <div className="p-6 bg-white rounded shadow mb-4">
+                <div className="theme-panel p-6 mb-4">
                   <div className="grid grid-cols-4 gap-4">
                     <div className="col-span-4 md:col-span-2">
                       <div className="text-sm text-gray-600 mb-2">筛选</div>
@@ -210,7 +204,7 @@ const WorkMain: FC = () => {
                   </div>
                 </div>
 
-                <div className="p-6 bg-white rounded shadow h-[300px]">
+                <div className="theme-panel p-6 h-[300px]">
                   <div className="text-base font-semibold mb-4">工时记录</div>
                   <MorTable
                     bordered
@@ -223,7 +217,7 @@ const WorkMain: FC = () => {
                 </div>
               </>
             ) : (
-              <div className="p-6 bg-white rounded shadow">
+              <div className="theme-panel p-6">
                 <div className="text-gray-500">请选择教师后查看课时统计与记录</div>
               </div>
             )}

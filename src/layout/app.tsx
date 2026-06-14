@@ -8,11 +8,13 @@
  */
 import { rootRoutes } from "@/router/routes";
 import RouteComponent from "@/router/route-component";
+import { applyTheme, getStoredThemeMode } from "@/utils/common/theme";
+
 export function App() {
-  document.body.setAttribute("mor-theme", "light");
+  applyTheme(getStoredThemeMode());
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="app-root">
       <RouteComponent routes={rootRoutes} />
     </div>
   );

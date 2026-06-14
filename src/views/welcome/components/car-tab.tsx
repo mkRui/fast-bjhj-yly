@@ -216,7 +216,7 @@ const CarTab: FC = () => {
 
   return (
     <Spin spinning={loading}>
-      <div className="p-6 bg-white rounded shadow mb-4">
+      <div className="theme-panel p-6 mb-4">
         <div className="flex items-center justify-between gap-4">
           <div>
             <div className="text-xl font-semibold mb-1">用车申请</div>
@@ -238,7 +238,7 @@ const CarTab: FC = () => {
         </div>
       </div>
 
-      <div className="p-6 bg-white rounded shadow mb-4">
+      <div className="theme-panel p-6 mb-4">
         <div className="text-sm text-gray-600 mb-2">筛选</div>
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -262,7 +262,7 @@ const CarTab: FC = () => {
         </div>
       </div>
 
-      <div className="p-6 bg-white rounded shadow h-[520px]">
+      <div className="theme-panel p-6 h-[520px]">
         <div className="text-base font-semibold mb-4">我的用车申请</div>
         <MorTable rowKey="id" columns={columns as any} dataSource={data.records || []} pagination={false} />
         <div className="flex justify-end mt-4">

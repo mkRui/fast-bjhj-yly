@@ -1,4 +1,4 @@
-import { FC, useCallback, useContext, useEffect, useMemo } from "react";
+import { FC, useContext, useEffect, useMemo } from "react";
 import { observer } from "mobx-react";
 import { InputNumber, Pagination, Space, Spin } from "antd";
 
@@ -6,6 +6,8 @@ import Button from "@/components/button";
 import MorTable from "@/components/table";
 import { toast } from "@/components/message";
 import RootContext from "@/stores/root-context";
+import { DictCode } from "@/constants/dict-code";
+import { getDictLabel } from "@/utils/common/dict";
 import RunComponents from "@/components/run-component";
 
 import StoreContext from "../store";
@@ -18,26 +20,18 @@ const WorkTab: FC = () => {
   const root = useContext(RootContext);
 
   const subjectDict = useMemo(() => {
-    const list = root.getEnumData("TEACHER_WORK_SUBJECT") || [];
-    const map = new Map<string, string>();
-    list.forEach((item) => map.set(String(item.code), String(item.desc)));
-    return map;
-  }, [root]);
-
-  const subjectLabel = useCallback(
-    (value: unknown): string => {
-      const key = String(value ?? "");
-      return subjectDict.get(key) || key || "-";
-    },
-    [subjectDict]
-  );
+    const list = root.getEnumData(DictCode.WORK_SUBJECT) || [];
+    return {
+      label: (value: unknown) => getDictLabel(list, value),
+    };
+  }, [root.enumList]);
 
   const statisticsData: WorkStatisticsItem[] = useMemo(() => {
     return (store.statistics || []).map((item) => ({
-      label: subjectLabel(item.subject),
+      label: subjectDict.label(item.subject),
       value: Number(item.num || 0),
     }));
-  }, [store.statistics, subjectLabel]);
+  }, [store.statistics, subjectDict]);
 
   useEffect(() => {
     void store.refreshWork();
@@ -90,14 +84,14 @@ const WorkTab: FC = () => {
     {
       title: "上报科目",
       dataIndex: "subject",
-      render: (val: any) => subjectLabel(val),
+      render: (val: any) => subjectDict.label(val),
     },
     { title: "时数数量", dataIndex: "num", width: 120 },
   ];
 
   return (
     <Spin spinning={store.loading}>
-      <div className="p-6 bg-white rounded shadow mb-4">
+      <div className="theme-panel p-6 mb-4">
         <div className="flex items-center justify-between gap-4">
           <div>
             <div className="text-xl font-semibold mb-1">工时上报</div>
@@ -122,7 +116,7 @@ const WorkTab: FC = () => {
         </div>
       </div>
 
-      <div className="p-6 bg-white rounded shadow mb-4">
+      <div className="theme-panel p-6 mb-4">
         <div className="text-sm text-gray-600 mb-2">筛选</div>
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -157,7 +151,7 @@ const WorkTab: FC = () => {
           <WorkStatisticsChart title="当前用户工时统计（按科目）" data={statisticsData} />
        </div>
 
-      <div className="p-6 bg-white rounded shadow h-[300px]">
+      <div className="theme-panel p-6 h-[300px]">
         <div className="text-base font-semibold mb-4">工时记录</div>
         <MorTable rowKey="id" columns={columns as any} dataSource={store.page.records || []} pagination={false} />
         <div className="flex justify-end mt-4">

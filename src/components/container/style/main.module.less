@@ -18,7 +18,7 @@
 
 .main {
     width: 100%;
-    background-color: var(--theme-bg-secondary);;
+    background-color: var(--theme-bg-layout);
 }
 
 .content {
@@ -35,9 +35,8 @@
     background: @bg-block;
     box-sizing: border-box;
     padding: 10px 10px;
-    background-color: #fff;
     border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    box-shadow: @shadow;
 }
 
 .content-layout {
@@ -61,11 +60,11 @@
     padding: 10px;
     background: @bg-block;
     border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    box-shadow: @shadow;
 }
 .content-footer {
     box-sizing: border-box;
     padding-top: 0;
-    background: #fff;
-    box-shadow: 0 -1px 3px rgba(0,0,0,.1);
+    background: @bg-block;
+    box-shadow: @shadow;
 }

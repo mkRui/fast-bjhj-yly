@@ -3,12 +3,14 @@ import { observer } from "mobx-react";
 import { FC, useContext } from "react";
 
 import Menu from "@/micro/menu";
+import { useThemeMode } from "@/config/hooks";
 
 import { AppContext } from "../main";
 import Style from "../style/aside.module.less";
 
 const LayoutAside: FC = () => {
   const { collapsed } = useContext(AppContext);
+  const { isDark } = useThemeMode();
 
   const ClassN = ClassNames(`${Style["layout-aside"]}`, {
     [`${Style["layout-aside_collapsed"]}`]: collapsed,
@@ -21,6 +23,7 @@ const LayoutAside: FC = () => {
           inlineCollapsed={collapsed}
           allOpenCheck={collapsed}
           mode="inline"
+          theme={isDark ? "dark" : "light"}
         />
       </div>
     </div>

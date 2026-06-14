@@ -15,7 +15,7 @@ const WorkStatisticsChart: FC<WorkStatisticsChartProps> = (props) => {
   const max = Math.max(0, ...data.map((d) => d.value));
 
   return (
-    <div className="bg-white rounded shadow p-4">
+    <div className="theme-panel p-4">
       {!!title && <div className="text-base font-semibold mb-4">{title}</div>}
       {data.length === 0 ? (
         <div className="text-gray-500">暂无数据</div>

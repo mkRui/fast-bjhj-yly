@@ -758,7 +758,7 @@ const AssetsTab: FC = () => {
           label: "申请易耗品",
           children: (
             <Spin spinning={loading}>
-              <div className="p-6 bg-white rounded shadow mb-4">
+              <div className="theme-panel p-6 mb-4">
                 <div className="flex items-center justify-between gap-4">
                   <div>
                     <div className="text-xl font-semibold mb-1">易耗品申请</div>
@@ -786,7 +786,7 @@ const AssetsTab: FC = () => {
                 </div>
               </div>
 
-              <div className="p-6 bg-white rounded shadow mb-4">
+              <div className="theme-panel p-6 mb-4">
                 <div className="text-sm text-gray-600 mb-2">筛选</div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -840,7 +840,7 @@ const AssetsTab: FC = () => {
                 </div>
               </div>
 
-              <div className="p-6 bg-white rounded shadow h-[520px]">
+              <div className="theme-panel p-6 h-[520px]">
                 <div className="text-base font-semibold mb-4">易耗品列表</div>
                 <MorTable rowKey="id" columns={columns as any} dataSource={pageData.records || []} pagination={false} />
                 <div className="flex justify-end mt-4">
@@ -864,7 +864,7 @@ const AssetsTab: FC = () => {
           label: "申请固定资产",
           children: (
             <Spin spinning={assetsLoading}>
-              <div className="p-6 bg-white rounded shadow mb-4">
+              <div className="theme-panel p-6 mb-4">
                 <div className="flex items-center justify-between gap-4">
                   <div>
                     <div className="text-xl font-semibold mb-1">固定资产申请</div>
@@ -892,7 +892,7 @@ const AssetsTab: FC = () => {
                 </div>
               </div>
 
-              <div className="p-6 bg-white rounded shadow mb-4">
+              <div className="theme-panel p-6 mb-4">
                 <div className="text-sm text-gray-600 mb-2">筛选</div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -946,7 +946,7 @@ const AssetsTab: FC = () => {
                 </div>
               </div>
 
-              <div className="p-6 bg-white rounded shadow h-[520px]">
+              <div className="theme-panel p-6 h-[520px]">
                 <div className="text-base font-semibold mb-4">固定资产列表</div>
                 <MorTable
                   rowKey="id"

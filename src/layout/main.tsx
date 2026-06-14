@@ -1,4 +1,5 @@
-import { FC, useEffect, createContext, useState, useContext } from "react";
+import { FC, useContext, useEffect, createContext, useState } from "react";
+import { ConfigProvider } from "antd";
 import { Scrollbars } from "react-custom-scrollbars";
 import ClassNames from "classnames";
 import { observer } from "mobx-react";
@@ -10,12 +11,16 @@ import { mainRoutes } from "@/router/routes";
 import RootContext from "@/stores/root-context";
 import { BasePath } from "@/router/path";
 import eventDispatch from "@/utils/common/event-dispatch";
+import { useThemeMode } from "@/config/hooks";
+import { getAntdTheme } from "@/config/antd-theme";
+import { applyTheme } from "@/utils/common/theme";
 
 import LayoutHeader from "./container/header";
 import LayoutAside from "./container/aside";
 
 import Styles from "./style/app.module.less";
 import "./style/common.less";
+import "@/styles/theme-vars.css";
 import { useNavigate } from "react-router-dom";
 
 interface AppContextProps {
@@ -58,6 +63,11 @@ const MainLayout: FC = () => {
   };
 
   const root = useContext(RootContext);
+  const { mode } = useThemeMode();
+
+  useEffect(() => {
+    applyTheme(mode);
+  }, [mode]);
 
   const mainClass: string = ClassNames(`${Styles.main}`, {
     [`${Styles[`main--aside`]}`]: true,
@@ -101,7 +111,8 @@ const MainLayout: FC = () => {
   }, []);
 
   return (
-    <AppContext.Provider value={Store}>
+    <ConfigProvider theme={getAntdTheme(mode)}>
+      <AppContext.Provider value={Store}>
       <Layout>
         <Header>
           <LayoutHeader />
@@ -126,6 +137,7 @@ const MainLayout: FC = () => {
       </Layout>
       <div id="portal-root"></div>
     </AppContext.Provider>
+    </ConfigProvider>
   );
 };
 

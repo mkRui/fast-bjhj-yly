@@ -7,17 +7,17 @@
     height: 40px;
     padding: 5px 16px;
     box-sizing: border-box;
-    border: 1px solid #e3e3e3;
+    border: 1px solid @border-divider;
     border-radius: 5px 5px 0 0;
     margin: 0 2px;
     cursor: pointer;
-    background-color: #fafafa;
+    background-color: @bg-block-dark;
     > em {
         display: inline-block;
         width: 12px;
         height: 12px;
         margin-right: 5px;
-        background-color: #ccc;
+        background-color: @text-disabled;
         border-radius: 50%;
     }
     > i {
@@ -25,13 +25,15 @@
         margin-right: 4px;
         font-size: 14px;
         vertical-align: middle;
+        color: @text-color;
     }
     > span {
         vertical-align: middle;
+        color: @text-color;
     }
     &.tab--active {
         border-bottom: 1px solid transparent;
-        background-color: #fff;
+        background-color: @bg-block;
         > i {
             color: @primary;
         }

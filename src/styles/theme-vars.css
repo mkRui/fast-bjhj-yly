@@ -1,0 +1,106 @@
+html[data-theme="light"],
+html[data-theme="light"] body,
+body[mor-theme="light"] {
+  --theme-bg-layout: #f0f2f5;
+  --theme-bg-elevated: #ffffff;
+  --theme-bg-sider: #ffffff;
+  --theme-table-row-hover: #e5f2ff;
+  --theme-color-white: #ffffff;
+}
+
+html[data-theme="dark"],
+html[data-theme="dark"] body,
+body[mor-theme="dark"] {
+  --theme-color-secondary: #1f1f1f;
+  --theme-color-white: #2a2a2a;
+
+  --theme-text-primary: rgba(255, 255, 255, 0.85);
+  --theme-text-color: rgba(255, 255, 255, 0.65);
+  --theme-text-secondary: rgba(255, 255, 255, 0.45);
+  --theme-text-disabled: rgba(255, 255, 255, 0.25);
+
+  --theme-bg-block: #1f1f1f;
+  --theme-bg-block-dark: #141414;
+  --theme-bg-white: #1f1f1f;
+  --theme-bg-black: #000000;
+
+  --theme-bg-primary: rgba(24, 144, 255, 0.15);
+  --theme-bg-success: rgba(0, 177, 157, 0.15);
+  --theme-bg-warning: rgba(240, 131, 0, 0.15);
+  --theme-bg-danger: rgba(245, 34, 45, 0.15);
+  --theme-bg-link: rgba(69, 97, 153, 0.15);
+  --theme-bg-text: rgba(255, 255, 255, 0.08);
+  --theme-bg-secondary: #000000;
+  --theme-bg-disabled: rgba(255, 255, 255, 0.12);
+
+  --theme-border-base: #424242;
+  --theme-border-divider: #303030;
+  --theme-border-input: #424242;
+
+  --theme-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.48),
+    0 6px 16px 0 rgba(0, 0, 0, 0.32), 0 9px 28px 8px rgba(0, 0, 0, 0.2);
+
+  --theme-bg-layout: #141414;
+  --theme-bg-elevated: #1f1f1f;
+  --theme-bg-sider: #001529;
+  --theme-table-row-hover: rgba(24, 144, 255, 0.15);
+
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] body,
+body[mor-theme="dark"] {
+  background-color: var(--theme-bg-layout);
+  color: var(--theme-text-primary);
+}
+
+.app-root {
+  min-height: 100vh;
+  background-color: var(--theme-bg-layout);
+}
+
+.theme-panel {
+  background-color: var(--theme-bg-elevated);
+  box-shadow: var(--theme-shadow);
+  border-radius: 4px;
+}
+
+html[data-theme="dark"] .bg-white,
+body[mor-theme="dark"] .bg-white {
+  background-color: var(--theme-bg-elevated) !important;
+}
+
+html[data-theme="dark"] .shadow,
+body[mor-theme="dark"] .shadow {
+  box-shadow: var(--theme-shadow) !important;
+}
+
+html[data-theme="dark"] .text-gray-900,
+html[data-theme="dark"] .text-gray-800,
+html[data-theme="dark"] .text-black,
+body[mor-theme="dark"] .text-gray-900,
+body[mor-theme="dark"] .text-gray-800,
+body[mor-theme="dark"] .text-black {
+  color: var(--theme-text-primary);
+}
+
+html[data-theme="dark"] .text-gray-600,
+html[data-theme="dark"] .text-gray-700,
+html[data-theme="dark"] .text-gray-500,
+body[mor-theme="dark"] .text-gray-600,
+body[mor-theme="dark"] .text-gray-700,
+body[mor-theme="dark"] .text-gray-500 {
+  color: var(--theme-text-color);
+}
+
+html[data-theme="dark"] .bg-gray-100,
+body[mor-theme="dark"] .bg-gray-100 {
+  background-color: var(--theme-bg-block-dark) !important;
+}
+
+html[data-theme="dark"] .ant-tabs,
+html[data-theme="dark"] .ant-tabs-content,
+body[mor-theme="dark"] .ant-tabs,
+body[mor-theme="dark"] .ant-tabs-content {
+  color: var(--theme-text-primary);
+}
