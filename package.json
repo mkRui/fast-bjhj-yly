@@ -11,6 +11,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:api": "RUN_API_SMOKE=1 vitest run src/tests/api-smoke.test.ts",
     "preview": "vite preview",
     "clean": "rm -rf dist node_modules/.vite",
     "deps:update": "yarn upgrade-interactive --latest"
@@ -61,7 +64,8 @@
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0",
     "vite-plugin-mkcert": "^1.17.8",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "3.2.4"
   },
   "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }
