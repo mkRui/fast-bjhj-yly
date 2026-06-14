@@ -1,6 +1,6 @@
 import { FC, useEffect } from "react";
 import { observer } from "mobx-react";
-import { Form, Input, Modal, Switch } from "antd";
+import { Form, Input, Modal } from "antd";
 import { ModalProps } from "antd/lib/modal";
 
 import { API } from "../types/api";
@@ -45,9 +45,6 @@ const FormModal: FC<NoticeModalComponentType> = (props) => {
         </Item>
         <Item name="code" label="角色代码">
           <Input placeholder="请输入角色代码"></Input>
-        </Item>
-        <Item name="defaultFlag" label="默认角色">
-          <Switch></Switch>
         </Item>
       </Form>
     </Modal>

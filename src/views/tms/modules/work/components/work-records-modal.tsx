@@ -8,11 +8,8 @@ import { DictCode } from "@/constants/dict-code";
 import { getDictLabel } from "@/utils/common/dict";
 import Button from "@/components/button";
 import MorTable from "@/components/table";
-import RunComponents from "@/components/run-component";
-import { toast } from "@/components/message";
 
 import { API } from "../types/api";
-import ReportWorkModal from "@/views/welcome/components/report-work-modal";
 
 interface WorkRecordsModalProps {
   teacherId: string;
@@ -81,35 +78,6 @@ const WorkRecordsModal: FC<WorkRecordsModalProps> = (props) => {
     void runQuery({ current: 1, size: 10 });
   }, []);
 
-  const handleAdd = (): void => {
-    const now = new Date();
-    const yyyy = now.getFullYear();
-    const mm = now.getMonth() + 1;
-    const date = `${yyyy}-${String(mm).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-
-    const modal = new RunComponents({
-      state: { loading: false },
-      render: (state) => (
-        <ReportWorkModal
-          {...state}
-          title="新增工时记录"
-          init={{
-            date,
-            year: year || yyyy,
-            month: month || mm,
-            subject: 0,
-            num: 0,
-          }}
-          onCancel={() => modal.unmount()}
-          onOk={async () => {
-            toast("info", "未配置新增接口");
-            modal.unmount();
-          }}
-        />
-      ),
-    });
-  };
-
   return (
     <Modal
       title={`工时记录${teacherName ? ` - ${teacherName}` : ""}`}
@@ -119,7 +87,7 @@ const WorkRecordsModal: FC<WorkRecordsModalProps> = (props) => {
       footer={null}
     >
       <Spin spinning={loading}>
-        <div className="mb-4 flex items-end justify-between gap-4">
+        <div className="mb-4 flex items-end gap-4">
           <Space>
             <div>
               <div className="text-sm text-gray-600 mb-1">关键词</div>
@@ -161,9 +129,6 @@ const WorkRecordsModal: FC<WorkRecordsModalProps> = (props) => {
               查询
             </Button>
           </Space>
-          <Button type="primary" action="add" onClick={handleAdd}>
-            新增
-          </Button>
         </div>
 
         <MorTable
