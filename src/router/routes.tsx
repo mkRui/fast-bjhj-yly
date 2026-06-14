@@ -11,13 +11,9 @@ import { Path, BasePath } from "./path";
 import Pages from "./page-all";
 
 import SystemRouter from "@/views/system/router/routes";
-import CmsRouter from "@/views/cms/router/routes";
-import OperationRouter from "@/views/operation/router/routes";
-import BusinessRouter from "@/views/business/router/routes";
-import SortRouter from "@/views/sort/router/routes";
-import ProductRouter from "@/views/product/router/routes";
 import TmsRouter from "@/views/tms/router/routes";
 import SmsRouter from "@/views/sms/router/routes";
+import SalaryRouter from "@/views/salary/router/routes";
 
 export interface RouteTypes {
   path: string;
@@ -29,38 +25,45 @@ export interface RouteTypes {
 }
 
 export const mainRoutes: RouteTypes[] = [
-  { path: BasePath.SYSTEM, component: Pages.System, children: SystemRouter },
-  { path: BasePath.CMS, component: Pages.Cms, children: CmsRouter },
-  {
-    path: BasePath.OPERATION,
-    component: Pages.Operation,
-    children: OperationRouter,
-  },
-  {
-    path: BasePath.BUSINESS,
-    component: Pages.Business,
-    children: BusinessRouter,
-  },
-  { path: BasePath.SORT, component: Pages.Sort, children: SortRouter },
-  { path: BasePath.PRODUCT, component: Pages.Product, children: ProductRouter },
-  { path: BasePath.TMS, component: Pages.Tms, children: TmsRouter },
-  { path: BasePath.SMS, component: Pages.Sms, children: SmsRouter },
-  {
-    path: "/personal-info",
-    component: Pages.PersonalInfo,
-    title: "个人信息",
-    fullPath: "/personal-info",
-  },
   {
     path: BasePath.WELCOME,
     component: Pages.Welcome,
-    title: "欢迎",
+    title: "个人中心",
     fullPath: BasePath.WELCOME,
   },
+  {
+    path: "/personal-info",
+    component: Pages.PersonalInfo,
+    title: "信息上报",
+    fullPath: "/personal-info",
+  },
+  { path: BasePath.SYSTEM, component: Pages.System, children: SystemRouter },
+  { path: BasePath.TMS, component: Pages.Tms, children: TmsRouter },
+  { path: BasePath.SMS, component: Pages.Sms, children: SmsRouter },
+  { path: BasePath.SALARY, component: Pages.Salary, children: SalaryRouter },
 ];
 
 export const rootRoutes: RouteTypes[] = [
   { path: "/", component: Pages.AuthGate },
-  { path: Path.LOGIN, component: Pages.Login },
+  { path: Path.LOGIN, component: Pages.Login, title: "登录", fullPath: Path.LOGIN },
+  {
+    path: Path.FORBIDDEN,
+    component: Pages.Forbidden,
+    title: "无权限",
+    fullPath: Path.FORBIDDEN,
+  },
+  {
+    path: Path.NOT_FOUND,
+    component: Pages.NotFound,
+    title: "页面不存在",
+    fullPath: Path.NOT_FOUND,
+  },
+  {
+    path: Path.SERVER_ERROR,
+    component: Pages.ServerError,
+    title: "服务器错误",
+    fullPath: Path.SERVER_ERROR,
+  },
   { path: BasePath.BASE, component: Pages.Main, children: mainRoutes },
+  { path: "*", component: Pages.NotFound, title: "页面不存在", fullPath: Path.NOT_FOUND },
 ];

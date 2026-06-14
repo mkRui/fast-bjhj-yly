@@ -11,30 +11,28 @@ import { dynamicImport } from "@/utils/react/lazy-load";
 // 使用动态导入实现代码分割
 const Login = dynamicImport(() => import("@/views/login"));
 const AuthGate = dynamicImport(() => import("@/views/auth-gate"));
+const NotFound = dynamicImport(() => import("@/views/exception/not-found"));
+const Forbidden = dynamicImport(() => import("@/views/exception/forbidden"));
+const ServerError = dynamicImport(() => import("@/views/exception/server-error"));
 const Main = dynamicImport(() => import("@/layout/main"));
 const System = dynamicImport(() => import("@/views/system"));
-const Cms = dynamicImport(() => import("@/views/cms"));
-const Operation = dynamicImport(() => import("@/views/operation"));
-const Business = dynamicImport(() => import("@/views/business"));
-const Sort = dynamicImport(() => import("@/views/sort"));
-const Product = dynamicImport(() => import("@/views/product"));
 const Welcome = dynamicImport(() => import("@/views/welcome"));
 const PersonalInfo = dynamicImport(() => import("@/views/personal-info"));
 const Tms = dynamicImport(() => import("@/views/tms"));
 const Sms = dynamicImport(() => import("@/views/sms"));
+const Salary = dynamicImport(() => import("@/views/salary"));
 
 export default {
   Login,
   AuthGate,
+  NotFound,
+  Forbidden,
+  ServerError,
   Main,
   System,
-  Cms,
-  Operation,
-  Business,
-  Sort,
-  Product,
   Welcome,
   PersonalInfo,
   Tms,
   Sms,
+  Salary,
 };

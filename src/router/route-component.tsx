@@ -29,7 +29,7 @@ const RouterComponents: FC<RouterProps> = (props) => {
           element={React.createElement(item.component)}
         />
       ))}
-      <Route element={<Navigate to="/404" />} />
+      <Route path="*" element={<Navigate to="/404" replace />} />
     </Routes>
   );
 };

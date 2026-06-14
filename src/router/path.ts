@@ -8,28 +8,23 @@
  */
 enum Path {
   LOGIN = "/login",
+  FORBIDDEN = "/403",
+  NOT_FOUND = "/404",
+  SERVER_ERROR = "/500",
 }
 
 enum FullPath {
   SYSTEM = "/system",
-  cms = "/cms",
-  operation = "/operation",
-  business = "/business",
-  sort = "/sort",
-  product = "/product",
   tms = "/tms",
   sms = "/sms",
+  salary = "/salary",
 }
 
 enum BasePath {
-  CMS = "/cms/*",
-  OPERATION = "/operation/*",
   SYSTEM = "/system/*",
-  BUSINESS = "/business/*",
-  SORT = "/sort/*",
-  PRODUCT = "/product/*",
   TMS = "/tms/*",
   SMS = "/sms/*",
+  SALARY = "/salary/*",
   BASE = "/*",
   WELCOME = "/welcome",
 }
