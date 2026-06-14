@@ -8,13 +8,14 @@ import WorkTab from "../components/work-tab";
 import LeaveTab from "../components/leave-tab";
 import AssetsTab from "../components/assets-tab";
 import CarTab from "../components/car-tab";
+import ExhibitionTab from "../components/exhibition-tab";
 
 const WelcomeMain: FC = () => {
   return (
     <Content style={{ flex: 1 }}>
       <Content.Layout style={{ height: "100%" }}>
         <Content.Header>
-          <HeaderTitle>欢迎</HeaderTitle>
+          <HeaderTitle>个人中心</HeaderTitle>
         </Content.Header>
         <Content.Main style={{ overflow: "unset" }}>
           <Tabs
@@ -23,6 +24,7 @@ const WelcomeMain: FC = () => {
               { key: "leave", label: "请假", children: <LeaveTab /> },
               { key: "assets", label: "资产", children: <AssetsTab /> },
               { key: "car", label: "用车", children: <CarTab /> },
+              { key: "exhibition", label: "展会", children: <ExhibitionTab /> },
             ]}
           />
         </Content.Main>

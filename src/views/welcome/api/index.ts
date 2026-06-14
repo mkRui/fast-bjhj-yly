@@ -93,4 +93,55 @@ export class Api extends Request {
   public async getCarApplyPage(params: API.CarApplyPage.Params): Promise<API.CarApplyPage.Response> {
     return await this.get<API.CarApplyPage.Data>("/user/car/apply/page", params);
   }
+
+  public async getExhibitionPage(
+    params: API.ExhibitionPage.Params
+  ): Promise<API.ExhibitionPage.Response> {
+    return await this.get<API.ExhibitionPage.Data>("/user/exhibition/page", params);
+  }
+
+  public async addExhibition(
+    params: API.ExhibitionAdd.Params
+  ): Promise<API.ExhibitionAdd.Response> {
+    return await this.post<API.ExhibitionAdd.Data>("/user/exhibition/add", params);
+  }
+
+  public async editExhibition(
+    params: API.ExhibitionEdit.Params
+  ): Promise<API.ExhibitionEdit.Response> {
+    return await this.post<API.ExhibitionEdit.Data>("/user/exhibition/edit", params);
+  }
+
+  public async delExhibition(
+    params: API.ExhibitionDel.Params
+  ): Promise<API.ExhibitionDel.Response> {
+    return await this.post<API.ExhibitionDel.Data>("/user/exhibition/del", params);
+  }
+
+  public async getExhibitionAttachmentList(
+    params: API.ExhibitionAttachmentList.Params
+  ): Promise<API.ExhibitionAttachmentList.Response> {
+    return await this.get<API.ExhibitionAttachmentList.Data[]>(
+      "/user/exhibition/attachment/list",
+      params
+    );
+  }
+
+  public async addExhibitionAttachment(
+    params: API.ExhibitionAttachmentAdd.Params
+  ): Promise<API.ExhibitionAttachmentAdd.Response> {
+    return await this.post<API.ExhibitionAttachmentAdd.Data>(
+      "/user/exhibition/attachment/add",
+      params
+    );
+  }
+
+  public async delExhibitionAttachment(
+    params: API.ExhibitionAttachmentDel.Params
+  ): Promise<API.ExhibitionAttachmentDel.Response> {
+    return await this.post<API.ExhibitionAttachmentDel.Data>(
+      "/user/exhibition/attachment/del",
+      params
+    );
+  }
 }

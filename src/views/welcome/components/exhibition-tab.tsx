@@ -1,0 +1,212 @@
+import { FC, useEffect, useMemo, useState } from "react";
+import { observer } from "mobx-react";
+import { Pagination, Space, Spin } from "antd";
+
+import axios from "@/api";
+import Button from "@/components/button";
+import MorTable from "@/components/table";
+import RunComponents from "@/components/run-component";
+import { toast } from "@/components/message";
+
+import { Api } from "../api";
+import { API } from "../types/api";
+import ExhibitionFormModal from "./exhibition-form-modal";
+import ExhibitionAttachmentModal from "./exhibition-attachment-modal";
+
+const ExhibitionTab: FC = () => {
+  const api = useMemo(() => new Api(axios), []);
+
+  const [loading, setLoading] = useState(false);
+  const [params, setParams] = useState<API.ExhibitionPage.Params>({
+    current: 0,
+    size: 10,
+  });
+  const [data, setData] = useState<API.ExhibitionPage.Data>({
+    size: 10,
+    pages: 0,
+    total: 0,
+    records: [],
+    current: 0,
+  });
+
+  const uiCurrent = Math.max(1, Number(params.current || 0) + 1);
+
+  const load = async (next?: Partial<API.ExhibitionPage.Params>): Promise<void> => {
+    const merged: API.ExhibitionPage.Params = { ...params, ...(next || {}) };
+    setLoading(true);
+    const [err, res] = await api.getExhibitionPage(merged);
+    setLoading(false);
+    if (err) return;
+    setParams(merged);
+    setData(res);
+  };
+
+  useEffect(() => {
+    void load({ current: 0 });
+  }, []);
+
+  const openAddModal = (): void => {
+    const modal = new RunComponents({
+      state: { loading: false },
+      render: (state) => (
+        <ExhibitionFormModal
+          {...state}
+          title="新增展会"
+          init={{ date: "", name: "", location: "" }}
+          onCancel={() => modal.unmount()}
+          onOk={async (values) => {
+            modal.setState({ loading: true });
+            const [err] = await api.addExhibition(values);
+            modal.setState({ loading: false });
+            if (!err) {
+              toast("success", "新增成功");
+              modal.unmount();
+              await load({ current: 0 });
+            }
+          }}
+        />
+      ),
+    });
+  };
+
+  const openEditModal = (record: API.ExhibitionPage.RecordItem): void => {
+    const modal = new RunComponents({
+      state: { loading: false },
+      render: (state) => (
+        <ExhibitionFormModal
+          {...state}
+          title="修改展会"
+          init={{
+            date: record.date,
+            name: record.name,
+            location: record.location,
+          }}
+          onCancel={() => modal.unmount()}
+          onOk={async (values) => {
+            modal.setState({ loading: true });
+            const [err] = await api.editExhibition({
+              id: record.id,
+              exhibition: values,
+            });
+            modal.setState({ loading: false });
+            if (!err) {
+              toast("success", "修改成功");
+              modal.unmount();
+              await load();
+            }
+          }}
+        />
+      ),
+    });
+  };
+
+  const openAttachmentModal = (record: API.ExhibitionPage.RecordItem): void => {
+    const modal = new RunComponents({
+      render: () => (
+        <ExhibitionAttachmentModal
+          exhibitionId={record.id}
+          exhibitionName={record.name}
+          fetchAttachments={async (exhibitionId) => {
+            const [err, list] = await api.getExhibitionAttachmentList({ exhibitionId });
+            if (err) return [];
+            return list || [];
+          }}
+          addAttachment={async (p) => {
+            const [err] = await api.addExhibitionAttachment(p);
+            return !err;
+          }}
+          delAttachment={async (id) => {
+            const [err] = await api.delExhibitionAttachment({ id });
+            return !err;
+          }}
+          onCancel={() => modal.unmount()}
+        />
+      ),
+    });
+  };
+
+  const columns = [
+    { title: "展会名称", dataIndex: "name" },
+    { title: "日期", dataIndex: "date", width: 140 },
+    { title: "年份", dataIndex: "year", width: 100 },
+    { title: "月份", dataIndex: "month", width: 100 },
+    { title: "地点", dataIndex: "location" },
+    {
+      title: "操作",
+      width: 220,
+      fixed: "right" as const,
+      render: (_: unknown, record: API.ExhibitionPage.RecordItem) => (
+        <Button.Group>
+          <Button type="link" onClick={() => openAttachmentModal(record)}>
+            附件
+          </Button>
+          <Button type="link" linkType="warning" onClick={() => openEditModal(record)}>
+            编辑
+          </Button>
+          <Button
+            type="link"
+            linkType="danger"
+            action="del"
+            onConfirm={async () => {
+              const [err] = await api.delExhibition({ id: record.id });
+              if (!err) {
+                toast("success", "删除成功");
+                await load();
+              }
+            }}
+          >
+            删除
+          </Button>
+        </Button.Group>
+      ),
+    },
+  ];
+
+  return (
+    <Spin spinning={loading}>
+      <div className="theme-panel p-6 mb-4">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <div className="text-xl font-semibold mb-1">展会信息</div>
+            <div className="text-gray-600">管理我的展会记录及附件</div>
+          </div>
+          <Space>
+            <Button type="primary" action="add" onClick={openAddModal}>
+              新增展会
+            </Button>
+            <Button action="reset" onClick={() => void load({ current: 0 })}>
+              刷新
+            </Button>
+          </Space>
+        </div>
+      </div>
+
+      <div className="theme-panel p-6 h-[520px]">
+        <div className="text-base font-semibold mb-4">我的展会</div>
+        <MorTable
+          rowKey="id"
+          columns={columns as any}
+          dataSource={data.records || []}
+          pagination={false}
+        />
+        <div className="flex justify-end mt-4">
+          <Pagination
+            current={uiCurrent}
+            pageSize={params.size}
+            total={data.total || 0}
+            showSizeChanger
+            showQuickJumper
+            onChange={(current, pageSize) => {
+              void load({
+                current: Math.max(0, current - 1),
+                size: pageSize,
+              });
+            }}
+          />
+        </div>
+      </div>
+    </Spin>
+  );
+};
+
+export default observer(ExhibitionTab);

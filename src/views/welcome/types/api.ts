@@ -447,4 +447,102 @@ export declare namespace API {
 
     export type Response = BaseRequest.Response<Data>;
   }
+
+  export namespace ExhibitionPage {
+    export interface Params {
+      current?: number;
+      size?: number;
+    }
+
+    export interface RecordItem {
+      id: number;
+      teacherId: number;
+      year: number;
+      month: number;
+      date: string;
+      name: string;
+      location: string;
+    }
+
+    export interface Data {
+      size: number;
+      pages: number;
+      total: number;
+      records: RecordItem[];
+      current: number;
+    }
+
+    export type Response = BaseRequest.Response<Data>;
+  }
+
+  export namespace ExhibitionAdd {
+    export interface Params {
+      date: string;
+      name: string;
+      location: string;
+    }
+
+    export type Data = null;
+    export type Response = BaseRequest.Response<Data>;
+  }
+
+  export namespace ExhibitionEdit {
+    export interface ExhibitionDTO {
+      date: string;
+      name: string;
+      location: string;
+    }
+
+    export interface Params {
+      id: number;
+      exhibition: ExhibitionDTO;
+    }
+
+    export type Data = null;
+    export type Response = BaseRequest.Response<Data>;
+  }
+
+  export namespace ExhibitionDel {
+    export interface Params {
+      id: number;
+    }
+
+    export type Data = null;
+    export type Response = BaseRequest.Response<Data>;
+  }
+
+  export namespace ExhibitionAttachmentList {
+    export interface Params {
+      exhibitionId: number;
+    }
+
+    export interface Data {
+      id: number;
+      exhibitionId: number;
+      filename: string;
+      suffix: string;
+      type: number;
+    }
+
+    export type Response = BaseRequest.Response<Data[]>;
+  }
+
+  export namespace ExhibitionAttachmentAdd {
+    export interface Params {
+      exhibitionId: number;
+      dist: string;
+    }
+
+    export type Data = null;
+    export type Response = BaseRequest.Response<Data>;
+  }
+
+  export namespace ExhibitionAttachmentDel {
+    export interface Params {
+      id: number;
+    }
+
+    export type Data = null;
+    export type Response = BaseRequest.Response<Data>;
+  }
 }

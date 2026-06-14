@@ -4,6 +4,7 @@ import { TmsFullPath, TmsPath } from "./path";
 import Teacher from "../modules/teacher";
 import Work from "../modules/work";
 import Leave from "../modules/leave";
+import Exhibition from "../modules/exhibition";
 
 const Routes: RouteTypes[] = [
   {
@@ -23,6 +24,12 @@ const Routes: RouteTypes[] = [
     component: Leave,
     title: "请假管理",
     fullPath: TmsFullPath.LEAVE,
+  },
+  {
+    path: TmsPath.EXHIBITION,
+    component: Exhibition,
+    title: "展会信息",
+    fullPath: TmsFullPath.EXHIBITION,
   },
 ];
 
