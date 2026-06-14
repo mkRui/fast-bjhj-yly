@@ -6,35 +6,45 @@ import { API } from "@/api/type";
 
 const Option = Select.Option;
 
-export interface SelectBranchProp extends JSX.IntrinsicAttributes {
-  value?: string;
-  onChange?: (name: string) => void;
-  handleInitChange?: (name: string) => void;
+export interface SelectEnumProps extends JSX.IntrinsicAttributes {
+  value?: string | number;
+  onChange?: (value: string | number) => void;
+  handleInitChange?: (value: string | number) => void;
   name: string;
   placeholder?: string;
   disabled?: boolean;
   allowClear?: boolean;
+  valueType?: "string" | "number";
 }
 
-const SelectEnum: FC<SelectBranchProp> = (props) => {
-  const { value, name, placeholder, disabled, handleInitChange, allowClear } = props;
+const SelectEnum: FC<SelectEnumProps> = (props) => {
+  const {
+    value,
+    name,
+    placeholder,
+    disabled,
+    handleInitChange,
+    allowClear,
+    valueType = "string",
+    onChange,
+  } = props;
 
   const [data, setData] = useState<API.GetEnum.Dict[]>([]);
 
   const store = useContext(root);
 
-  const handleChange = (id: string): void => {
-    props.onChange?.(id);
-    handleInitChange?.(id);
+  const parseValue = (code: string): string | number =>
+    valueType === "number" ? Number(code) : code;
+
+  const handleChange = (next: string | number): void => {
+    onChange?.(next);
+    handleInitChange?.(next);
   };
 
   useEffect(() => {
     const list = store.getEnumData(name) || [];
-    if (list.length > 0) {
-      setData(list);
-      handleInitChange?.(list[0].code);
-    }
-  }, [store.enumList.length]);
+    setData(list);
+  }, [store.enumList, name]);
 
   return (
     <Select
@@ -46,7 +56,7 @@ const SelectEnum: FC<SelectBranchProp> = (props) => {
       allowClear={allowClear}
     >
       {data.map((item) => (
-        <Option value={item.code} key={item.code}>
+        <Option value={parseValue(item.code)} key={item.code}>
           <span aria-label={item.desc}>{item.desc}</span>
         </Option>
       ))}

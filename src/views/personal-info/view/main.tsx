@@ -2,10 +2,12 @@ import { FC, useContext, useEffect } from "react";
 import { observer } from "mobx-react";
 import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
-import { Divider, Form, Input, InputNumber, Select, Space, Spin, Switch } from "antd";
+import { Divider, Form, Input, InputNumber, Space, Spin, Switch } from "antd";
 import Button from "@/components/button";
 import { toast } from "@/components/message";
 import Upload from "@/components/upload";
+import SelectEnum from "@/micro/select-enum";
+import { DictCode } from "@/constants/dict-code";
 
 import StoreContext from "../store";
 import { API, EditTeacherInfoBody } from "../types/api";
@@ -226,11 +228,11 @@ const PersonalInfoMain: FC = () => {
     <Content style={{ flex: 1 }}>
       <Content.Layout style={{ height: "100%" }}>
         <Content.Header>
-          <HeaderTitle>个人信息</HeaderTitle>
+          <HeaderTitle>信息上报</HeaderTitle>
         </Content.Header>
         <Content.Main style={{ overflow: "unset" }}>
           <Spin spinning={store.loading}>
-            <div className="p-6 bg-white rounded shadow">
+            <div className="theme-panel p-6">
               <Form
                 form={form}
                 layout="vertical"
@@ -248,13 +250,7 @@ const PersonalInfoMain: FC = () => {
                     <Input placeholder="请输入姓名" />
                   </Item>
                   <Item label="性别" name={["teacher", "gender"]}>
-                    <Select
-                      options={[
-                        { label: "未知", value: 0 },
-                        { label: "男", value: 1 },
-                        { label: "女", value: 2 },
-                      ]}
-                    />
+                    <SelectEnum name={DictCode.GENDER} valueType="number" allowClear />
                   </Item>
                   <Item label="民族" name={["teacher", "ethnicity"]}>
                     <Input placeholder="请输入民族" />
@@ -285,7 +281,7 @@ const PersonalInfoMain: FC = () => {
                     <Input placeholder="请输入现居住地址" />
                   </Item>
                   <Item label="政治面貌" name={["teacherInfo", "politicalStatus"]}>
-                    <InputNumber style={{ width: "100%" }} placeholder="请输入政治面貌（数字）" />
+                    <SelectEnum name={DictCode.POLITICAL_STATUS} valueType="number" allowClear />
                   </Item>
                   <Item label="紧急联系人" name={["teacherInfo", "emergencyContact"]}>
                     <Input placeholder="请输入紧急联系人" />
@@ -313,7 +309,7 @@ const PersonalInfoMain: FC = () => {
                     <InputNumber style={{ width: "100%" }} placeholder="请输入第一学历学制" />
                   </Item>
                   <Item label="第一学历学位" name={["teacherInfo", "firstDegree"]}>
-                    <InputNumber style={{ width: "100%" }} placeholder="请输入第一学历学位" />
+                    <SelectEnum name={DictCode.DEGREE} valueType="number" allowClear />
                   </Item>
                   <Item
                     label="第一学历毕业日期"
@@ -338,7 +334,7 @@ const PersonalInfoMain: FC = () => {
                     <InputNumber style={{ width: "100%" }} placeholder="请输入最高学历学制" />
                   </Item>
                   <Item label="最高学历学位" name={["teacherInfo", "highestDegree"]}>
-                    <InputNumber style={{ width: "100%" }} placeholder="请输入最高学历学位" />
+                    <SelectEnum name={DictCode.DEGREE} valueType="number" allowClear />
                   </Item>
                   <Item
                     label="最高学历毕业日期"

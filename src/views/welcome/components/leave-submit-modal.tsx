@@ -9,6 +9,7 @@ import LeavePeriodSelect from "@/micro/leave-period-list";
 import LeavePeriodSetting from "@/micro/leave-period-setting";
 import { API as PeriodSettingAPI } from "@/micro/leave-period-setting/types";
 import SelectEnum from "@/micro/select-enum";
+import { DictCode } from "@/constants/dict-code";
 import { API } from "../types/api";
 
 const Item = Form.Item;
@@ -164,10 +165,10 @@ const LeaveSubmitModal: FC<LeaveSubmitModalProps> = (props) => {
           rules={[{ required: true, message: "请选择请假类型" }]}
         >
           <SelectEnum
-            name="TEACHER_LEAVE_TYPE"
+            name={DictCode.LEAVE_TYPE}
             allowClear
-            handleInitChange={(v: string) => form.setFieldValue("leaveType", v)}
-            onChange={(v: string) => form.setFieldValue("leaveType", v)}
+            handleInitChange={(v) => form.setFieldValue("leaveType", v)}
+            onChange={(v) => form.setFieldValue("leaveType", v)}
           />
         </Item>
 

@@ -5,6 +5,8 @@ import { observer } from "mobx-react";
 
 import Button from "@/components/button";
 import Upload from "@/components/upload";
+import SelectEnum from "@/micro/select-enum";
+import { DictCode } from "@/constants/dict-code";
 import { API } from "../types/api";
 
 const Item = Form.Item;
@@ -205,7 +207,7 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
               <Input placeholder="请输入姓名" />
             </Item>
             <Item label="性别" name={["teacher", "gender"]}>
-              <InputNumber style={{ width: "100%" }} placeholder="性别（数字）" />
+              <SelectEnum name={DictCode.GENDER} valueType="number" allowClear />
             </Item>
             <Item label="民族" name={["teacher", "ethnicity"]}>
               <Input placeholder="请输入民族" />
@@ -233,7 +235,7 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
               <Input placeholder="请输入现居住地址" />
             </Item>
             <Item label="政治面貌" name={["teacherInfo", "politicalStatus"]}>
-              <InputNumber style={{ width: "100%" }} placeholder="政治面貌（数字）" />
+              <SelectEnum name={DictCode.POLITICAL_STATUS} valueType="number" allowClear />
             </Item>
             <Item label="紧急联系人" name={["teacherInfo", "emergencyContact"]}>
               <Input placeholder="请输入紧急联系人" />
@@ -255,7 +257,7 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
               <InputNumber style={{ width: "100%" }} placeholder="请输入第一学历学制" />
             </Item>
             <Item label="第一学历学位" name={["teacherInfo", "firstDegree"]}>
-              <InputNumber style={{ width: "100%" }} placeholder="请输入第一学历学位" />
+              <SelectEnum name={DictCode.DEGREE} valueType="number" allowClear />
             </Item>
             <Item label="第一学历毕业日期" name={["teacherInfo", "firstDegreeGraduationDate"]}>
               <Input placeholder="请输入第一学历毕业日期" />
@@ -274,7 +276,7 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
               <InputNumber style={{ width: "100%" }} placeholder="请输入最高学历学制" />
             </Item>
             <Item label="最高学历学位" name={["teacherInfo", "highestDegree"]}>
-              <InputNumber style={{ width: "100%" }} placeholder="请输入最高学历学位" />
+              <SelectEnum name={DictCode.DEGREE} valueType="number" allowClear />
             </Item>
             <Item label="最高学历毕业日期" name={["teacherInfo", "highestDegreeGraduationDate"]}>
               <Input placeholder="请输入最高学历毕业日期" />

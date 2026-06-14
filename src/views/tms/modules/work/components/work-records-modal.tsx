@@ -4,6 +4,8 @@ import { Input, InputNumber, Modal, Pagination, Space, Spin } from "antd";
 import type { ModalProps } from "antd/lib/modal";
 
 import RootContext from "@/stores/root-context";
+import { DictCode } from "@/constants/dict-code";
+import { getDictLabel } from "@/utils/common/dict";
 import Button from "@/components/button";
 import MorTable from "@/components/table";
 import RunComponents from "@/components/run-component";
@@ -38,16 +40,11 @@ const WorkRecordsModal: FC<WorkRecordsModalProps> = (props) => {
   });
 
   const subjectDict = useMemo(() => {
-    const list = root.getEnumData("TEACHER_WORK_SUBJECT") || [];
-    const map = new Map<string, string>();
-    list.forEach((item) => map.set(String(item.code), String(item.desc)));
-    return map;
-  }, [root]);
-
-  const subjectLabel = (value: unknown): string => {
-    const key = String(value ?? "");
-    return subjectDict.get(key) || key || "-";
-  };
+    const list = root.getEnumData(DictCode.WORK_SUBJECT) || [];
+    return {
+      label: (value: unknown) => getDictLabel(list, value),
+    };
+  }, [root.enumList]);
 
   const columns = [
     { title: "上报日期", dataIndex: "date" },
@@ -56,7 +53,7 @@ const WorkRecordsModal: FC<WorkRecordsModalProps> = (props) => {
     {
       title: "上报科目",
       dataIndex: "subject",
-      render: (val: any) => subjectLabel(val),
+      render: (val: any) => subjectDict.label(val),
     },
     { title: "上报数量", dataIndex: "num", width: 120 },
   ];

@@ -5,6 +5,7 @@ import type { ModalProps } from "antd/lib/modal";
 
 import SelectEnum from "@/micro/select-enum";
 import DatePicker from "@/components/date-picker";
+import { DictCode } from "@/constants/dict-code";
 import { API } from "../types/api";
 
 const Item = Form.Item;
@@ -140,7 +141,7 @@ const ReportWorkModal: FC<ReportWorkModalProps> = (props) => {
           rules={[{ required: true, message: "请选择上报科目" }]}
         >
           <SelectEnum
-            name="TEACHER_WORK_SUBJECT"
+            name={DictCode.WORK_SUBJECT}
             placeholder="请选择上报科目"
             allowClear
             handleInitChange={(code) => {

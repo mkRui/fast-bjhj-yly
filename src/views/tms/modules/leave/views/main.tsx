@@ -12,11 +12,14 @@ import { toast } from "@/components/message";
 import StoreContext from "../store";
 import { API } from "../types/api";
 import CheckLeaveModal from "../components/check-modal";
+import { DictCode } from "@/constants/dict-code";
+import { useDict } from "@/hooks/use-dict";
 
 const Option = Select.Option;
 
 const LeaveMain: FC = () => {
   const store = useContext(StoreContext);
+  const leaveTypeDict = useDict(DictCode.LEAVE_TYPE);
 
   useEffect(() => {
     const init = async (): Promise<void> => {
@@ -77,7 +80,12 @@ const LeaveMain: FC = () => {
         `${record.leaveStartTime || "-"} ~ ${record.leaveEndTime || "-"}`,
     },
     { title: "请假数量", dataIndex: "leaveNum", width: 120 },
-    { title: "请假类型", dataIndex: "leaveType", width: 120 },
+    {
+      title: "请假类型",
+      dataIndex: "leaveType",
+      width: 120,
+      render: (val: unknown) => leaveTypeDict.label(val),
+    },
     { title: "请假事由", dataIndex: "leaveReason" },
     {
       title: "审核状态",
