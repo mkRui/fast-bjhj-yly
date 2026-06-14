@@ -2,7 +2,11 @@ import { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RootContext from "@/stores/root-context";
 import morStorage from "@/utils/common/local-storage";
-import { BasePath, Path } from "@/router/path";
+import { MenuList } from "@/micro/menu/config";
+import { filterMenuByResList } from "@/micro/menu/utils/filter-menu";
+import { getFirstMenuHref } from "@/micro/menu/utils/get-first-menu-href";
+import { Path } from "@/router/path";
+import { UserFullPath } from "@/views/user/router/path";
 
 const AuthGate: FC = () => {
   const navigate = useNavigate();
@@ -30,7 +34,10 @@ const AuthGate: FC = () => {
       }
 
       void store.getEnum();
-      navigate(BasePath.WELCOME, { replace: true });
+      const firstMenu =
+        getFirstMenuHref(filterMenuByResList(MenuList, store.resList)) ||
+        UserFullPath.SUBMIT;
+      navigate(firstMenu, { replace: true });
     };
 
     void run();

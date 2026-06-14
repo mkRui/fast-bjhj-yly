@@ -50,16 +50,17 @@ const MenuContainer: FC<MenuListTypes> = (props) => {
   const getArr = (url: string): void => {
     const search: any = Search(MenuList, url);
     const selected = search[selectMode === "front" ? 0 : search.length - 1];
-    setOpenKey([...openKey, ...search.slice(0, search.length - 1)]);
+    setOpenKey(search.slice(0, search.length - 1));
     setSelect(`${selected as string}`);
     handleClick?.(url);
   };
 
   const menuItemClick = (item: MenuType): void => {
-    getArr(item.href);
+    const [pathname, search = ""] = item.href.split("?");
     if (isRouteJump) {
-      navigate(item.href);
+      navigate({ pathname, search: search ? `?${search}` : "" });
     }
+    getArr(item.href);
     handleClick?.(item.href);
   };
 
@@ -95,9 +96,9 @@ const MenuContainer: FC<MenuListTypes> = (props) => {
 
   useEffect(() => {
     if (base) {
-      getArr(base.pathname);
+      getArr(`${base.pathname}${base.search || ""}`);
     }
-  }, []);
+  }, [base?.pathname, base?.search]);
 
   useEffect(() => {
     setMenu(filterMenuByResList(MenuList, store.resList));

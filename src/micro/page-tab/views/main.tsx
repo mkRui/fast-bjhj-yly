@@ -1,16 +1,46 @@
 import { SettingOutlined } from "@ant-design/icons";
 import { Dropdown, Menu } from "antd";
-import { useLocation } from "react-router-dom";
-import { FC, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { FC, useContext, useEffect, useRef, useState } from "react";
 import { useList } from "react-use";
+import { observer } from "mobx-react";
 import withRouterEnhance, {
   MetaProps,
 } from "@/utils/react/with-router-enhance";
 import { rootRoutes } from "@/router/routes";
+import { BasePath } from "@/router/path";
+import RootContext from "@/stores/root-context";
+import { MenuList } from "@/micro/menu/config";
+import { filterMenuByResList } from "@/micro/menu/utils/filter-menu";
+import { getFirstMenuHref } from "@/micro/menu/utils/get-first-menu-href";
 
 import Tab from "../components/tab";
 import Styles from "../styles/main.module.less";
 import { Flatten } from "@/utils/data-structure/tree";
+import { navigateToPath } from "../utils/navigate-path";
+
+const WELCOME_TAB_TITLES: Record<string, string> = {
+  work: "课时上报",
+  leave: "请假申请",
+  assets: "资产管理",
+  car: "用车申请",
+};
+
+function getRouteTitle(pathname: string, search: string): string {
+  if (pathname === "/welcome") {
+    const tab = new URLSearchParams(search).get("tab");
+    if (tab && WELCOME_TAB_TITLES[tab]) {
+      return WELCOME_TAB_TITLES[tab];
+    }
+    return "用户功能";
+  }
+
+  const info = Flatten(rootRoutes as any).find(
+    (item: any) => item.fullPath === pathname
+  ) as { title?: string } | undefined;
+
+  return info?.title || pathname;
+}
 
 interface TabItem {
   title: string;
@@ -20,87 +50,116 @@ interface TabItem {
 
 const PageTab: FC<MetaProps> = (props) => {
   const { base } = props;
+  const store = useContext(RootContext);
+  const navigate = useNavigate();
 
-  const [list, { push, clear, removeAt, set }] = useList<TabItem>([]);
+  const [list, { push, clear, set }] = useList<TabItem>([]);
 
-  const container = useRef<any>(null);
-
-  const tabContainer = useRef<any>(null);
-
-  const timer = useRef<any>(null);
+  const container = useRef<HTMLDivElement>(null);
+  const tabContainer = useRef<HTMLDivElement>(null);
+  const timer = useRef<ReturnType<typeof setTimeout>>(null);
 
   const [path, setPath] = useState("");
 
   const location = useLocation();
 
-  const getPathIndex = (url: string) => {
-    const index = list.findIndex((item) => item.path === url);
-    return index;
+  const getCurrentPath = (): string =>
+    location.pathname + location.search;
+
+  const getFirstMenuPath = (): string => {
+    const firstHref = getFirstMenuHref(
+      filterMenuByResList(MenuList, store.resList)
+    );
+    return firstHref || BasePath.WELCOME;
   };
 
-  const goRight = () => {
+  const navigateToFirstMenu = (): void => {
+    navigateToPath(navigate, getFirstMenuPath());
+  };
+
+  const getPathIndex = (url: string): number => {
+    return list.findIndex((item) => item.path === url);
+  };
+
+  const goRight = (): void => {
     if (timer.current) {
       clearTimeout(timer.current);
     }
     timer.current = setTimeout(() => {
       const c = container.current;
       const t = tabContainer.current;
-      c.scrollBy(t.offsetWidth, 0);
+      if (c && t) {
+        c.scrollBy(t.offsetWidth, 0);
+      }
     }, 0);
   };
 
   useEffect(() => {
-    if (base) {
-      const info = Flatten(rootRoutes as any).find(
-        (item: any) => item.fullPath === base.pathname
-      ) as any;
-      console.log(base.pathname);
-      const index = getPathIndex(location.pathname + location.search);
-      const tab: TabItem = {
-        title: info?.title || "",
-        basePath: base.path,
-        path: location.pathname + location.search,
-      };
-      if (index === -1) {
-        push(tab);
-        goRight();
-      }
-      setPath(location.pathname + location.search);
-    }
-  }, [location.pathname, location.search]);
+    if (!base) return;
 
-  const handleClose = (url: string) => {
+    const currentPath = getCurrentPath();
+    const index = getPathIndex(currentPath);
+    const tab: TabItem = {
+      title: getRouteTitle(location.pathname, location.search),
+      basePath: base.path,
+      path: currentPath,
+    };
+
+    if (index === -1) {
+      push(tab);
+      goRight();
+    } else if (list[index].title !== tab.title) {
+      const nextList = [...list];
+      nextList[index] = tab;
+      set(nextList);
+    }
+
+    setPath(currentPath);
+  }, [location.pathname, location.search, store.resList.length]);
+
+  const handleClose = (url: string): void => {
+    const currentPath = getCurrentPath();
     const index = getPathIndex(url);
-    removeAt(index);
-    if (index === 0 && list.length === 1) {
-      console.log(index);
-    } else if (url.includes(location.pathname)) {
-      const path = (list[index - 1] || list[index + 1])?.path;
-      console.log(path);
+    if (index === -1) return;
+
+    const remaining = list.filter((item) => item.path !== url);
+    set(remaining);
+
+    if (url === currentPath) {
+      if (remaining.length > 0) {
+        const nextIndex = Math.min(index, remaining.length - 1);
+        navigateToPath(navigate, remaining[nextIndex].path);
+      } else {
+        navigateToFirstMenu();
+      }
     }
   };
 
-  const handleScroll = (e: any) => {
+  const handleScroll = (e: React.WheelEvent<HTMLDivElement>): void => {
     const t = tabContainer.current;
     const c = container.current;
+    if (!t || !c) return;
+
     if (e.nativeEvent.deltaY <= 0) {
-      /* scrolling up */
       c.scrollTo(Math.max(c.scrollLeft - 10, 0), 0);
     } else {
-      /* scrolling down */
       c.scrollTo(Math.min(c.scrollLeft + 10, t.offsetWidth), 0);
     }
   };
 
-  const handleClearAll = () => {
+  const handleClearAll = (): void => {
     clear();
+    navigateToFirstMenu();
   };
 
-  const handleCloseOther = (path: string) => {
-    set(list.filter((item) => item.path === path));
+  const handleCloseOther = (keepPath: string): void => {
+    set(list.filter((item) => item.path === keepPath));
+    if (getCurrentPath() !== keepPath) {
+      navigateToPath(navigate, keepPath);
+    }
   };
 
-  const click = async ({ key }: { key: string }) => {
+  const click = async ({ key }: { key: string }): Promise<void> => {
     switch (key) {
       case "closeAll":
         handleClearAll();
@@ -111,7 +170,7 @@ const PageTab: FC<MetaProps> = (props) => {
     }
   };
 
-  const MenuList = (
+  const MenuListOverlay = (
     <Menu onClick={click}>
       <Menu.Item key="closeAll">关闭所有</Menu.Item>
       <Menu.Item key="closeOther">关闭其他</Menu.Item>
@@ -123,7 +182,7 @@ const PageTab: FC<MetaProps> = (props) => {
       <div
         ref={container}
         className={Styles["page-tab__container"]}
-        onWheel={(e) => handleScroll(e)}
+        onWheel={handleScroll}
       >
         <div ref={tabContainer} className={Styles["page-tab__context"]}>
           {[...new Map(list.map((item) => [item.path, item])).values()].map(
@@ -133,14 +192,14 @@ const PageTab: FC<MetaProps> = (props) => {
                 title={item.title || ""}
                 path={item.path}
                 active={path === item.path}
-                onClose={(url: string) => handleClose(url)}
+                onClose={handleClose}
               />
             )
           )}
         </div>
       </div>
-      <Dropdown trigger={["click"]} overlay={MenuList}>
-        <button className={Styles["button"]}>
+      <Dropdown trigger={["click"]} overlay={MenuListOverlay}>
+        <button type="button" className={Styles["button"]}>
           <SettingOutlined />
         </button>
       </Dropdown>
@@ -148,5 +207,4 @@ const PageTab: FC<MetaProps> = (props) => {
   );
 };
 
-// todo 需要改进
-export default withRouterEnhance(PageTab);
+export default withRouterEnhance(observer(PageTab));

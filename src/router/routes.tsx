@@ -9,6 +9,7 @@
 import type { ComponentType, JSX } from "react";
 import { Path, BasePath } from "./path";
 import Pages from "./page-all";
+import { UserFullPath } from "@/views/user/router/path";
 
 import SystemRouter from "@/views/system/router/routes";
 import TmsRouter from "@/views/tms/router/routes";
@@ -27,14 +28,38 @@ export interface RouteTypes {
 export const mainRoutes: RouteTypes[] = [
   {
     path: BasePath.WELCOME,
-    component: Pages.Welcome,
-    title: "个人中心",
-    fullPath: BasePath.WELCOME,
+    component: Pages.WelcomeRedirect,
+    title: "课时上报",
+    fullPath: UserFullPath.SUBMIT,
+  },
+  {
+    path: UserFullPath.SUBMIT,
+    component: Pages.UserWork,
+    title: "课时上报",
+    fullPath: UserFullPath.SUBMIT,
+  },
+  {
+    path: UserFullPath.LEAVE,
+    component: Pages.UserLeave,
+    title: "请假申请",
+    fullPath: UserFullPath.LEAVE,
+  },
+  {
+    path: UserFullPath.ASSETS,
+    component: Pages.UserAssets,
+    title: "资产管理",
+    fullPath: UserFullPath.ASSETS,
+  },
+  {
+    path: UserFullPath.CAR,
+    component: Pages.UserCar,
+    title: "用车申请",
+    fullPath: UserFullPath.CAR,
   },
   {
     path: "/personal-info",
     component: Pages.PersonalInfo,
-    title: "信息上报",
+    title: "教师信息",
     fullPath: "/personal-info",
   },
   { path: BasePath.SYSTEM, component: Pages.System, children: SystemRouter },

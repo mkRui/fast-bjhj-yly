@@ -2,7 +2,9 @@ import type { MenuType } from "../types";
 
 function hasPermission(code: string, resList: string[]): boolean {
   if (!code) return false;
-  return resList.includes(code);
+  return resList.some(
+    (res) => res === code || res.startsWith(`${code}:`) || code.startsWith(`${res}:`)
+  );
 }
 
 function filterNode(item: MenuType, resList: string[]): MenuType | null {

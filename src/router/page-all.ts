@@ -16,7 +16,13 @@ const Forbidden = dynamicImport(() => import("@/views/exception/forbidden"));
 const ServerError = dynamicImport(() => import("@/views/exception/server-error"));
 const Main = dynamicImport(() => import("@/layout/main"));
 const System = dynamicImport(() => import("@/views/system"));
-const Welcome = dynamicImport(() => import("@/views/welcome"));
+const WelcomeRedirect = dynamicImport(
+  () => import("@/views/welcome/pages/welcome-redirect")
+);
+const UserWork = dynamicImport(() => import("@/views/welcome/pages/work-page"));
+const UserLeave = dynamicImport(() => import("@/views/welcome/pages/leave-page"));
+const UserAssets = dynamicImport(() => import("@/views/welcome/pages/assets-page"));
+const UserCar = dynamicImport(() => import("@/views/welcome/pages/car-page"));
 const PersonalInfo = dynamicImport(() => import("@/views/personal-info"));
 const Tms = dynamicImport(() => import("@/views/tms"));
 const Sms = dynamicImport(() => import("@/views/sms"));
@@ -30,7 +36,11 @@ export default {
   ServerError,
   Main,
   System,
-  Welcome,
+  WelcomeRedirect,
+  UserWork,
+  UserLeave,
+  UserAssets,
+  UserCar,
   PersonalInfo,
   Tms,
   Sms,

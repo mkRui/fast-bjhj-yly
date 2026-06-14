@@ -2,20 +2,34 @@
  * 菜单资源编码，需与后端 sys/res 及角色授权 resList 保持一致。
  */
 export const MenuCode = {
-  WELCOME: "user:welcome",
-  PERSONAL_INFO: "user:teacher:info",
-  TMS_TEACHER: "tms:teacher",
-  TMS_WORK: "tms:work",
-  TMS_LEAVE: "tms:leave",
-  TMS_EXHIBITION: "tms:exhibition",
-  SALARY_BASE: "sms:salary:base",
-  SALARY_CALC: "sms:salary:calc",
-  SYS_USER: "sys:user:manage",
-  SYS_ROLE: "sys:role:manage",
-  SYS_RES: "sys:res:manage",
+  // 系统设置 sys
+  SYS_RES: "sys:res",
+  SYS_ROLE: "sys:role",
+  SYS_USER: "sys:user",
+
+  // 用户功能 user
+  USER_SUBMIT: "user:submit",
+  USER_TEACHER: "user:teacher",
+  USER_LEAVE: "user:leave",
+  USER_ASSETS: "user:assets",
+  USER_CAR: "user:car",
+
+  // 工资管理 sms
   SMS_PERIOD: "sms:period",
-  AMS_CATEGORY: "ams:category",
+  SMS_SALARY: "sms:salary",
+
+  // 教师管理 tms
+  TMS_TEACHER: "tms:teacher",
+  TMS_LEAVE: "tms:leave",
+  TMS_WORK: "tms:work",
+  TMS_EXHIBITION: "tms:exhibition",
+
+  // 资产管理 ams
   AMS_ASSETS: "ams:assets",
-  CRMS_CAR: "crms:car",
+  AMS_CATEGORY: "ams:category",
   AMS_CONSUMABLES: "ams:consumables",
+
+  // 用车管理 crms
+  CRMS_CAR: "crms:car",
+  CRMS_APPLY: "crms:apply",
 } as const;

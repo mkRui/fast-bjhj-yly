@@ -35,31 +35,50 @@ export class Tree implements TreeType {
   }
 }
 
-// 查找 Tree id 并附带链路
-export function Search(config: any, target: string): any {
-  const arr: any = [];
+// 查找 Tree id 并附带链路（优先匹配最长 href，避免多个父级共用前缀时选错）
+function matchHref(target: string, href: string): boolean {
+  if (!href) return false;
+  if (target === href) return true;
 
-  const find = config.find((elem: any) => target.includes(elem.href));
+  const [hrefPath, hrefQuery = ""] = href.split("?");
+  const [targetPath, targetQuery = ""] = target.split("?");
 
-  if (find) {
-    arr.push(find.id);
-    if (find.children) {
-      deep(find.children, target);
+  if (hrefQuery) {
+    if (targetPath !== hrefPath || !targetQuery) return false;
+    const hrefParams = new URLSearchParams(hrefQuery);
+    const targetParams = new URLSearchParams(targetQuery);
+    for (const [key, value] of hrefParams.entries()) {
+      if (targetParams.get(key) !== value) return false;
     }
+    return true;
   }
 
-  function deep(config: any, target: string): void {
-    const deepFind = config.find((elem: any) => target.includes(elem.href));
+  if (target.startsWith(`${href}?`)) return true;
+  return hrefPath.length > 1 && targetPath === hrefPath && !targetQuery;
+}
 
-    if (deepFind) {
-      arr.push(deepFind.id);
-      if (deepFind.children) {
-        deep(deepFind.children, target);
+export function Search(config: any, target: string): any {
+  let bestChain: string[] = [];
+  let bestScore = -1;
+
+  const walk = (nodes: any[], ancestors: string[]): void => {
+    for (const node of nodes) {
+      const chain = [...ancestors, node.id];
+      if (matchHref(target, node.href)) {
+        const score = node.href.length;
+        if (score > bestScore) {
+          bestScore = score;
+          bestChain = chain;
+        }
+      }
+      if (node.children?.length) {
+        walk(node.children, chain);
       }
     }
-  }
+  };
 
-  return arr;
+  walk(config, []);
+  return bestChain;
 }
 
 // Tree 扁平化

@@ -5,11 +5,10 @@ import ClassNames from "classnames";
 import { observer } from "mobx-react";
 
 import Layout, { Header, Main, Aside } from "@/components/container";
-import PageTab from "@/micro/page-tab";
 import RouteComponent from "@/router/route-component";
 import { mainRoutes } from "@/router/routes";
 import RootContext from "@/stores/root-context";
-import { BasePath } from "@/router/path";
+import { UserFullPath } from "@/views/user/router/path";
 import eventDispatch from "@/utils/common/event-dispatch";
 import { useThemeMode } from "@/config/hooks";
 import { getAntdTheme } from "@/config/antd-theme";
@@ -124,11 +123,10 @@ const MainLayout: FC = () => {
           <Main className={mainClass}>
             <Scrollbars autoHide>
               <div className={Styles[`main--content`]}>
-                <PageTab />
                 <RouteComponent
                   baseRouter="/"
                   routes={mainRoutes}
-                  redirect={BasePath.WELCOME}
+                  redirect={UserFullPath.SUBMIT}
                 />
               </div>
             </Scrollbars>

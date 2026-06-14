@@ -1,10 +1,10 @@
-import { CloseOutlined } from '@ant-design/icons';
-import ClassNames from 'classnames';
-import { FC, MouseEvent } from 'react';
+import { CloseOutlined } from "@ant-design/icons";
+import ClassNames from "classnames";
+import { FC, MouseEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
-
-import Styles from '../styles/tab.module.less';
+import { navigateToPath } from "../utils/navigate-path";
+import Styles from "../styles/tab.module.less";
 interface TabProps {
     title: string;
     path: string;
@@ -28,7 +28,7 @@ const Tab: FC<TabProps> = (props) => {
     };
 
     const handleClick = () => {
-        navigate(path);
+        navigateToPath(navigate, path);
     };
 
     return (
