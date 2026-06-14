@@ -33,12 +33,10 @@ export declare namespace API {
 
   export namespace Add {
     export interface Params {
-      assetsDTO: {
-        categoryId: string;
-        name: string;
-        remark?: string;
-        selfCode?: string;
-      };
+      categoryId: string;
+      name: string;
+      remark?: string;
+      selfCode?: string;
     }
 
     export type Data = null;
@@ -57,12 +55,10 @@ export declare namespace API {
   export namespace Edit {
     export interface Params {
       id: string;
-      assets: {
-        categoryId: string;
-        name: string;
-        remark?: string;
-        selfCode?: string;
-      };
+      categoryId: string;
+      name: string;
+      remark?: string;
+      selfCode?: string;
     }
 
     export type Data = null;
@@ -71,7 +67,7 @@ export declare namespace API {
 
   export namespace StockIn {
     export interface Params {
-      assetsId: string;
+      assetId: string;
       num: number;
     }
 

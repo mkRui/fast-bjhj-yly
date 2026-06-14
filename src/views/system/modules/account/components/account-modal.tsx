@@ -22,7 +22,7 @@ const NoticeModal: FC<NoticeModalComponentType> = (props) => {
 
   const handleOk = (): void => {
     void form.validateFields().then(async (data: any) => {
-      onOk({
+      await onOk({
         ...data,
         enableFlag: data.enableFlag ?? true,
         lockFlag: data.lockFlag ?? false,
@@ -39,7 +39,7 @@ const NoticeModal: FC<NoticeModalComponentType> = (props) => {
   }, [info]);
 
   return (
-    <Modal title={title} visible={true} onCancel={onCancel} onOk={handleOk}>
+    <Modal title={title} open={true} onCancel={onCancel} onOk={handleOk}>
       <Form form={form} layout="vertical">
         <Item
           rules={[

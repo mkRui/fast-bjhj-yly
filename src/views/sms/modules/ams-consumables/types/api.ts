@@ -34,12 +34,10 @@ export declare namespace API {
 
   export namespace Add {
     export interface Params {
-      consumablesDTO: {
-        categoryId: string;
-        name: string;
-        remark?: string;
-        selfCode?: string;
-      };
+      categoryId: string;
+      name: string;
+      remark?: string;
+      selfCode?: string;
     }
 
     export type Data = null;
@@ -49,12 +47,10 @@ export declare namespace API {
   export namespace Edit {
     export interface Params {
       id: string;
-      consumables: {
-        categoryId: string;
-        name: string;
-        remark?: string;
-        selfCode?: string;
-      };
+      categoryId: string;
+      name: string;
+      remark?: string;
+      selfCode?: string;
     }
 
     export type Data = null;

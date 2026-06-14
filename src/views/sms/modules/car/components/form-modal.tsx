@@ -38,7 +38,9 @@ const CarFormModal: FC<CarFormModalProps> = (props) => {
       if (id) {
         await onOk({
           id,
-          car: { name, minPassengerNum, maxPassengerNum },
+          name,
+          minPassengerNum,
+          maxPassengerNum,
         } as API.Edit.Params);
       } else {
         await onOk({

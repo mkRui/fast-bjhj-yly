@@ -41,11 +41,17 @@ const ConsumablesFormModal: FC<ConsumablesFormModalProps> = (props) => {
       if (id) {
         await onOk({
           id,
-          consumables: { categoryId, name, selfCode, remark },
+          categoryId,
+          name,
+          selfCode,
+          remark,
         } as API.Edit.Params);
       } else {
         await onOk({
-          consumablesDTO: { categoryId, name, selfCode, remark },
+          categoryId,
+          name,
+          selfCode,
+          remark,
         } as API.Add.Params);
       }
     });

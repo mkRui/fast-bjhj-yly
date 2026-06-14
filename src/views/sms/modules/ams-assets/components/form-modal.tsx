@@ -41,11 +41,17 @@ const AssetsFormModal: FC<AssetsFormModalProps> = (props) => {
       if (id) {
         await onOk({
           id,
-          assets: { categoryId, name, selfCode, remark },
+          categoryId,
+          name,
+          selfCode,
+          remark,
         } as API.Edit.Params);
       } else {
         await onOk({
-          assetsDTO: { categoryId, name, selfCode, remark },
+          categoryId,
+          name,
+          selfCode,
+          remark,
         } as API.Add.Params);
       }
     });

@@ -36,7 +36,8 @@ const CategoryFormModal: FC<CategoryFormModalProps> = (props) => {
       if (id) {
         await onOk({
           id,
-          category: { name, code },
+          name,
+          code,
         } as API.Edit.Params);
       } else {
         await onOk({ name, code } as API.Add.Params);

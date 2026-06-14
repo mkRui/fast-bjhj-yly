@@ -487,15 +487,11 @@ export declare namespace API {
   }
 
   export namespace ExhibitionEdit {
-    export interface ExhibitionDTO {
+    export interface Params {
+      id: number;
       date: string;
       name: string;
       location: string;
-    }
-
-    export interface Params {
-      id: number;
-      exhibition: ExhibitionDTO;
     }
 
     export type Data = null;

@@ -48,10 +48,8 @@ export declare namespace API {
   export namespace Edit {
     export interface Params {
       id: string;
-      category: {
-        name: string;
-        code: string;
-      };
+      name: string;
+      code: string;
     }
 
     export type Data = null;

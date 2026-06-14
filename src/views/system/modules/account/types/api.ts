@@ -82,9 +82,8 @@ export declare namespace API {
   }
 
   export namespace EditAccount {
-    export interface Params {
+    export interface Params extends API.AddAccount.Params {
       id: string;
-      user: API.AddAccount.Params;
     }
 
     export type Data = null;
