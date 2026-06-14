@@ -1,21 +1,68 @@
 .menu__container {
     .ant-menu {
-        .ant-menu-item-selected {
-            color: #2f54eb;
+        .ant-menu-item,
+        .ant-menu-submenu-title {
+            border-radius: 6px;
+            position: relative;
+            margin-inline: 8px;
+            width: calc(100% - 16px);
+        }
+
+        .ant-menu-item-selected,
+        .ant-menu-submenu-selected > .ant-menu-submenu-title {
+            font-weight: 600;
+
             &::before {
-                content: '';
+                content: "";
                 display: block;
-                width: 2px;
-                height: 100%;
-                background-color: #2f54eb;
+                width: 3px;
+                height: 70%;
+                background-color: #1677ff;
                 position: absolute;
-                right: 0;
+                left: 0;
+                top: 15%;
+                border-radius: 0 2px 2px 0;
+            }
+        }
+
+        &.ant-menu-light {
+            .ant-menu-item-selected,
+            .ant-menu-submenu-selected > .ant-menu-submenu-title {
+                color: #1677ff !important;
+                background-color: #e6f4ff !important;
+
+                .anticon {
+                    color: #1677ff !important;
+                }
             }
 
+            .ant-menu-item:not(.ant-menu-item-selected):hover,
+            .ant-menu-submenu-title:hover {
+                color: #1677ff !important;
+                background-color: #f0f5ff !important;
+            }
         }
-        .ant-menu-item {
-            border-radius: 0;
-            position: relative;
+
+        &.ant-menu-dark {
+            .ant-menu-item-selected,
+            .ant-menu-submenu-selected > .ant-menu-submenu-title {
+                color: #fff !important;
+                background-color: #1677ff !important;
+
+                &::before {
+                    background-color: #69b1ff;
+                }
+
+                .anticon {
+                    color: #fff !important;
+                }
+            }
+
+            .ant-menu-item:not(.ant-menu-item-selected):hover,
+            .ant-menu-submenu-title:hover {
+                color: #fff !important;
+                background-color: rgba(255, 255, 255, 0.08) !important;
+            }
         }
     }
 }

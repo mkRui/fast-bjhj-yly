@@ -6,8 +6,9 @@ import { MenuList } from "../config";
 import { observer } from "mobx-react";
 
 import Context from "@/stores/root-context";
-import { Search, Tree, Flatten } from "@/utils/data-structure/tree";
+import { Search } from "@/utils/data-structure/tree";
 import withRouterEnhance from "@/utils/react/with-router-enhance";
+import { filterMenuByResList } from "../utils/filter-menu";
 
 import "../styles/menu.less";
 
@@ -63,7 +64,6 @@ const MenuContainer: FC<MenuListTypes> = (props) => {
   };
 
   const handleOpenChange = (data: string[]): void => {
-    console.log(data);
     setOpenKey(data);
     openChange?.();
   };
@@ -73,7 +73,7 @@ const MenuContainer: FC<MenuListTypes> = (props) => {
     return MenuList.map((item: MenuType) => {
       if (item.children?.length) {
         return (
-          <SubMenu title={item.name} key={item.id}>
+          <SubMenu title={item.name} key={item.id} icon={item.icon}>
             {!!item.children?.length && MenuCom(item.children)}
           </SubMenu>
         );
@@ -81,6 +81,7 @@ const MenuContainer: FC<MenuListTypes> = (props) => {
         return (
           <Menu.Item
             key={item.id}
+            icon={item.icon}
             onClick={() => {
               menuItemClick(item);
             }}
@@ -99,11 +100,7 @@ const MenuContainer: FC<MenuListTypes> = (props) => {
   }, []);
 
   useEffect(() => {
-    if (store.resList.length) {
-      const code = store.resList.map((item) => item);
-      const menu = Flatten(MenuList).filter((item) => code.includes(item.code));
-      setMenu(new Tree(menu).loop("0"));
-    }
+    setMenu(filterMenuByResList(MenuList, store.resList));
   }, [store.resList]);
 
   useEffect(() => {
