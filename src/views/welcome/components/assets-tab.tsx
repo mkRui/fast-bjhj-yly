@@ -5,7 +5,7 @@ import type { ModalProps } from "antd/lib/modal";
 
 import axios from "@/api";
 import Button from "@/components/button";
-import CheckStatusTag, { isCheckFlagSet } from "@/components/check-status-tag";
+import CheckStatusTag from "@/components/check-status-tag";
 import MorTable from "@/components/table";
 import RunComponents from "@/components/run-component";
 import SelectEnum from "@/micro/select-enum";
@@ -104,8 +104,6 @@ const ApplyListModal: FC<ApplyListModalProps> = (props) => {
   useEffect(() => {
     void load({ consumablesId, current: 1 });
   }, [consumablesId]);
-
-  const isChecked = isCheckFlagSet;
 
   const columns = [
     { title: "审核意见", dataIndex: "applyCheckedComment", width: 220 },
@@ -378,8 +376,6 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
       ),
     });
   };
-
-  const isChecked = isCheckFlagSet;
 
   const itemColumns = [
     {

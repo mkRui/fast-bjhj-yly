@@ -5,7 +5,7 @@ import type { ModalProps } from "antd/lib/modal";
 
 import axios from "@/api";
 import Button from "@/components/button";
-import CheckStatusTag, { isCheckFlagSet } from "@/components/check-status-tag";
+import CheckStatusTag from "@/components/check-status-tag";
 import DatePicker from "@/components/date-picker";
 import MorTable from "@/components/table";
 import RunComponents from "@/components/run-component";
