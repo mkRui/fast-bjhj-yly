@@ -4,7 +4,7 @@ import { Pagination, Select, Space, Spin } from "antd";
 
 import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
-import CheckStatusTag from "@/components/check-status-tag";
+import CheckStatusTag, { isCheckFlagSet } from "@/components/check-status-tag";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
@@ -82,7 +82,7 @@ const LeaveMain: FC = () => {
       title: "操作",
       width: 120,
       render: (_: any, record: API.Page.RecordItem) =>
-        record.checkedFlag === null ? null : (
+        !isCheckFlagSet(record.checkedFlag) ? (
           <Button
             type="link"
             onClick={() => {
@@ -91,7 +91,7 @@ const LeaveMain: FC = () => {
           >
             审核
           </Button>
-        ),
+        ) : null,
     },
   ];
 
