@@ -5,9 +5,11 @@ import type { ModalProps } from "antd/lib/modal";
 
 import axios from "@/api";
 import Button from "@/components/button";
+import CheckStatusTag, { isCheckFlagSet } from "@/components/check-status-tag";
 import DatePicker from "@/components/date-picker";
 import MorTable from "@/components/table";
 import RunComponents from "@/components/run-component";
+import { useFormInitialValues } from "@/hooks/use-form-initial-values";
 import { toastRequestResult } from "@/utils/common/mutation-success";
 
 import { Api } from "../api";
@@ -29,21 +31,40 @@ const CarApplyModal: FC<CarApplyModalProps> = (props) => {
   const { title, loading, init, onCancel, onOk } = props;
   const [form] = Form.useForm();
   const [carId, setCarId] = useState<string>(String(init?.carId || ""));
+  const [passengerRange, setPassengerRange] = useState<{ min: number; max?: number }>({
+    min: 1,
+  });
+
+  const applyPassengerRange = (item?: API.CarList.Item): void => {
+    const min = Number(item?.minPassengerNum ?? 1);
+    const max =
+      item?.maxPassengerNum === undefined || item?.maxPassengerNum === null
+        ? undefined
+        : Number(item.maxPassengerNum);
+    setPassengerRange({ min, max });
+    const current = form.getFieldValue("passengerNum");
+    if (current === undefined || current === null) return;
+    let next = Number(current);
+    if (next < min) next = min;
+    if (max !== undefined && next > max) next = max;
+    form.setFieldValue("passengerNum", next);
+  };
+
+  useFormInitialValues(form, {
+    carId: init?.carId,
+    purposeId: init?.purposeId,
+    applyReason: init?.applyReason || "",
+    rentalTime: init?.rentalTime || "",
+    origin: init?.origin || "",
+    destination: init?.destination || "",
+    passengerNum: init?.passengerNum ?? 1,
+    num: init?.num ?? 1,
+    remark: init?.remark || "",
+  });
 
   useEffect(() => {
-    form.setFieldsValue({
-      carId: init?.carId,
-      purposeId: init?.purposeId,
-      applyReason: init?.applyReason || "",
-      rentalTime: init?.rentalTime || "",
-      origin: init?.origin || "",
-      destination: init?.destination || "",
-      passengerNum: init?.passengerNum ?? 1,
-      num: init?.num ?? 1,
-      remark: init?.remark || "",
-    });
     setCarId(String(init?.carId || ""));
-  }, [form, init]);
+  }, [init?.carId]);
 
   const handleOk = (): void => {
     void form.validateFields().then(async (values: any) => {
@@ -77,14 +98,17 @@ const CarApplyModal: FC<CarApplyModalProps> = (props) => {
           <CarSelect
             allowClear
             value={form.getFieldValue("carId")}
-            onInitChange={(v) => {
+            onInitChange={(v, list) => {
               form.setFieldValue("carId", v);
               setCarId(String(v || ""));
+              const item = list?.find((it) => String(it.id) === String(v || ""));
+              applyPassengerRange(item);
             }}
-            onChange={(v) => {
+            onChange={(v, item) => {
               form.setFieldValue("carId", v);
               form.setFieldValue("purposeId", undefined);
               setCarId(String(v || ""));
+              applyPassengerRange(item);
             }}
           />
         </Item>
@@ -109,8 +133,33 @@ const CarApplyModal: FC<CarApplyModalProps> = (props) => {
         <Item label="目的地" name="destination" rules={[{ required: true, message: "请输入目的地" }]}>
           <Input placeholder="请输入目的地" />
         </Item>
-        <Item label="乘车人数" name="passengerNum" rules={[{ required: true, message: "请输入乘车人数" }]}>
-          <InputNumber style={{ width: "100%" }} min={1} />
+        <Item
+          label={
+            passengerRange.max !== undefined
+              ? `乘车人数（${passengerRange.min}~${passengerRange.max}人）`
+              : `乘车人数（至少 ${passengerRange.min} 人）`
+          }
+          name="passengerNum"
+          rules={[
+            { required: true, message: "请输入乘车人数" },
+            {
+              validator: async (_rule, value) => {
+                const num = Number(value || 0);
+                if (num < passengerRange.min) {
+                  throw new Error(`乘车人数不能少于 ${passengerRange.min} 人`);
+                }
+                if (passengerRange.max !== undefined && num > passengerRange.max) {
+                  throw new Error(`乘车人数不能超过 ${passengerRange.max} 人`);
+                }
+              },
+            },
+          ]}
+        >
+          <InputNumber
+            style={{ width: "100%" }}
+            min={passengerRange.min}
+            max={passengerRange.max}
+          />
         </Item>
         <Item label="车次" name="num" rules={[{ required: true, message: "请输入车次" }]}>
           <InputNumber style={{ width: "100%" }} min={1} />
@@ -189,9 +238,15 @@ const CarTab: FC = () => {
     });
   };
 
-  const isChecked = (val: any) => typeof val === "boolean";
-
   const columns = [
+    { title: "审核意见", dataIndex: "checkedComment", width: 200 },
+    {
+      title: "审核状态",
+      width: 120,
+      render: (_: any, record: API.CarApplyPage.RecordItem) => (
+        <CheckStatusTag checkedFlag={record.checkedFlag} />
+      ),
+    },
     { title: "申请时间", dataIndex: "applyTime", width: 180 },
     { title: "车型", dataIndex: "carName", width: 160 },
     { title: "用途", dataIndex: "purpose", width: 140 },
@@ -202,15 +257,6 @@ const CarTab: FC = () => {
     { title: "人数", dataIndex: "passengerNum", width: 100 },
     { title: "车次", dataIndex: "num", width: 100 },
     { title: "金额", dataIndex: "amountPrice", width: 120 },
-    {
-      title: "审核状态",
-      width: 120,
-      render: (_: any, record: API.CarApplyPage.RecordItem) => {
-        if (!isChecked(record.checkedFlag)) return "未审核";
-        return record.checkedFlag ? "通过" : "不通过";
-      },
-    },
-    { title: "审核意见", dataIndex: "checkedComment", width: 200 },
   ];
 
   return (
