@@ -17,7 +17,7 @@ export type RequestResponse<T> = BaseRequest.Response<PageResponse<T>>;
 
 export abstract class PaginationModel<P, D> {
   abstract getList(params: P): Promise<D>;
-  abstract delItem(id: number): Promise<any>;
+  abstract delItem(id: string): Promise<any>;
   abstract jumpPage(page: number): any;
 }
 
@@ -91,7 +91,7 @@ export class PaginationBaseStore<T extends Request, P extends PageParams, D>
 
   // 删除某一项
   public async delItem(
-    id: number | string
+    id: string
   ): Promise<BaseRequest.Response<any>> {
     console.log(id);
     throw "请在子类实现";
@@ -145,7 +145,7 @@ export class PaginationBaseStore<T extends Request, P extends PageParams, D>
 
   // 删除某一项 - 并刷新列表
   public async del(
-    id: number | string
+    id: string
   ): Promise<BaseRequest.Response<null> | undefined> {
     const [, data] = await this.delItem(id);
     if (data) {

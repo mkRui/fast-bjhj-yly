@@ -11,7 +11,7 @@ import { toastActionResult } from "@/utils/common/mutation-success";
 export interface ModalContainer extends JSX.IntrinsicAttributes {
   onCancel: ModalProps["onCancel"];
   onOk: any;
-  id: number;
+  id: string;
 }
 
 const RoleResourceModal: FC<ModalContainer> = (props) => {
@@ -19,7 +19,7 @@ const RoleResourceModal: FC<ModalContainer> = (props) => {
 
   const store = useContext(Store);
 
-  const [checkList, setCheckList] = useState<number[]>([]);
+  const [checkList, setCheckList] = useState<string[]>([]);
 
   const init = async (): Promise<void> => {
     store.$setParams({ roleId: id });

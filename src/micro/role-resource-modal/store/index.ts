@@ -11,7 +11,7 @@ import Api from "../api";
 import { API } from "../types";
 export class RoleStore extends Store<Api> {
   public params: API.RoleResourceList.Params = {
-    roleId: 0,
+    roleId: "",
   };
 
   public data: API.RoleResourceList.Data[] = [];

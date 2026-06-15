@@ -9,7 +9,7 @@ const Item = Form.Item;
 interface SubjectAddModalProps {
   title: string;
   loading?: boolean;
-  salaryId?: number;
+  salaryId?: string;
   records?: API.Page.RecordItem[];
   onCancel: ModalProps["onCancel"];
   onOk: (params: API.SubjectAdd.Params) => void | Promise<void>;
@@ -17,7 +17,7 @@ interface SubjectAddModalProps {
 
 const SubjectAddModal: FC<SubjectAddModalProps> = (props) => {
   const { title, loading, salaryId, records, onCancel, onOk } = props;
-  const [form] = Form.useForm<API.SubjectAdd.Params & { teacherKey?: number }>();
+  const [form] = Form.useForm<API.SubjectAdd.Params & { teacherKey?: string }>();
 
   useEffect(() => {
     const defaultSalaryId = salaryId ?? records?.[0]?.id;
@@ -32,7 +32,7 @@ const SubjectAddModal: FC<SubjectAddModalProps> = (props) => {
   const handleOk = (): void => {
     void form.validateFields().then(async (values) => {
       await onOk({
-        salaryId: Number(values.salaryId),
+        salaryId: String(values.salaryId),
         subject: String(values.subject || ""),
         amount: Number(values.amount || 0),
       });

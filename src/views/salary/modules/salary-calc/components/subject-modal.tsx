@@ -16,7 +16,7 @@ interface SubjectModalProps {
   month: number;
   fetchSubjects: (params: API.SubjectList.Params) => Promise<API.SubjectList.Data[]>;
   addSubject: (params: API.SubjectAdd.Params) => Promise<MutationResult>;
-  delSubject: (id: number) => Promise<MutationResult>;
+  delSubject: (id: string) => Promise<MutationResult>;
   onCancel: ModalProps["onCancel"];
 }
 

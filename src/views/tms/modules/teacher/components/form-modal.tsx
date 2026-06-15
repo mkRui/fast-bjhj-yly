@@ -66,12 +66,12 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
           firstDegreeMajor: info.teacherInfo?.firstDegreeMajor,
           firstDegreeDuration: info.teacherInfo?.firstDegreeDuration,
           firstDegree: info.teacherInfo?.firstDegree,
-          firstDegreeGraduationDate: info.teacherInfo?.firstDegreeGraduationDate,
+          firstDegreeGraduationDate: toText(info.teacherInfo?.firstDegreeGraduationDate),
           highestDegreeGraduationInstitution: info.teacherInfo?.highestDegreeGraduationInstitution,
           highestDegreeMajor: info.teacherInfo?.highestDegreeMajor,
           highestDegreeDuration: info.teacherInfo?.highestDegreeDuration,
           highestDegree: info.teacherInfo?.highestDegree,
-          highestDegreeGraduationDate: info.teacherInfo?.highestDegreeGraduationDate,
+          highestDegreeGraduationDate: toText(info.teacherInfo?.highestDegreeGraduationDate),
           teachingLicense: Boolean(info.teacherInfo?.teachingLicense),
           teachingLicenseType: info.teacherInfo?.teachingLicenseType,
           teachingLicenseSubject: info.teacherInfo?.teachingLicenseSubject,
@@ -114,7 +114,7 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
       const vInfo = values?.teacherInfo || {};
 
       const payload: API.Edit.Params = {
-        id: Number(info.teacher.id),
+        id: String(info.teacher.id),
         teacher: {
           name: toText(vTeacher.name),
           gender: toNumber(vTeacher.gender, 0),
@@ -222,7 +222,7 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
           <Divider orientation="left">教师信息</Divider>
           <div className="grid grid-cols-2 gap-4">
             <Item label="出生日期" name={["teacherInfo", "dateOfBirth"]}>
-              <Input placeholder="请输入出生日期（字符串）" />
+              <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} placeholder="请选择出生日期" />
             </Item>
             <Item label="手机" name={["teacherInfo", "phone"]}>
               <Input placeholder="请输入手机" />
@@ -262,7 +262,7 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
               <SelectEnum name={DictCode.DEGREE} valueType="number" allowClear />
             </Item>
             <Item label="第一学历毕业日期" name={["teacherInfo", "firstDegreeGraduationDate"]}>
-              <Input placeholder="请输入第一学历毕业日期" />
+              <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} placeholder="请选择第一学历毕业日期" />
             </Item>
           </div>
 
@@ -281,7 +281,7 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
               <SelectEnum name={DictCode.DEGREE} valueType="number" allowClear />
             </Item>
             <Item label="最高学历毕业日期" name={["teacherInfo", "highestDegreeGraduationDate"]}>
-              <Input placeholder="请输入最高学历毕业日期" />
+              <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} placeholder="请选择最高学历毕业日期" />
             </Item>
           </div>
 

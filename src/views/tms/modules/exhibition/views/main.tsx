@@ -44,7 +44,7 @@ const ExhibitionMain: FC = () => {
       title: "教师",
       dataIndex: "teacherId",
       width: 140,
-      render: (teacherId: number) => store.teacherMap[teacherId] || teacherId || "-",
+      render: (teacherId: string) => store.teacherMap[teacherId] || teacherId || "-",
     },
     { title: "年份", dataIndex: "year", width: 100 },
     { title: "月份", dataIndex: "month", width: 100 },

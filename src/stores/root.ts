@@ -18,7 +18,7 @@ import { API } from "@/api/type";
 
 class RootStore extends Store<Api> {
   public init: API.Init.User = {
-    id: 0,
+    id: "",
     enableFlag: false,
     lockFlag: false,
     account: "",

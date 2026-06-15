@@ -17,7 +17,7 @@ export declare namespace API {
 
     export interface User {
       /*用户id */
-      id: number;
+      id: string;
       /*是否启用 */
       enableFlag: boolean;
       /*是否锁定 */
@@ -29,7 +29,7 @@ export declare namespace API {
 
     export interface UserInfo {
       /*编辑id */
-      id: number;
+      id: string;
 
       /*昵称 */
       nickname: string;

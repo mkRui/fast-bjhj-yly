@@ -8,8 +8,8 @@ export declare namespace API {
     }
 
     export interface Data {
-      id: number;
-      parentId: number;
+      id: string;
+      parentId: string;
       name: string;
       code: string;
       selfCode: string;
@@ -22,7 +22,7 @@ export declare namespace API {
 
   export namespace DelRes {
     export interface Params {
-      id: number;
+      id: string;
     }
 
     export type Data = null;
@@ -34,7 +34,7 @@ export declare namespace API {
     export interface Params {
       name: string;
       code: string;
-      parentId?: number;
+      parentId?: string;
     }
 
     export type Data = null;
@@ -46,8 +46,8 @@ export declare namespace API {
     export interface Params extends API.AddRes.Params {
       name: string;
       code: string;
-      parentId: number;
-      resId: number;
+      parentId: string;
+      resId: string;
     }
 
     export type Data = null;

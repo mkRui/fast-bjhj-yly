@@ -9,12 +9,12 @@ import { toastActionResult } from "@/utils/common/mutation-success";
 import { API } from "../types/api";
 
 interface ExhibitionAttachmentModalProps {
-  exhibitionId: number;
+  exhibitionId: string;
   exhibitionName?: string;
   loading?: boolean;
-  fetchAttachments: (exhibitionId: number) => Promise<API.ExhibitionAttachmentList.Data[]>;
+  fetchAttachments: (exhibitionId: string) => Promise<API.ExhibitionAttachmentList.Data[]>;
   addAttachment: (params: API.ExhibitionAttachmentAdd.Params) => Promise<boolean>;
-  delAttachment: (id: number) => Promise<boolean>;
+  delAttachment: (id: string) => Promise<boolean>;
   onCancel: ModalProps["onCancel"];
 }
 

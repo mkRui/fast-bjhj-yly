@@ -6,9 +6,9 @@ import MorTable from "@/components/table";
 import { API } from "../types/api";
 
 interface AttachmentModalProps {
-  exhibitionId: number;
+  exhibitionId: string;
   exhibitionName?: string;
-  fetchAttachments: (exhibitionId: number) => Promise<API.AttachmentList.Data[]>;
+  fetchAttachments: (exhibitionId: string) => Promise<API.AttachmentList.Data[]>;
   onCancel: ModalProps["onCancel"];
 }
 

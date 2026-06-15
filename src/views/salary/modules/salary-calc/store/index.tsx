@@ -69,7 +69,7 @@ export class SalaryCalcStore extends Store<Api> {
     return resolveMutation(err, () => this.fetchPage());
   }
 
-  public async delSubject(id: number) {
+  public async delSubject(id: string) {
     const [err] = await this.api.delSubject({ id });
     return resolveMutation(err, () => this.fetchPage());
   }

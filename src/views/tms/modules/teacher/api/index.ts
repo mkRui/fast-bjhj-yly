@@ -18,4 +18,3 @@ export class Api extends Request {
     return await this.post<API.Del.Data>("/tms/teacher/del", params);
   }
 }
-

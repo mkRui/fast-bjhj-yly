@@ -11,10 +11,10 @@ export declare namespace API {
     }
 
     export interface RecordItem {
-      id: number;
+      id: string;
       year: number;
       month: number;
-      teacherId: number;
+      teacherId: string;
       teacherUserName: string;
       amount: number;
     }
@@ -34,12 +34,12 @@ export declare namespace API {
     export interface Params {
       year: number;
       month: number;
-      teacherId: number;
+      teacherId: string;
     }
 
     export interface Data {
-      id: number;
-      salaryId: number;
+      id: string;
+      salaryId: string;
       subject: string;
       amount: number;
     }
@@ -49,7 +49,7 @@ export declare namespace API {
 
   export namespace SubjectAdd {
     export interface Params {
-      salaryId: number;
+      salaryId: string;
       subject: string;
       amount: number;
     }
@@ -60,7 +60,7 @@ export declare namespace API {
 
   export namespace SubjectDel {
     export interface Params {
-      id: number;
+      id: string;
     }
 
     export type Data = null;

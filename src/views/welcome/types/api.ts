@@ -406,8 +406,8 @@ export declare namespace API {
     }
 
     export interface RecordItem {
-      id: number;
-      teacherId: number;
+      id: string;
+      teacherId: string;
       year: number;
       month: number;
       date: string;
@@ -439,7 +439,7 @@ export declare namespace API {
 
   export namespace ExhibitionEdit {
     export interface Params {
-      id: number;
+      id: string;
       date: string;
       name: string;
       location: string;
@@ -457,7 +457,7 @@ export declare namespace API {
 
   export namespace ExhibitionDel {
     export interface Params {
-      id: number;
+      id: string;
     }
 
     export type Data = null;
@@ -466,12 +466,12 @@ export declare namespace API {
 
   export namespace ExhibitionAttachmentList {
     export interface Params {
-      exhibitionId: number;
+      exhibitionId: string;
     }
 
     export interface Data {
-      id: number;
-      exhibitionId: number;
+      id: string;
+      exhibitionId: string;
       filename: string;
       suffix: string;
       type: number;
@@ -482,7 +482,7 @@ export declare namespace API {
 
   export namespace ExhibitionAttachmentAdd {
     export interface Params {
-      exhibitionId: number;
+      exhibitionId: string;
       dist: string;
     }
 
@@ -492,7 +492,7 @@ export declare namespace API {
 
   export namespace ExhibitionAttachmentDel {
     export interface Params {
-      id: number;
+      id: string;
     }
 
     export type Data = null;

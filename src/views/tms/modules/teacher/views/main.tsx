@@ -65,7 +65,7 @@ const TeacherMain: FC = () => {
             linkType="danger"
             action="del"
             onConfirm={() => {
-              void store.del(Number(record.id));
+              void store.del(record.id);
             }}
           >
             删除
@@ -90,8 +90,8 @@ const TeacherMain: FC = () => {
     void store.getList();
   };
 
-  const handleEdit = async (id: number): Promise<void> => {
-    const info = await store.getInfo(Number(id));
+  const handleEdit = async (id: string): Promise<void> => {
+    const info = await store.getInfo(id);
     if (!info) {
       toast("error", "获取教师信息失败");
       return;

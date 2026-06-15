@@ -10,8 +10,8 @@ export declare namespace API {
     }
 
     export interface RecordItem {
-      id: number;
-      teacherId: number;
+      id: string;
+      teacherId: string;
       leaveDate: string;
       leaveStartTime: string;
       leaveEndTime: string;
@@ -19,7 +19,7 @@ export declare namespace API {
       leaveType: number;
       leaveReason: string;
       checkedFlag: boolean | null;
-      checkedUserId?: number;
+      checkedUserId?: string;
       checkedUserName?: string;
       checkedComment?: string;
     }
@@ -37,7 +37,7 @@ export declare namespace API {
 
   export namespace Check {
     export interface Params {
-      id: number;
+      id: string;
       checkedFlag: boolean;
       checkedComment?: string;
     }

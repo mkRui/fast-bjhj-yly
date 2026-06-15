@@ -85,7 +85,7 @@ const WorkMain: FC = () => {
   }, [teacherId, loadRecords]);
 
   const selectedTeacher = useMemo(() => {
-    return store.teacherList.find((t: any) => Number(t.id) === Number(teacherId));
+    return store.teacherList.find((t: any) => String(t.id) === String(teacherId));
   }, [store.teacherList, teacherId]);
 
   const columns = [

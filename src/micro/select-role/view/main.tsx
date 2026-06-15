@@ -7,20 +7,20 @@ import BranchStoreContext from "../store";
 const Option = Select.Option;
 
 export interface SelectBranchProp extends JSX.IntrinsicAttributes {
-  value?: number[];
-  onChange?: (name: number[]) => void;
-  getUid?: (id: number) => void;
-  userId?: number;
+  value?: string[];
+  onChange?: (name: string[]) => void;
+  getUid?: (id: string) => void;
+  userId?: string;
 }
 
 const SelectUserAccount: FC<SelectBranchProp> = (props) => {
   const { value, userId } = props;
 
-  const [role, setRole] = useState<number[]>([]);
+  const [role, setRole] = useState<string[]>([]);
 
   const store = useContext(BranchStoreContext);
 
-  const handleChange = (id: number[] | number): void => {
+  const handleChange = (id: string[] | string): void => {
     if (typeof id === "object") {
       props.onChange?.(id);
     }
@@ -68,7 +68,7 @@ const SelectUserAccount: FC<SelectBranchProp> = (props) => {
       placeholder="请选择用户角色"
     >
       {store.data.map((item) => (
-        <Option value={String(item.id)} key={item.id}>
+        <Option value={item.id} key={item.id}>
           <span aria-label={item.name}>{item.name}</span>
         </Option>
       ))}

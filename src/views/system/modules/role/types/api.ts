@@ -8,7 +8,7 @@ export declare namespace API {
     }
 
     export interface Data {
-      id: number;
+      id: string;
       name: string;
       code: string;
     }
@@ -18,7 +18,7 @@ export declare namespace API {
 
   export namespace DelRole {
     export interface Params {
-      id: number;
+      id: string;
     }
 
     export type Data = null;
@@ -40,7 +40,7 @@ export declare namespace API {
 
   export namespace SetRole {
     export interface Params extends API.AddRole.Params {
-      roleId: number;
+      roleId: string;
     }
 
     export type Data = null;

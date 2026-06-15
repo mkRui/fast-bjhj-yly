@@ -61,7 +61,7 @@ export class TeacherStore extends Store<Api> {
     }
   }
 
-  public async getInfo(id: number): Promise<API.Info.Data | null> {
+  public async getInfo(id: string): Promise<API.Info.Data | null> {
     const [err, data] = await this.api.getInfo({ id });
     if (!err) {
       return data;
@@ -76,7 +76,7 @@ export class TeacherStore extends Store<Api> {
     return resolveMutation(err, () => this.getList());
   }
 
-  public async del(id: number) {
+  public async del(id: string) {
     this.$setLoading(true);
     const [err] = await this.api.del({ id });
     this.$setLoading(false);

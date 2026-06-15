@@ -33,7 +33,7 @@ const SalaryBaseFormModal: FC<SalaryBaseFormModalProps> = (props) => {
   const handleOk = (): void => {
     void form.validateFields().then(async (values) => {
       await onOk({
-        id: Number(values.id),
+        id: String(values.id),
         salaryBase: Number(values.salaryBase || 0),
         salaryPosition: Number(values.salaryPosition || 0),
         salaryBonus: Number(values.salaryBonus || 0),

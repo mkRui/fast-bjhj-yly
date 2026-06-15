@@ -5,12 +5,12 @@ import { BaseRequest } from "mor-request";
 export declare namespace API {
   export namespace RoleResourceList {
     export interface Params {
-      roleId: number;
+      roleId: string;
     }
 
     export interface Data {
-      id: number;
-      parentId: number;
+      id: string;
+      parentId: string;
       name: string;
       code: string;
       type: string;
@@ -28,8 +28,8 @@ export declare namespace API {
 
   export namespace SetRoleResource {
     export interface Params {
-      roleId: number;
-      resId: number | string;
+      roleId: string;
+      resId: string;
       act: string;
     }
 

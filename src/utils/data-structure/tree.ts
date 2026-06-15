@@ -1,6 +1,6 @@
 interface ListType {
-  id: number | string;
-  parentId: number | string;
+  id: string;
+  parentId: string;
   children?: ListType[];
 }
 
@@ -16,11 +16,11 @@ export class Tree implements TreeType {
   }
 
   // 根据parentId 初始化 tree
-  public initTree(parentId: string | number): any {
+  public initTree(parentId: string): any {
     return this.loop(parentId);
   }
 
-  public loop(parentId: string | number): any {
+  public loop(parentId: string): any {
     const treeList: any = [];
     const len = this.list.length;
     for (let i = 0; i < len; i++) {

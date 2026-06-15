@@ -4,7 +4,7 @@ import { BaseRequest } from "mor-request";
 export declare namespace API {
   export namespace Teacher {
     export interface Data {
-      id: number;
+      id: string;
       name: string;
       gender: number;
       ethnicity: string;
@@ -14,7 +14,7 @@ export declare namespace API {
 
   export namespace SalaryBase {
     export interface Data {
-      id: number;
+      id: string;
       salaryBase: number;
       salaryPosition: number;
       salaryBonus: number;
@@ -49,7 +49,7 @@ export declare namespace API {
 
   export namespace Edit {
     export interface Params {
-      id: number;
+      id: string;
       salaryBase: number;
       salaryPosition: number;
       salaryBonus: number;

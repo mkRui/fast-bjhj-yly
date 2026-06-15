@@ -5,13 +5,13 @@ import { BaseRequest } from "mor-request";
 export declare namespace API {
   export namespace UserRoleList {
     export interface Params {
-      userId: number;
+      userId: string;
     }
 
     export interface Data {
-      id: number;
-      userId: number;
-      roleId: number;
+      id: string;
+      userId: string;
+      roleId: string;
     }
 
     export type Response = BaseRequest.Response<Data[]>;
@@ -19,7 +19,7 @@ export declare namespace API {
 
   export namespace RoleList {
     export interface Data {
-      id: number;
+      id: string;
       name: string;
       code: string;
     }

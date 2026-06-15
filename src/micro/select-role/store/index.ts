@@ -9,7 +9,7 @@ import Api from "../api";
 import { API } from "../types";
 export class RoleStore extends Store<Api> {
   public params: API.UserRoleList.Params = {
-    userId: 0,
+    userId: "",
   };
 
   public data: API.RoleList.Data[] = [];

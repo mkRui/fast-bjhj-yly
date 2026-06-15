@@ -35,7 +35,7 @@ export declare namespace API {
 
   export namespace Info {
     export interface Params {
-      id: number;
+      id: string;
     }
 
     export interface Data {
@@ -52,7 +52,7 @@ export declare namespace API {
 
   export namespace Edit {
     export interface Params {
-      id: number;
+      id: string;
       teacher: Omit<Teacher, "id">;
       teacherInfo: EditTeacherInfoBody;
       familyMember: EditFamilyMember[];
@@ -67,7 +67,7 @@ export declare namespace API {
 
   export namespace Del {
     export interface Params {
-      id: number;
+      id: string;
     }
 
     export type Data = null;

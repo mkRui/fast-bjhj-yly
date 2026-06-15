@@ -9,7 +9,7 @@ import { API } from "../types/api";
 export class ExhibitionStore extends Store<Api> {
   public loading = false;
 
-  public teacherMap: Record<number, string> = {};
+  public teacherMap: Record<string, string> = {};
 
   public params: API.Page.Params = {
     current: "0",
@@ -42,7 +42,7 @@ export class ExhibitionStore extends Store<Api> {
     this.loading = loading;
   }
 
-  public $setTeacherMap(map: Record<number, string>): void {
+  public $setTeacherMap(map: Record<string, string>): void {
     this.teacherMap = map;
   }
 
@@ -57,7 +57,7 @@ export class ExhibitionStore extends Store<Api> {
   public async fetchTeacherMap(): Promise<void> {
     const [err, data] = await this.api.getTeacherList({ current: 1, size: 999 });
     if (err) return;
-    const map: Record<number, string> = {};
+    const map: Record<string, string> = {};
     (data.records || []).forEach((item) => {
       map[item.id] = item.name;
     });
@@ -72,7 +72,7 @@ export class ExhibitionStore extends Store<Api> {
   }
 
   public async fetchAttachmentList(
-    exhibitionId: number
+    exhibitionId: string
   ): Promise<API.AttachmentList.Data[]> {
     const [err, data] = await this.api.getAttachmentList({ exhibitionId });
     if (err) return [];
