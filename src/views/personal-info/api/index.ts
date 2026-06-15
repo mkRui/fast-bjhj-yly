@@ -9,7 +9,7 @@ export class Api extends Request {
   public async editTeacherInfo(
     params: API.EditTeacherInfo.Params
   ): Promise<API.EditTeacherInfo.Response> {
-    return await this.post<API.EditTeacherInfo.Data>("/i/user/teacher/edit", params);
+    return await this.post<API.EditTeacherInfo.Data>("/user/teacher/edit", params);
   }
 }
 

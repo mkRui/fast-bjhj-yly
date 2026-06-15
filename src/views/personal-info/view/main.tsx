@@ -5,6 +5,7 @@ import HeaderTitle from "@/components/card-header";
 import { Divider, Form, Input, InputNumber, Space, Spin, Switch } from "antd";
 import Button from "@/components/button";
 import { toastActionResult } from "@/utils/common/mutation-success";
+import { toast } from "@/components/message";
 import Upload from "@/components/upload";
 import SelectEnum from "@/micro/select-enum";
 import DatePicker from "@/components/date-picker";
@@ -38,11 +39,11 @@ const PersonalInfoMain: FC = () => {
   };
 
   const buildEditBody = (
-    data: API.TeacherInfo.Data,
+    data: Partial<API.TeacherInfo.Data> | null | undefined,
     values: any
   ): API.EditTeacherInfo.Params => {
-    const originTeacher: any = data.teacher || {};
-    const originTeacherInfo: any = data.teacherInfo || {};
+    const originTeacher: any = data?.teacher || {};
+    const originTeacherInfo: any = data?.teacherInfo || {};
 
     const vTeacher: any = values?.teacher || {};
     const vInfo: any = values?.teacherInfo || {};
@@ -105,7 +106,6 @@ const PersonalInfoMain: FC = () => {
     };
 
     return {
-      id: data.teacher.id,
       teacher: {
         name: toText(vTeacher.name ?? originTeacher.name),
         gender: toNumber(vTeacher.gender ?? originTeacher.gender, 0),
@@ -173,13 +173,13 @@ const PersonalInfoMain: FC = () => {
           firstDegreeMajor: store.data.teacherInfo?.firstDegreeMajor,
           firstDegreeDuration: store.data.teacherInfo?.firstDegreeDuration,
           firstDegree: store.data.teacherInfo?.firstDegree,
-          firstDegreeGraduationDate: store.data.teacherInfo?.firstDegreeGraduationDate,
+          firstDegreeGraduationDate: toText(store.data.teacherInfo?.firstDegreeGraduationDate),
           highestDegreeGraduationInstitution:
             store.data.teacherInfo?.highestDegreeGraduationInstitution,
           highestDegreeMajor: store.data.teacherInfo?.highestDegreeMajor,
           highestDegreeDuration: store.data.teacherInfo?.highestDegreeDuration,
           highestDegree: store.data.teacherInfo?.highestDegree,
-          highestDegreeGraduationDate: store.data.teacherInfo?.highestDegreeGraduationDate,
+          highestDegreeGraduationDate: toText(store.data.teacherInfo?.highestDegreeGraduationDate),
           teachingLicense: Boolean(store.data.teacherInfo?.teachingLicense),
           teachingLicenseType: store.data.teacherInfo?.teachingLicenseType,
           teachingLicenseSubject: store.data.teacherInfo?.teachingLicenseSubject,
@@ -192,21 +192,21 @@ const PersonalInfoMain: FC = () => {
           financialBankAccount: store.data.teacherInfo?.financialBankAccount,
           financialBankName: store.data.teacherInfo?.financialBankName,
         },
-        familyMember: (store.data.familyMemberList || []).map((item) => ({
+        familyMember: (store.data?.familyMemberList || []).map((item) => ({
           relation: item.relation,
           name: item.name,
           employer: item.employer,
         })),
-        professionalTitle: (store.data.professionalTitleList || []).map((item) => ({
+        professionalTitle: (store.data?.professionalTitleList || []).map((item) => ({
           title: item.title,
           evaluationDate: toText(item.evaluationDate),
         })),
-        teachingExperience: (store.data.teachingExperienceList || []).map((item) => ({
+        teachingExperience: (store.data?.teachingExperienceList || []).map((item) => ({
           years: item.years,
           grade: item.grade,
           subject: item.subject,
         })),
-        workExperience: (store.data.workExperienceList || []).map((item) => ({
+        workExperience: (store.data?.workExperienceList || []).map((item) => ({
           employer: item.employer,
           startDate: toText(item.startDate),
           endDate: toText(item.endDate),
@@ -218,8 +218,7 @@ const PersonalInfoMain: FC = () => {
   }, [store.data, form]);
 
   const handleSubmit = async (values: any): Promise<void> => {
-    if (!store.data) return;
-    const payload = buildEditBody(store.data, values);
+    const payload = buildEditBody(store.data ?? {}, values);
     const ok = await store.editInfo(payload);
     toastActionResult(ok, "保存成功", "保存失败");
   };
@@ -236,8 +235,12 @@ const PersonalInfoMain: FC = () => {
               <Form
                 form={form}
                 layout="vertical"
+                scrollToFirstError
                 onFinish={(values) => {
                   void handleSubmit(values);
+                }}
+                onFinishFailed={() => {
+                  toast("error", "请完善表单必填项");
                 }}
               >
                 <Divider orientation="left">教师</Divider>
@@ -263,7 +266,7 @@ const PersonalInfoMain: FC = () => {
                 <Divider orientation="left">教师信息</Divider>
                 <div className="grid grid-cols-2 gap-4">
                   <Item label="出生日期" name={["teacherInfo", "dateOfBirth"]}>
-                    <Input placeholder="请输入出生日期（字符串）" />
+                    <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} placeholder="请选择出生日期" />
                   </Item>
                   <Item label="手机" name={["teacherInfo", "phone"]}>
                     <Input placeholder="请输入手机" />
@@ -315,7 +318,7 @@ const PersonalInfoMain: FC = () => {
                     label="第一学历毕业日期"
                     name={["teacherInfo", "firstDegreeGraduationDate"]}
                   >
-                    <Input placeholder="请输入第一学历毕业日期" />
+                    <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} placeholder="请选择第一学历毕业日期" />
                   </Item>
                 </div>
 
@@ -340,7 +343,7 @@ const PersonalInfoMain: FC = () => {
                     label="最高学历毕业日期"
                     name={["teacherInfo", "highestDegreeGraduationDate"]}
                   >
-                    <Input placeholder="请输入最高学历毕业日期" />
+                    <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} placeholder="请选择最高学历毕业日期" />
                   </Item>
                 </div>
 
@@ -595,7 +598,12 @@ const PersonalInfoMain: FC = () => {
 
                 <div className="mt-6 flex gap-3">
                   <Space>
-                    <Button type="primary" htmlType="submit" loading={store.loading}>
+                    <Button
+                      type="primary"
+                      loading={store.loading}
+                      disabled={store.loading}
+                      onClick={() => form.submit()}
+                    >
                       保存
                     </Button>
                     <Button

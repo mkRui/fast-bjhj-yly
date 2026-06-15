@@ -42,31 +42,31 @@ export interface TeacherInfo {
 }
 
 export interface FamilyMember {
-  id: number;
-  teacherId: number;
+  id: string;
+  teacherId: string;
   relation: number;
   name: string;
   employer: string;
 }
 
 export interface ProfessionalTitle {
-  id: number;
-  teacherId: number;
+  id: string;
+  teacherId: string;
   title: string;
   evaluationDate: Record<string, unknown>;
 }
 
 export interface TeachingExperience {
-  id: number;
-  teacherId: number;
+  id: string;
+  teacherId: string;
   years: number;
   grade: string;
   subject: string;
 }
 
 export interface WorkExperience {
-  id: number;
-  teacherId: number;
+  id: string;
+  teacherId: string;
   startDate: Record<string, unknown>;
   endDate: Record<string, unknown>;
   employer: string;
@@ -78,8 +78,8 @@ export interface InfoRes {
   code: number;
   msg: string;
   data: {
-    teacher: Teacher;
-    teacherInfo: TeacherInfo;
+    teacher: Teacher | null;
+    teacherInfo: TeacherInfo | null;
     familyMemberList: FamilyMember[];
     professionalTitleList: ProfessionalTitle[];
     teachingExperienceList: TeachingExperience[];
@@ -151,7 +151,6 @@ export declare namespace API {
 
   export namespace EditTeacherInfo {
     export interface Params {
-      id: string;
       teacher: Omit<Teacher, "id">;
       teacherInfo: EditTeacherInfoBody;
       familyMember: EditFamilyMember[];
