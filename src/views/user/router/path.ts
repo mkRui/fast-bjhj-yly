@@ -1,4 +1,5 @@
 enum UserPath {
+  LINE = "/user",
   SUBMIT = "/user/submit",
   LEAVE = "/user/leave",
   ASSETS = "/user/assets",
@@ -6,6 +7,7 @@ enum UserPath {
 }
 
 enum UserFullPath {
+  LINE = "/user",
   SUBMIT = "/user/submit",
   LEAVE = "/user/leave",
   ASSETS = "/user/assets",

@@ -60,7 +60,9 @@ const MenuContainer: FC<MenuListTypes> = (props) => {
     if (isRouteJump) {
       navigate({ pathname, search: search ? `?${search}` : "" });
     }
-    getArr(item.href);
+    const chain = Search(MenuList, item.href);
+    setOpenKey(chain.slice(0, chain.length - 1));
+    setSelect(item.id);
     handleClick?.(item.href);
   };
 

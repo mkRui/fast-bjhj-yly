@@ -200,7 +200,7 @@ const MenuList: MenuType[] = [
   },
   {
     name: "用户功能",
-    href: UserFullPath.SUBMIT,
+    href: UserFullPath.LINE,
     code: "",
     children: UserMenuList,
     id: "9200000000000000",

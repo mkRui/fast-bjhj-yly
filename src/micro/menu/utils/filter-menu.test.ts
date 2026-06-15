@@ -8,6 +8,8 @@ const menu: MenuType[] = [
     name: "系统",
     id: "1",
     parentId: "0",
+    href: "",
+    code: "",
     children: [
       { name: "用户", id: "2", parentId: "1", href: "/sys/user", code: "sys:user" },
       { name: "角色", id: "3", parentId: "1", href: "/sys/role", code: "sys:role" },
@@ -17,6 +19,8 @@ const menu: MenuType[] = [
     name: "资产",
     id: "4",
     parentId: "0",
+    href: "",
+    code: "",
     children: [
       { name: "固定资产", id: "5", parentId: "4", href: "/ams/assets", code: "ams:assets" },
     ],

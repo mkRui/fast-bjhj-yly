@@ -66,7 +66,8 @@ export function Search(config: any, target: string): any {
       const chain = [...ancestors, node.id];
       if (matchHref(target, node.href)) {
         const score = node.href.length;
-        if (score > bestScore) {
+        const depth = chain.length;
+        if (score > bestScore || (score === bestScore && depth > bestChain.length)) {
           bestScore = score;
           bestChain = chain;
         }

@@ -8,6 +8,8 @@ const menu: MenuType[] = [
     name: "分组",
     id: "1",
     parentId: "0",
+    href: "",
+    code: "",
     children: [
       { name: "子1", id: "2", parentId: "1", href: "/a", code: "a" },
       { name: "子2", id: "3", parentId: "1", href: "/b", code: "b" },
@@ -32,6 +34,8 @@ describe("getFirstMenuHref", () => {
           name: "仅分组",
           id: "1",
           parentId: "0",
+          href: "",
+          code: "",
           children: [{ name: "叶", id: "2", parentId: "1", href: "/leaf", code: "x" }],
         },
       ])
