@@ -1,8 +1,9 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { observer } from "mobx-react";
 import { Form, Input, Modal, Switch } from "antd";
 import type { ModalProps } from "antd/lib/modal";
 
+import { useFormInitialValues } from "@/hooks/use-form-initial-values";
 import { API } from "../types/api";
 
 const Item = Form.Item;
@@ -19,13 +20,11 @@ const CheckLeaveModal: FC<CheckLeaveModalProps> = (props) => {
   const { title, loading, init, onCancel, onOk } = props;
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    form.setFieldsValue({
-      id: init.id,
-      checkedFlag: typeof init.checkedFlag === "boolean" ? init.checkedFlag : true,
-      checkedComment: init.checkedComment || "",
-    });
-  }, [form, init]);
+  useFormInitialValues(form, {
+    id: init.id,
+    checkedFlag: typeof init.checkedFlag === "boolean" ? init.checkedFlag : true,
+    checkedComment: init.checkedComment || "",
+  });
 
   const handleOk = (): void => {
     void form.validateFields().then(async (values: any) => {

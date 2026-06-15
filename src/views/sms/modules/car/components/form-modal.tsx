@@ -1,8 +1,9 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { observer } from "mobx-react";
 import { Form, Input, InputNumber, Modal } from "antd";
 import { ModalProps } from "antd/lib/modal";
 
+import { useFormInitialValues } from "@/hooks/use-form-initial-values";
 import { API } from "../types/api";
 
 const Item = Form.Item;
@@ -19,14 +20,12 @@ const CarFormModal: FC<CarFormModalProps> = (props) => {
   const { onCancel, info, onOk, title, loading } = props;
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    form.setFieldsValue({
-      id: info?.id,
-      name: info?.name || "",
-      minPassengerNum: info?.minPassengerNum ?? 1,
-      maxPassengerNum: info?.maxPassengerNum ?? 1,
-    });
-  }, [form, info]);
+  useFormInitialValues(form, {
+    id: info?.id,
+    name: info?.name || "",
+    minPassengerNum: info?.minPassengerNum ?? 1,
+    maxPassengerNum: info?.maxPassengerNum ?? 1,
+  });
 
   const handleOk = (): void => {
     void form.validateFields().then(async (values: any) => {

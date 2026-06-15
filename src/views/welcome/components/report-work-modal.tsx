@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useState } from "react";
 import { observer } from "mobx-react";
 import { Form, InputNumber, Modal, Space, Switch } from "antd";
 import type { ModalProps } from "antd/lib/modal";
@@ -6,6 +6,7 @@ import type { ModalProps } from "antd/lib/modal";
 import SelectEnum from "@/micro/select-enum";
 import DatePicker from "@/components/date-picker";
 import { DictCode } from "@/constants/dict-code";
+import { useFormInitialValues } from "@/hooks/use-form-initial-values";
 import { API } from "../types/api";
 
 const Item = Form.Item;
@@ -21,21 +22,16 @@ export interface ReportWorkModalProps {
 const ReportWorkModal: FC<ReportWorkModalProps> = (props) => {
   const { title, loading, init, onCancel, onOk } = props;
   const [form] = Form.useForm();
-  const [mode, setMode] = useState<"day" | "month">("day");
-
-  const initMode = useMemo<"day" | "month">(() => {
+  const initMode: "day" | "month" = (() => {
     const hasDate = !!init?.date;
     const hasYearMonth = !!init?.year && !!init?.month;
     if (hasYearMonth && !hasDate) return "month";
     return "day";
-  }, [init?.date, init?.year, init?.month]);
+  })();
 
-  useEffect(() => {
-    if (init) {
-      form.setFieldsValue(init);
-    }
-    setMode(initMode);
-  }, [init, form, initMode]);
+  const [mode, setMode] = useState<"day" | "month">(initMode);
+
+  useFormInitialValues(form, init as Record<string, unknown> | undefined);
 
   const handleOk = (): void => {
     void form.validateFields().then(async (values: any) => {

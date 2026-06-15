@@ -7,6 +7,7 @@ import axios from "@/api";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
 import { toastRequestResult } from "@/utils/common/mutation-success";
+import { useFormInitialValues } from "@/hooks/use-form-initial-values";
 import { Api } from "../api";
 import { API } from "../types/api";
 
@@ -25,14 +26,12 @@ const PurposeFormModal: FC<PurposeFormModalProps> = (props) => {
   const { title, loading, carId, init, onCancel, onOk } = props;
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    form.setFieldsValue({
-      id: init?.id,
-      carId: init?.carId || carId,
-      purpose: init?.purpose || "",
-      price: init?.price ?? 0,
-    });
-  }, [form, init, carId]);
+  useFormInitialValues(form, {
+    id: init?.id,
+    carId: init?.carId || carId,
+    purpose: init?.purpose || "",
+    price: init?.price ?? 0,
+  });
 
   const handleOk = (): void => {
     void form.validateFields().then(async (values: any) => {

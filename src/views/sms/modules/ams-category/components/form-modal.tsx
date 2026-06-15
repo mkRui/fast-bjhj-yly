@@ -1,8 +1,9 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { observer } from "mobx-react";
 import { Form, Input, Modal } from "antd";
 import type { ModalProps } from "antd/lib/modal";
 
+import { useFormInitialValues } from "@/hooks/use-form-initial-values";
 import { API } from "../types/api";
 
 const Item = Form.Item;
@@ -19,13 +20,11 @@ const CategoryFormModal: FC<CategoryFormModalProps> = (props) => {
   const { title, loading, init, onCancel, onOk } = props;
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    form.setFieldsValue({
-      id: init?.id,
-      name: init?.name || "",
-      code: init?.code || "",
-    });
-  }, [form, init]);
+  useFormInitialValues(form, {
+    id: init?.id,
+    name: init?.name || "",
+    code: init?.code || "",
+  });
 
   const handleOk = (): void => {
     void form.validateFields().then(async (values: any) => {

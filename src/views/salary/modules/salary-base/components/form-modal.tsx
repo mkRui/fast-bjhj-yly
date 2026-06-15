@@ -1,7 +1,8 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { Col, Form, InputNumber, Modal, Row } from "antd";
 import type { ModalProps } from "antd/lib/modal";
 
+import { useFormInitialValues } from "@/hooks/use-form-initial-values";
 import { API } from "../types/api";
 
 const Item = Form.Item;
@@ -18,18 +19,16 @@ const SalaryBaseFormModal: FC<SalaryBaseFormModalProps> = (props) => {
   const { title, loading, init, onCancel, onOk } = props;
   const [form] = Form.useForm<API.Edit.Params>();
 
-  useEffect(() => {
-    form.setFieldsValue({
-      id: init?.id,
-      salaryBase: init?.salaryBase ?? 0,
-      salaryPosition: init?.salaryPosition ?? 0,
-      salaryBonus: init?.salaryBonus ?? 0,
-      salarySeniority: init?.salarySeniority ?? 0,
-      salaryHousing: init?.salaryHousing ?? 0,
-      salaryTransportation: init?.salaryTransportation ?? 0,
-      salaryCrossing: init?.salaryCrossing ?? 0,
-    });
-  }, [form, init]);
+  useFormInitialValues(form, {
+    id: init?.id,
+    salaryBase: init?.salaryBase ?? 0,
+    salaryPosition: init?.salaryPosition ?? 0,
+    salaryBonus: init?.salaryBonus ?? 0,
+    salarySeniority: init?.salarySeniority ?? 0,
+    salaryHousing: init?.salaryHousing ?? 0,
+    salaryTransportation: init?.salaryTransportation ?? 0,
+    salaryCrossing: init?.salaryCrossing ?? 0,
+  });
 
   const handleOk = (): void => {
     void form.validateFields().then(async (values) => {

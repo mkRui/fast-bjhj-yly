@@ -1,8 +1,9 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { Form, Input, Modal } from "antd";
 import type { ModalProps } from "antd/lib/modal";
 
 import DatePicker from "@/components/date-picker";
+import { useFormInitialValues } from "@/hooks/use-form-initial-values";
 
 const Item = Form.Item;
 
@@ -24,13 +25,11 @@ const ExhibitionFormModal: FC<ExhibitionFormModalProps> = (props) => {
   const { title, loading, init, onCancel, onOk } = props;
   const [form] = Form.useForm<ExhibitionFormValues>();
 
-  useEffect(() => {
-    form.setFieldsValue({
-      date: init?.date || "",
-      name: init?.name || "",
-      location: init?.location || "",
-    });
-  }, [form, init]);
+  useFormInitialValues(form, {
+    date: init?.date || "",
+    name: init?.name || "",
+    location: init?.location || "",
+  });
 
   const handleOk = (): void => {
     void form.validateFields().then(async (values) => {

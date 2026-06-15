@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { observer } from "mobx-react";
 import { Form, Input, InputNumber, Modal, TimePicker } from "antd";
 import type { ModalProps } from "antd/lib/modal";
@@ -9,6 +9,7 @@ import LeaveSetting from "@/micro/leave-setting";
 import { API as LeaveSettingAPI } from "@/micro/leave-setting/types";
 import SelectEnum from "@/micro/select-enum";
 import { DictCode } from "@/constants/dict-code";
+import { useFormInitialValues } from "@/hooks/use-form-initial-values";
 import { API } from "../types/api";
 
 const Item = Form.Item;
@@ -37,14 +38,13 @@ const LeaveSubmitModal: FC<LeaveSubmitModalProps> = (props) => {
   const [form] = Form.useForm();
   const [setting, setSetting] = useState<LeaveSettingAPI.Setting.Data | null>(null);
 
-  useEffect(() => {
-    if (init) {
-      form.setFieldsValue({
-        ...init,
-        leaveType: init.leaveType === null || init.leaveType === undefined ? undefined : String(init.leaveType),
-      });
-    }
-  }, [init, form]);
+  useFormInitialValues(form, {
+    ...init,
+    leaveType:
+      init?.leaveType === null || init?.leaveType === undefined
+        ? undefined
+        : String(init.leaveType),
+  });
 
   const leaveMinUnitLabel = useMemo(() => {
     const unit = Number(setting?.leaveMinUnit || 0);
