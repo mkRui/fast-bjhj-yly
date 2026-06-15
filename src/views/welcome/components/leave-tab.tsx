@@ -1,4 +1,4 @@
-import { FC, useContext } from "react";
+import { FC, useContext, useEffect } from "react";
 import { observer } from "mobx-react";
 import { Pagination, Space, Spin, Tag } from "antd";
 
@@ -6,17 +6,20 @@ import Button from "@/components/button";
 import MorTable from "@/components/table";
 import RunComponents from "@/components/run-component";
 import { toastActionResult } from "@/utils/common/mutation-success";
-import LeavePeriodSelect from "@/micro/leave-period-list";
+import { DictCode } from "@/constants/dict-code";
+import { useDict } from "@/hooks/use-dict";
 
 import StoreContext from "../store";
 import { API } from "../types/api";
 import LeaveSubmitModal from "./leave-submit-modal";
-import { DictCode } from "@/constants/dict-code";
-import { useDict } from "@/hooks/use-dict";
 
 const LeaveTab: FC = () => {
   const store = useContext(StoreContext);
   const leaveTypeDict = useDict(DictCode.LEAVE_TYPE);
+
+  useEffect(() => {
+    void store.fetchLeavePage();
+  }, [store]);
 
   const openLeaveModal = (): void => {
     const now = new Date();
@@ -78,8 +81,7 @@ const LeaveTab: FC = () => {
   return (
     <Spin spinning={store.leaveLoading}>
       <div className="theme-panel p-6 mb-4">
-        <div className="flex items-center justify-between gap-4">
-          <div className="text-gray-600">请选择周期后查看记录</div>
+        <div className="flex items-center justify-end gap-4">
           <Space>
             <Button type="primary" action="add" onClick={openLeaveModal}>
               提交请假
@@ -93,29 +95,6 @@ const LeaveTab: FC = () => {
               刷新
             </Button>
           </Space>
-        </div>
-      </div>
-
-      <div className="theme-panel p-6 mb-4">
-        <div className="grid grid-cols-4 gap-4">
-          <div className="col-span-4 md:col-span-2">
-            <div className="text-sm text-gray-600 mb-2">筛选</div>
-            <div>
-              <div className="text-sm text-gray-600 mb-1">周期</div>
-              <LeavePeriodSelect
-                value={store.leaveFilter.periodId}
-                allowClear
-                onInitChange={(v?: number) => {
-                  store.$setLeaveFilter({ periodId: v === undefined ? undefined : String(v), current: 1 });
-                  void store.fetchLeavePage();
-                }}
-                onChange={(v?: number) => {
-                  store.$setLeaveFilter({ periodId: v === undefined ? undefined : String(v), current: 1 });
-                  void store.fetchLeavePage();
-                }}
-              />
-            </div>
-          </div>
         </div>
       </div>
 

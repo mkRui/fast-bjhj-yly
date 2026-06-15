@@ -34,9 +34,9 @@ const AssetsFormModal: FC<AssetsFormModalProps> = (props) => {
     void form.validateFields().then(async (values: any) => {
       const id = String(values.id || "");
       const categoryId = String(values.categoryId || "");
-      const name = String(values.name || "");
-      const selfCode = String(values.selfCode || "");
-      const remark = String(values.remark || "");
+      const name = String(values.name || "").trim();
+      const selfCode = String(values.selfCode || "").trim();
+      const remark = String(values.remark || "").trim();
 
       if (id) {
         await onOk({

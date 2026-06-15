@@ -31,7 +31,7 @@ const CarFormModal: FC<CarFormModalProps> = (props) => {
   const handleOk = (): void => {
     void form.validateFields().then(async (values: any) => {
       const id = String(values.id || "");
-      const name = String(values.name || "");
+      const name = String(values.name || "").trim();
       const minPassengerNum = Number(values.minPassengerNum || 0);
       const maxPassengerNum = Number(values.maxPassengerNum || 0);
 

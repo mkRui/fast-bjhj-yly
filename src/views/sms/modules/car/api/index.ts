@@ -7,11 +7,26 @@ export class Api extends Request {
   }
 
   public async add(params: API.Add.Params): Promise<API.Add.Response> {
-    return await this.post<API.Add.Data>("/crms/car/add", params);
+    const body: API.Add.RequestBody = {
+      car: {
+        name: params.name,
+        minPassengerNum: params.minPassengerNum,
+        maxPassengerNum: params.maxPassengerNum,
+      },
+    };
+    return await this.post<API.Add.Data>("/crms/car/add", body);
   }
 
   public async edit(params: API.Edit.Params): Promise<API.Edit.Response> {
-    return await this.post<API.Edit.Data>("/crms/car/edit", params);
+    const body: API.Edit.RequestBody = {
+      id: params.id,
+      car: {
+        name: params.name,
+        minPassengerNum: params.minPassengerNum,
+        maxPassengerNum: params.maxPassengerNum,
+      },
+    };
+    return await this.post<API.Edit.Data>("/crms/car/edit", body);
   }
 
   public async del(params: API.Del.Params): Promise<API.Del.Response> {
@@ -23,11 +38,26 @@ export class Api extends Request {
   }
 
   public async addPurpose(params: API.PurposeAdd.Params): Promise<API.PurposeAdd.Response> {
-    return await this.post<API.PurposeAdd.Data>("/crms/car/purpose/add", params);
+    const body: API.PurposeAdd.RequestBody = {
+      purpose: {
+        carId: params.carId,
+        purpose: params.purpose,
+        price: params.price,
+      },
+    };
+    return await this.post<API.PurposeAdd.Data>("/crms/car/purpose/add", body);
   }
 
   public async editPurpose(params: API.PurposeEdit.Params): Promise<API.PurposeEdit.Response> {
-    return await this.post<API.PurposeEdit.Data>("/crms/car/purpose/edit", params);
+    const body: API.PurposeEdit.RequestBody = {
+      id: params.id,
+      purpose: {
+        carId: params.carId,
+        purpose: params.purpose,
+        price: params.price,
+      },
+    };
+    return await this.post<API.PurposeEdit.Data>("/crms/car/purpose/edit", body);
   }
 
   public async delPurpose(params: API.PurposeDel.Params): Promise<API.PurposeDel.Response> {

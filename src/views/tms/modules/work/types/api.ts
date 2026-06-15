@@ -34,7 +34,6 @@ export declare namespace API {
     export interface RecordItem {
       id: string;
       teacherId: string;
-      periodId: string;
       subject: number;
       date: string;
       year: number;

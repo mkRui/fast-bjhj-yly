@@ -15,7 +15,11 @@ export class Api extends Request {
   }
 
   public async edit(params: API.Edit.Params): Promise<API.Edit.Response> {
-    return await this.post<API.Edit.Data>("/ams/category/edit", params);
+    const { id, name, code } = params;
+    return await this.post<API.Edit.Data>("/ams/category/edit", {
+      id,
+      category: { name, code },
+    });
   }
 }
 

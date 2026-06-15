@@ -1,6 +1,15 @@
 import { Request } from "mor-request";
 import { API } from "../types/api";
 
+function toAssetPayload(params: API.Add.Params | Omit<API.Edit.Params, "id">): API.Add.Payload {
+  return {
+    categoryId: params.categoryId,
+    name: params.name,
+    remark: params.remark,
+    selfCode: params.selfCode,
+  };
+}
+
 export class Api extends Request {
   public async getPage(params: API.Page.Params): Promise<API.Page.Response> {
     return await this.get<API.Page.Data>("/ams/assets/page", params);
@@ -15,7 +24,7 @@ export class Api extends Request {
   }
 
   public async add(params: API.Add.Params): Promise<API.Add.Response> {
-    return await this.post<API.Add.Data>("/ams/assets/add", params);
+    return await this.post<API.Add.Data>("/ams/assets/add", { asset: toAssetPayload(params) });
   }
 
   public async del(params: API.Del.Params): Promise<API.Del.Response> {
@@ -23,7 +32,11 @@ export class Api extends Request {
   }
 
   public async edit(params: API.Edit.Params): Promise<API.Edit.Response> {
-    return await this.post<API.Edit.Data>("/ams/assets/edit", params);
+    const { id, ...rest } = params;
+    return await this.post<API.Edit.Data>("/ams/assets/edit", {
+      id,
+      asset: toAssetPayload(rest),
+    });
   }
 
   public async stockIn(params: API.StockIn.Params): Promise<API.StockIn.Response> {

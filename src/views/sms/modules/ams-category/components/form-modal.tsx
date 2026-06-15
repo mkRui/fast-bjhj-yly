@@ -30,8 +30,8 @@ const CategoryFormModal: FC<CategoryFormModalProps> = (props) => {
   const handleOk = (): void => {
     void form.validateFields().then(async (values: any) => {
       const id = String(values.id || "");
-      const name = String(values.name || "");
-      const code = String(values.code || "");
+      const name = String(values.name || "").trim();
+      const code = String(values.code || "").trim();
 
       if (id) {
         await onOk({

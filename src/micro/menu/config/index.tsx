@@ -98,14 +98,6 @@ const UserMenuList: MenuType[] = [
 
 const SmsMenuList: MenuType[] = [
   {
-    name: "周期管理",
-    href: SmsFullPath.PERIOD,
-    code: MenuCode.SMS_PERIOD,
-    id: "9100000000000001",
-    parentId: "9100000000000000",
-    icon: <CalendarOutlined />,
-  },
-  {
     name: "工资测算",
     href: SalaryFullPath.CALC,
     code: MenuCode.SMS_SALARY,

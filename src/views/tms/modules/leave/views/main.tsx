@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useMemo } from "react";
+import { FC, useContext, useEffect } from "react";
 import { observer } from "mobx-react";
 import { Pagination, Select, Space, Spin, Tag } from "antd";
 
@@ -22,25 +22,8 @@ const LeaveMain: FC = () => {
   const leaveTypeDict = useDict(DictCode.LEAVE_TYPE);
 
   useEffect(() => {
-    const init = async (): Promise<void> => {
-      await store.fetchPeriodList();
-      if (!store.params.periodId && store.periodList.length > 0) {
-        const first = store.periodList.find((i) => i.currentFlag) || store.periodList[0];
-        if (first?.id !== undefined && first?.id !== null) {
-          store.$setParams({ periodId: String(first.id), current: "0" });
-        }
-      }
-      await store.fetchPage();
-    };
-    void init();
+    void store.fetchPage();
   }, [store]);
-
-  const periodOptions = useMemo(() => {
-    return (store.periodList || []).map((i) => ({
-      value: String(i.id),
-      label: `${i.name}${i.currentFlag ? "（当前）" : ""}`,
-    }));
-  }, [store.periodList]);
 
   const uiCurrent = Math.max(1, Number(store.params.current || "0") + 1);
 
@@ -104,7 +87,7 @@ const LeaveMain: FC = () => {
     {
       title: "操作",
       width: 120,
-      render: (_: any, record: API.Page.RecordItem) => (
+      render: (_: any, record: API.Page.RecordItem) =>
         record.checkedFlag === null ? null : (
           <Button
             type="link"
@@ -114,8 +97,7 @@ const LeaveMain: FC = () => {
           >
             审核
           </Button>
-        )
-      ),
+        ),
     },
   ];
 
@@ -142,22 +124,6 @@ const LeaveMain: FC = () => {
           <Space>
             <Select
               allowClear
-              style={{ width: 240 }}
-              placeholder="请选择周期"
-              value={store.params.periodId}
-              onChange={(v) => {
-                store.$setParams({ periodId: v || undefined, current: "0" });
-                void store.fetchPage();
-              }}
-            >
-              {periodOptions.map((o) => (
-                <Option key={o.value} value={o.value}>
-                  <span aria-label={o.label}>{o.label}</span>
-                </Option>
-              ))}
-            </Select>
-            <Select
-              allowClear
               style={{ width: 180 }}
               placeholder="审核状态"
               value={store.params.checkedFlag}
@@ -172,23 +138,12 @@ const LeaveMain: FC = () => {
             <Button
               action="reset"
               onClick={() => {
-                const reset = async (): Promise<void> => {
-                  store.$setParams({
-                    periodId: undefined,
-                    checkedFlag: undefined,
-                    current: "0",
-                    size: "10",
-                  });
-                  await store.fetchPeriodList();
-                  if (store.periodList.length > 0) {
-                    const first = store.periodList.find((i) => i.currentFlag) || store.periodList[0];
-                    if (first?.id !== undefined && first?.id !== null) {
-                      store.$setParams({ periodId: String(first.id), current: "0" });
-                    }
-                  }
-                  await store.fetchPage();
-                };
-                void reset();
+                store.$setParams({
+                  checkedFlag: undefined,
+                  current: "0",
+                  size: "10",
+                });
+                void store.fetchPage();
               }}
             >
               重置

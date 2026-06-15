@@ -8,8 +8,8 @@ import { createContext } from "react";
 import Api from "../api";
 import { API } from "../types";
 
-export class LeavePeriodSettingStore extends Store<Api> {
-  public data: API.PeriodSetting.Data | null = null;
+export class LeaveSettingStore extends Store<Api> {
+  public data: API.Setting.Data | null = null;
 
   constructor(axios: AxiosInstance) {
     super(new Api(axios));
@@ -19,19 +19,16 @@ export class LeavePeriodSettingStore extends Store<Api> {
     });
   }
 
-  public $setData(data: API.PeriodSetting.Data | null): void {
+  public $setData(data: API.Setting.Data | null): void {
     this.data = data;
   }
 
-  public async getData(periodId: string): Promise<void> {
-    const [, data] = await this.api.getSetting({ periodId });
+  public async fetchSetting(): Promise<void> {
+    const [, data] = await this.api.getSetting();
     if (data) this.$setData(data);
   }
 }
 
-const LeavePeriodSettingContext = createContext<LeavePeriodSettingStore>(
-  {} as LeavePeriodSettingStore
-);
+const LeaveSettingContext = createContext<LeaveSettingStore>({} as LeaveSettingStore);
 
-export default LeavePeriodSettingContext;
-
+export default LeaveSettingContext;

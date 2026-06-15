@@ -15,7 +15,6 @@ export const MenuCode = {
   USER_CAR: "user:car",
 
   // 工资管理 sms
-  SMS_PERIOD: "sms:period",
   SMS_SALARY: "sms:salary",
 
   // 教师管理 tms

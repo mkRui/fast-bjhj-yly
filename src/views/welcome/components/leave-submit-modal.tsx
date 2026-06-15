@@ -5,9 +5,8 @@ import type { ModalProps } from "antd/lib/modal";
 import dayjs from "dayjs";
 
 import DatePicker from "@/components/date-picker";
-import LeavePeriodSelect from "@/micro/leave-period-list";
-import LeavePeriodSetting from "@/micro/leave-period-setting";
-import { API as PeriodSettingAPI } from "@/micro/leave-period-setting/types";
+import LeaveSetting from "@/micro/leave-setting";
+import { API as LeaveSettingAPI } from "@/micro/leave-setting/types";
 import SelectEnum from "@/micro/select-enum";
 import { DictCode } from "@/constants/dict-code";
 import { API } from "../types/api";
@@ -36,7 +35,7 @@ export interface LeaveSubmitModalProps {
 const LeaveSubmitModal: FC<LeaveSubmitModalProps> = (props) => {
   const { title, loading, init, onCancel, onOk } = props;
   const [form] = Form.useForm();
-  const [setting, setSetting] = useState<PeriodSettingAPI.PeriodSetting.Data | null>(null);
+  const [setting, setSetting] = useState<LeaveSettingAPI.Setting.Data | null>(null);
 
   useEffect(() => {
     if (init) {
@@ -46,8 +45,6 @@ const LeaveSubmitModal: FC<LeaveSubmitModalProps> = (props) => {
       });
     }
   }, [init, form]);
-
-  const periodId = Form.useWatch("periodId", form);
 
   const leaveMinUnitLabel = useMemo(() => {
     const unit = Number(setting?.leaveMinUnit || 0);
@@ -60,7 +57,6 @@ const LeaveSubmitModal: FC<LeaveSubmitModalProps> = (props) => {
   const handleOk = (): void => {
     void form.validateFields().then(async (values: any) => {
       await onOk({
-        periodId: values.periodId,
         leaveNum: Number(values.leaveNum || 0),
         leaveDate: String(values.leaveDate || ""),
         leaveStartTime: `${values.leaveStartTime || ""}:00`,
@@ -82,22 +78,7 @@ const LeaveSubmitModal: FC<LeaveSubmitModalProps> = (props) => {
       confirmLoading={loading}
     >
       <Form form={form} layout="vertical">
-        <Item
-          label="周期"
-          name="periodId"
-          rules={[{ required: true, message: "请选择周期" }]}
-        >
-          <LeavePeriodSelect
-            allowClear
-            onInitChange={(v?: string) => form.setFieldValue("periodId", v)}
-            onChange={(v?: string) => form.setFieldValue("periodId", v)}
-          />
-        </Item>
-
-        <LeavePeriodSetting
-          periodId={Number(periodId || 0)}
-          onInit={(data: PeriodSettingAPI.PeriodSetting.Data) => setSetting(data)}
-        />
+        <LeaveSetting onInit={(data: LeaveSettingAPI.Setting.Data) => setSetting(data)} />
 
         <Item
           label={

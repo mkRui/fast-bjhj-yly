@@ -91,11 +91,7 @@ const WorkTab: FC = () => {
   return (
     <Spin spinning={store.loading}>
       <div className="theme-panel p-6 mb-4">
-        <div className="flex items-center justify-between gap-4">
-          <div className="text-gray-600">
-            当前周期：{store.period?.name || "-"}
-            {store.period?.currentFlag ? "（当前）" : ""}
-          </div>
+        <div className="flex items-center justify-end gap-4">
           <Space>
             <Button type="primary" action="add" onClick={openReportModal}>
               上报工时

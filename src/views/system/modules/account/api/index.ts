@@ -20,7 +20,8 @@ export class Api extends Request {
   public async editAccount(
     params: API.EditAccount.Params
   ): Promise<API.EditAccount.Response> {
-    return await this.post<API.EditAccount.Data>("/sys/user/edit", params);
+    const { id, ...user } = params;
+    return await this.post<API.EditAccount.Data>("/sys/user/edit", { id, user });
   }
 
   // 删除用户

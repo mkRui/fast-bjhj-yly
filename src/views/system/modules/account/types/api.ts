@@ -84,6 +84,9 @@ export declare namespace API {
   export namespace EditAccount {
     export interface Params extends API.AddAccount.Params {
       id: string;
+      enableFlag?: boolean;
+      lockFlag?: boolean;
+      roleList?: unknown[];
     }
 
     export type Data = null;

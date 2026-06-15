@@ -7,11 +7,28 @@ export class Api extends Request {
   }
 
   public async add(params: API.Add.Params): Promise<API.Add.Response> {
-    return await this.post<API.Add.Data>("/ams/consumables/add", params);
+    const body: API.Add.RequestBody = {
+      consumables: {
+        categoryId: params.categoryId,
+        name: params.name,
+        remark: params.remark,
+        selfCode: params.selfCode,
+      },
+    };
+    return await this.post<API.Add.Data>("/ams/consumables/add", body);
   }
 
   public async edit(params: API.Edit.Params): Promise<API.Edit.Response> {
-    return await this.post<API.Edit.Data>("/ams/consumables/edit", params);
+    const body: API.Edit.RequestBody = {
+      id: params.id,
+      consumables: {
+        categoryId: params.categoryId,
+        name: params.name,
+        remark: params.remark,
+        selfCode: params.selfCode,
+      },
+    };
+    return await this.post<API.Edit.Data>("/ams/consumables/edit", body);
   }
 
   public async del(params: API.Del.Params): Promise<API.Del.Response> {

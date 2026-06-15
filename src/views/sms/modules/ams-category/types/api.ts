@@ -52,6 +52,11 @@ export declare namespace API {
       code: string;
     }
 
+    export interface Payload {
+      name: string;
+      code: string;
+    }
+
     export type Data = null;
     export type Response = BaseRequest.Response<Data>;
   }

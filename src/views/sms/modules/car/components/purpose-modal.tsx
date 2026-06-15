@@ -37,7 +37,7 @@ const PurposeFormModal: FC<PurposeFormModalProps> = (props) => {
   const handleOk = (): void => {
     void form.validateFields().then(async (values: any) => {
       const id = String(values.id || "");
-      const purpose = String(values.purpose || "");
+      const purpose = String(values.purpose || "").trim();
       const price = Number(values.price || 0);
 
       if (id) {

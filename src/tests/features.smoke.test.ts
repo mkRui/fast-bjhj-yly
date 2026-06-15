@@ -44,7 +44,6 @@ const MODULE_ENTRY_POINTS = [
   "@/views/tms/modules/work",
   "@/views/tms/modules/leave",
   "@/views/tms/modules/exhibition",
-  "@/views/sms/modules/period",
   "@/views/sms/modules/ams-category",
   "@/views/sms/modules/ams-assets",
   "@/views/sms/modules/ams-consumables",
@@ -62,7 +61,7 @@ const MODULE_ENTRY_POINTS = [
 
 describe("功能测试用例清单", () => {
   it("用例结构完整", () => {
-    expect(FEATURE_TEST_CASES.length).toBeGreaterThanOrEqual(20);
+    expect(FEATURE_TEST_CASES.length).toBeGreaterThanOrEqual(19);
     FEATURE_TEST_CASES.forEach((item) => {
       expect(item.id).toBeTruthy();
       expect(item.module).toBeTruthy();

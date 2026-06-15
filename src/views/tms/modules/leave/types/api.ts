@@ -2,19 +2,8 @@
 import { BaseRequest } from "mor-request";
 
 export declare namespace API {
-  export namespace PeriodList {
-    export interface Data {
-      id: number;
-      name: string;
-      currentFlag: boolean;
-    }
-
-    export type Response = BaseRequest.Response<Data[]>;
-  }
-
   export namespace Page {
     export interface Params {
-      periodId?: string;
       checkedFlag?: string;
       current?: string;
       size?: string;
@@ -23,7 +12,6 @@ export declare namespace API {
     export interface RecordItem {
       id: number;
       teacherId: number;
-      periodId: number;
       leaveDate: string;
       leaveStartTime: string;
       leaveEndTime: string;

@@ -2,11 +2,7 @@
 import { BaseRequest } from "mor-request";
 
 export declare namespace API {
-  export namespace PeriodSetting {
-    export interface Params {
-      periodId: string;
-    }
-
+  export namespace Setting {
     export interface Data {
       id: string;
       leaveMinUnit: number;
@@ -26,4 +22,3 @@ export declare namespace API {
     export type Response = BaseRequest.Response<Data>;
   }
 }
-
