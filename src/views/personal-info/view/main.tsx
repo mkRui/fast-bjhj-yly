@@ -7,6 +7,7 @@ import Button from "@/components/button";
 import { toastActionResult } from "@/utils/common/mutation-success";
 import Upload from "@/components/upload";
 import SelectEnum from "@/micro/select-enum";
+import DatePicker from "@/components/date-picker";
 import { DictCode } from "@/constants/dict-code";
 
 import StoreContext from "../store";
@@ -17,6 +18,7 @@ const Item = Form.Item;
 const PersonalInfoMain: FC = () => {
   const store = useContext(StoreContext);
   const [form] = Form.useForm();
+  const hasTeachingLicense = Form.useWatch(["teacherInfo", "teachingLicense"], form);
 
   const toText = (value: unknown): string => {
     if (value === null || value === undefined) return "";
@@ -226,7 +228,7 @@ const PersonalInfoMain: FC = () => {
     <Content style={{ flex: 1 }}>
       <Content.Layout style={{ height: "100%" }}>
         <Content.Header>
-          <HeaderTitle>信息上报</HeaderTitle>
+          <HeaderTitle>教师信息</HeaderTitle>
         </Content.Header>
         <Content.Main style={{ overflow: "unset" }}>
           <Spin spinning={store.loading}>
@@ -304,7 +306,7 @@ const PersonalInfoMain: FC = () => {
                     <Input placeholder="请输入第一学历专业" />
                   </Item>
                   <Item label="第一学历学制" name={["teacherInfo", "firstDegreeDuration"]}>
-                    <InputNumber style={{ width: "100%" }} placeholder="请输入第一学历学制" />
+                    <SelectEnum name={DictCode.DEGREE_DURATION} valueType="number" allowClear />
                   </Item>
                   <Item label="第一学历学位" name={["teacherInfo", "firstDegree"]}>
                     <SelectEnum name={DictCode.DEGREE} valueType="number" allowClear />
@@ -329,7 +331,7 @@ const PersonalInfoMain: FC = () => {
                     <Input placeholder="请输入最高学历专业" />
                   </Item>
                   <Item label="最高学历学制" name={["teacherInfo", "highestDegreeDuration"]}>
-                    <InputNumber style={{ width: "100%" }} placeholder="请输入最高学历学制" />
+                    <SelectEnum name={DictCode.DEGREE_DURATION} valueType="number" allowClear />
                   </Item>
                   <Item label="最高学历学位" name={["teacherInfo", "highestDegree"]}>
                     <SelectEnum name={DictCode.DEGREE} valueType="number" allowClear />
@@ -351,30 +353,34 @@ const PersonalInfoMain: FC = () => {
                   >
                     <Switch />
                   </Item>
-                  <Item
-                    label="教师资格证类型"
-                    name={["teacherInfo", "teachingLicenseType"]}
-                  >
-                    <InputNumber style={{ width: "100%" }} placeholder="请输入教师资格证类型" />
-                  </Item>
-                  <Item
-                    label="教师资格证学科"
-                    name={["teacherInfo", "teachingLicenseSubject"]}
-                  >
-                    <Input placeholder="请输入教师资格证学科" />
-                  </Item>
-                  <Item
-                    label="教师资格证编号"
-                    name={["teacherInfo", "teachingLicenseCertificateNumber"]}
-                  >
-                    <Input placeholder="请输入教师资格证编号" />
-                  </Item>
-                  <Item
-                    label="教师资格证发证机关"
-                    name={["teacherInfo", "teachingLicenseIssuingAuthority"]}
-                  >
-                    <Input placeholder="请输入教师资格证发证机关" />
-                  </Item>
+                  {hasTeachingLicense ? (
+                    <>
+                      <Item
+                        label="教师资格证类型"
+                        name={["teacherInfo", "teachingLicenseType"]}
+                      >
+                        <SelectEnum name={DictCode.LICENSE_TYPE} valueType="number" allowClear />
+                      </Item>
+                      <Item
+                        label="教师资格证学科"
+                        name={["teacherInfo", "teachingLicenseSubject"]}
+                      >
+                        <Input placeholder="请输入教师资格证学科" />
+                      </Item>
+                      <Item
+                        label="教师资格证编号"
+                        name={["teacherInfo", "teachingLicenseCertificateNumber"]}
+                      >
+                        <Input placeholder="请输入教师资格证编号" />
+                      </Item>
+                      <Item
+                        label="教师资格证发证机关"
+                        name={["teacherInfo", "teachingLicenseIssuingAuthority"]}
+                      >
+                        <Input placeholder="请输入教师资格证发证机关" />
+                      </Item>
+                    </>
+                  ) : null}
                 </div>
 
                 <Divider orientation="left">其他信息</Divider>
@@ -409,9 +415,9 @@ const PersonalInfoMain: FC = () => {
                           <Item
                             label="关系"
                             name={[field.name, "relation"]}
-                            rules={[{ required: true, message: "请输入关系（数字）" }]}
+                            rules={[{ required: true, message: "请选择关系" }]}
                           >
-                            <InputNumber style={{ width: "100%" }} placeholder="关系（数字）" />
+                            <SelectEnum name={DictCode.FAMILY_RELATION} valueType="number" allowClear />
                           </Item>
                           <Item
                             label="姓名"
@@ -439,7 +445,7 @@ const PersonalInfoMain: FC = () => {
                       <div>
                         <Button
                           action="add"
-                          onClick={() => add({ relation: 0, name: "", employer: "" })}
+                          onClick={() => add({ name: "", employer: "" })}
                         >
                           新增家庭成员
                         </Button>
@@ -543,10 +549,10 @@ const PersonalInfoMain: FC = () => {
                             <Input placeholder="请输入工作单位" />
                           </Item>
                           <Item label="起始时间" name={[field.name, "startDate"]}>
-                            <Input placeholder="请输入起始时间（字符串）" />
+                            <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} placeholder="请选择起始时间" />
                           </Item>
                           <Item label="截止时间" name={[field.name, "endDate"]}>
-                            <Input placeholder="请输入截止时间（字符串）" />
+                            <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} placeholder="请选择截止时间" />
                           </Item>
                           <Item label="岗位" name={[field.name, "position"]}>
                             <Input placeholder="请输入岗位" />
