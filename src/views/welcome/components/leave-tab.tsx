@@ -76,7 +76,7 @@ const LeaveTab: FC = () => {
       width: 120,
       render: (val: unknown) => leaveTypeDict.label(val),
     },
-    { title: "原因", dataIndex: "leaveReason" },
+    { title: "事由", dataIndex: "leaveReason" },
   ];
 
   return (
