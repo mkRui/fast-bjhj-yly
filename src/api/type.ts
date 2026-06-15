@@ -58,12 +58,14 @@ export declare namespace API {
 
   export namespace GetEnum {
     export interface Data {
+      name?: string | null;
       code: string;
       desc: string;
       dict: Dict[];
     }
 
     export interface Dict {
+      name?: string;
       code: string;
       desc: string;
     }

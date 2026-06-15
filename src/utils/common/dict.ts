@@ -1,5 +1,12 @@
 import type { API } from "@/api/type";
 
+export function resolveEnumDict(
+  _code: string,
+  dict: API.GetEnum.Dict[] | undefined
+): API.GetEnum.Dict[] {
+  return dict?.length ? dict : [];
+}
+
 export function getDictLabel(
   dict: API.GetEnum.Dict[] | undefined,
   code: unknown,

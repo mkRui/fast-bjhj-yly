@@ -11,6 +11,7 @@ import { makeObservable, observable, action } from "mobx";
 import { Store } from "mor-request";
 import axios from "@/api";
 import { resolveMutation } from "@/utils/common/mutation-success";
+import { resolveEnumDict } from "@/utils/common/dict";
 // 全局
 import { Api } from "@/api/api";
 import { API } from "@/api/type";
@@ -63,8 +64,9 @@ class RootStore extends Store<Api> {
     this.resList = list;
   }
 
-  public getEnumData(code: string): API.GetEnum.Dict[] | undefined {
-    return this.enumList.find((item) => item.code === code)?.dict;
+  public getEnumData(code: string): API.GetEnum.Dict[] {
+    const dict = this.enumList.find((item) => item.code === code)?.dict;
+    return resolveEnumDict(code, dict);
   }
 
   // 初始化
