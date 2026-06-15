@@ -40,13 +40,11 @@ export declare namespace API {
       selfCode?: string;
     }
 
-    export interface RequestBody {
-      consumables: {
-        categoryId: string;
-        name: string;
-        remark?: string;
-        selfCode?: string;
-      };
+    export interface Payload {
+      categoryId: string;
+      name: string;
+      remark?: string;
+      selfCode?: string;
     }
 
     export type Data = null;
@@ -64,12 +62,7 @@ export declare namespace API {
 
     export interface RequestBody {
       id: string;
-      consumables: {
-        categoryId: string;
-        name: string;
-        remark?: string;
-        selfCode?: string;
-      };
+      consumables: Add.Payload;
     }
 
     export type Data = null;

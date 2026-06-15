@@ -20,12 +20,10 @@ export declare namespace API {
       maxPassengerNum: number;
     }
 
-    export interface RequestBody {
-      car: {
-        name: string;
-        minPassengerNum: number;
-        maxPassengerNum: number;
-      };
+    export interface Payload {
+      name: string;
+      minPassengerNum: number;
+      maxPassengerNum: number;
     }
 
     export type Data = null;
@@ -42,11 +40,7 @@ export declare namespace API {
 
     export interface RequestBody {
       id: string;
-      car: {
-        name: string;
-        minPassengerNum: number;
-        maxPassengerNum: number;
-      };
+      car: Add.Payload;
     }
 
     export type Data = null;
@@ -85,12 +79,10 @@ export declare namespace API {
       price: number;
     }
 
-    export interface RequestBody {
-      purpose: {
-        carId: string;
-        purpose: string;
-        price: number;
-      };
+    export interface Payload {
+      carId: string;
+      purpose: string;
+      price: number;
     }
 
     export type Data = null;
@@ -107,11 +99,7 @@ export declare namespace API {
 
     export interface RequestBody {
       id: string;
-      purpose: {
-        carId: string;
-        purpose: string;
-        price: number;
-      };
+      purpose: PurposeAdd.Payload;
     }
 
     export type Data = null;

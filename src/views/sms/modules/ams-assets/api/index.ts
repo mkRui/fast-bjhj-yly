@@ -24,7 +24,7 @@ export class Api extends Request {
   }
 
   public async add(params: API.Add.Params): Promise<API.Add.Response> {
-    return await this.post<API.Add.Data>("/ams/assets/add", { asset: toAssetPayload(params) });
+    return await this.post<API.Add.Data>("/ams/assets/add", toAssetPayload(params));
   }
 
   public async del(params: API.Del.Params): Promise<API.Del.Response> {

@@ -1,34 +1,32 @@
 import { Request } from "mor-request";
 import { API } from "../types/api";
 
+function toConsumablesPayload(
+  params: API.Add.Params | Omit<API.Edit.Params, "id">
+): API.Add.Payload {
+  return {
+    categoryId: params.categoryId,
+    name: params.name,
+    remark: params.remark,
+    selfCode: params.selfCode,
+  };
+}
+
 export class Api extends Request {
   public async getPage(params: API.Page.Params): Promise<API.Page.Response> {
     return await this.get<API.Page.Data>("/ams/consumables/page", params);
   }
 
   public async add(params: API.Add.Params): Promise<API.Add.Response> {
-    const body: API.Add.RequestBody = {
-      consumables: {
-        categoryId: params.categoryId,
-        name: params.name,
-        remark: params.remark,
-        selfCode: params.selfCode,
-      },
-    };
-    return await this.post<API.Add.Data>("/ams/consumables/add", body);
+    return await this.post<API.Add.Data>("/ams/consumables/add", toConsumablesPayload(params));
   }
 
   public async edit(params: API.Edit.Params): Promise<API.Edit.Response> {
-    const body: API.Edit.RequestBody = {
-      id: params.id,
-      consumables: {
-        categoryId: params.categoryId,
-        name: params.name,
-        remark: params.remark,
-        selfCode: params.selfCode,
-      },
-    };
-    return await this.post<API.Edit.Data>("/ams/consumables/edit", body);
+    const { id, ...rest } = params;
+    return await this.post<API.Edit.Data>("/ams/consumables/edit", {
+      id,
+      consumables: toConsumablesPayload(rest),
+    });
   }
 
   public async del(params: API.Del.Params): Promise<API.Del.Response> {
