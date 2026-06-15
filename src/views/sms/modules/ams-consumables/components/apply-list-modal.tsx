@@ -5,6 +5,7 @@ import type { ModalProps } from "antd/lib/modal";
 
 import axios from "@/api";
 import Button from "@/components/button";
+import CheckStatusTag, { isCheckFlagSet } from "@/components/check-status-tag";
 import MorTable from "@/components/table";
 import { toastRequestResult } from "@/utils/common/mutation-success";
 import { Api } from "../api";
@@ -71,21 +72,20 @@ const ConsumablesApplyListModal: FC<ConsumablesApplyListModalProps> = (props) =>
     });
   };
 
-  const isChecked = (val: any) => typeof val === "boolean";
+  const isChecked = isCheckFlagSet;
 
   const columns = [
+    { title: "审核意见", dataIndex: "checkedComment", width: 200 },
+    {
+      title: "审核状态",
+      width: 120,
+      render: (_: any, record: API.ApplyPage.RecordItem) => (
+        <CheckStatusTag checkedFlag={record.checkedFlag} />
+      ),
+    },
     { title: "申请时间", dataIndex: "applyTime", width: 180 },
     { title: "申请人", dataIndex: "applyUserName", width: 140 },
     { title: "申请原因", dataIndex: "applyReason" },
-    {
-      title: "审核结果",
-      width: 140,
-      render: (_: any, record: API.ApplyPage.RecordItem) => {
-        if (!isChecked(record.checkedFlag)) return "-";
-        return record.checkedFlag ? "通过" : "不通过";
-      },
-    },
-    { title: "审核意见", dataIndex: "checkedComment", width: 200 },
     {
       title: "操作",
       width: 140,

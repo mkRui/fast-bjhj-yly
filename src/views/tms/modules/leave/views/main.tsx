@@ -1,9 +1,10 @@
 import { FC, useContext, useEffect } from "react";
 import { observer } from "mobx-react";
-import { Pagination, Select, Space, Spin, Tag } from "antd";
+import { Pagination, Select, Space, Spin } from "antd";
 
 import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
+import CheckStatusTag from "@/components/check-status-tag";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
@@ -54,6 +55,13 @@ const LeaveMain: FC = () => {
   };
 
   const columns = [
+    { title: "审核意见", dataIndex: "checkedComment", width: 200 },
+    {
+      title: "审核状态",
+      dataIndex: "checkedFlag",
+      width: 120,
+      render: (val: boolean | null) => <CheckStatusTag checkedFlag={val} />,
+    },
     { title: "请假日期", dataIndex: "leaveDate", width: 140 },
     {
       title: "时间",
@@ -69,21 +77,7 @@ const LeaveMain: FC = () => {
       render: (val: unknown) => leaveTypeDict.label(val),
     },
     { title: "请假事由", dataIndex: "leaveReason" },
-    {
-      title: "审核状态",
-      dataIndex: "checkedFlag",
-      width: 120,
-      render: (val: any) =>
-        val === null ? (
-          <Tag color="orange">未审核</Tag>
-        ) : val ? (
-          <Tag color="green">审核通过</Tag>
-        ) : (
-          <Tag color="red">审核驳回</Tag>
-        ),
-    },
     { title: "审核人", dataIndex: "checkedUserName", width: 140 },
-    { title: "审核意见", dataIndex: "checkedComment", width: 200 },
     {
       title: "操作",
       width: 120,

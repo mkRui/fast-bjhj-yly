@@ -1,8 +1,9 @@
 import { FC, useContext, useEffect } from "react";
 import { observer } from "mobx-react";
-import { Pagination, Space, Spin, Tag } from "antd";
+import { Pagination, Space, Spin } from "antd";
 
 import Button from "@/components/button";
+import CheckStatusTag from "@/components/check-status-tag";
 import MorTable from "@/components/table";
 import RunComponents from "@/components/run-component";
 import { toastActionResult } from "@/utils/common/mutation-success";
@@ -54,6 +55,13 @@ const LeaveTab: FC = () => {
   };
 
   const columns = [
+    { title: "审核意见", dataIndex: "checkedComment", width: 200 },
+    {
+      title: "审核状态",
+      dataIndex: "checkedFlag",
+      width: 120,
+      render: (val: boolean | null) => <CheckStatusTag checkedFlag={val} />,
+    },
     { title: "请假日期", dataIndex: "leaveDate", width: 140 },
     {
       title: "时间",
@@ -69,13 +77,6 @@ const LeaveTab: FC = () => {
       render: (val: unknown) => leaveTypeDict.label(val),
     },
     { title: "原因", dataIndex: "leaveReason" },
-    {
-      title: "审核状态",
-      dataIndex: "checkedFlag",
-      width: 120,
-      render: (val: any) =>
-        val ? <Tag color="green">已审核</Tag> : <Tag color="orange">未审核</Tag>,
-    },
   ];
 
   return (

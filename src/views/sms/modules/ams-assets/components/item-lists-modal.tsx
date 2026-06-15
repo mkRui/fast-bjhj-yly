@@ -5,7 +5,10 @@ import type { ModalProps } from "antd/lib/modal";
 
 import axios from "@/api";
 import Button from "@/components/button";
+import CheckStatusTag, { isCheckFlagSet } from "@/components/check-status-tag";
 import MorTable from "@/components/table";
+import { DictCode } from "@/constants/dict-code";
+import { useDict } from "@/hooks/use-dict";
 import { toastRequestResult } from "@/utils/common/mutation-success";
 import { Api } from "../api";
 import { API } from "../types/api";
@@ -33,6 +36,8 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
 
   const api = useMemo(() => new Api(axios), []);
   const shouldAutoOpenApplies = useRef(initialActiveKey === "applies");
+  const assetsStatusDict = useDict(DictCode.ASSETS_STATUS);
+  const assetsDisposeDict = useDict(DictCode.ASSETS_DISPOSE);
 
   const [activeKey, setActiveKey] = useState<"items" | "applies">(initialActiveKey);
 
@@ -152,7 +157,12 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
       render: (_: any, record: API.ItemPage.RecordItem) => record.assetName || record.assetId || "-",
     },
     { title: "完整代码", dataIndex: "fullCode", width: 200 },
-    { title: "状态", dataIndex: "status", width: 120 },
+    {
+      title: "状态",
+      dataIndex: "status",
+      width: 120,
+      render: (val: unknown) => assetsStatusDict.label(val),
+    },
     { title: "入库时间", dataIndex: "stockInTime", width: 180 },
     { title: "备注", dataIndex: "remark" },
     {
@@ -169,28 +179,33 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
     },
   ];
 
-  const isChecked = (val: any) => typeof val === "boolean";
+  const isChecked = isCheckFlagSet;
 
   const applyColumns = [
+    { title: "申请审核意见", dataIndex: "applyCheckedComment", width: 200 },
+    {
+      title: "申请审核",
+      width: 120,
+      render: (_: any, record: API.ItemApplyPage.RecordItem) => (
+        <CheckStatusTag checkedFlag={record.applyCheckedFlag} />
+      ),
+    },
     { title: "申请时间", dataIndex: "applyTime", width: 180 },
     { title: "申请人", dataIndex: "applyUserName", width: 140 },
     { title: "申请原因", dataIndex: "applyReason" },
     {
-      title: "申请审核",
-      width: 140,
-      render: (_: any, record: API.ItemApplyPage.RecordItem) => {
-        if (!isChecked(record.applyCheckedFlag)) return "-";
-        return record.applyCheckedFlag ? "通过" : "不通过";
-      },
+      title: "处置类型",
+      dataIndex: "disposeType",
+      width: 120,
+      render: (val: unknown) => assetsDisposeDict.label(val),
     },
-    { title: "处置类型", dataIndex: "disposeType", width: 120 },
+    { title: "处置审核意见", dataIndex: "disposeCheckedComment", width: 200 },
     {
       title: "处置审核",
-      width: 140,
-      render: (_: any, record: API.ItemApplyPage.RecordItem) => {
-        if (!isChecked(record.disposeCheckedFlag)) return "-";
-        return record.disposeCheckedFlag ? "通过" : "不通过";
-      },
+      width: 120,
+      render: (_: any, record: API.ItemApplyPage.RecordItem) => (
+        <CheckStatusTag checkedFlag={record.disposeCheckedFlag} unsetText="-" />
+      ),
     },
     {
       title: "操作",
