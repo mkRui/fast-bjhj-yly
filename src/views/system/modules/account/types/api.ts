@@ -44,25 +44,15 @@ export declare namespace API {
 
   export namespace AddAccount {
     export interface Params {
-      /*昵称 */
-      nickname?: string;
-
-      /*头像 */
-      avatar?: string;
-
-      /*手机号 */
-      phone?: string;
-
-      /*电子邮箱 */
-      email?: string;
-
-      /*描述 */
-      description?: string;
-
-      /*账号 */
+      enableFlag?: boolean;
+      lockFlag?: boolean;
       account?: string;
-
-      /*管理的频道id */
+      phone?: string;
+      email?: string;
+      nickname?: string;
+      avatar?: string;
+      description?: string;
+      roleList?: unknown[];
       channelList?: Record<string, unknown>[];
     }
 

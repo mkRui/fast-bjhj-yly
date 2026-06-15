@@ -30,7 +30,6 @@ export declare namespace API {
     export interface Params {
       name: string;
       code: string;
-      defaultFlag: boolean;
     }
 
     export type Data = null;

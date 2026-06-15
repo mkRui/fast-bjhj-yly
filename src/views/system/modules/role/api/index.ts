@@ -27,6 +27,6 @@ export class Api extends Request {
   public async setRole(
     params?: API.SetRole.Params
   ): Promise<API.SetRole.Response> {
-    return await this.post<API.SetRole.Data>("/sys/role/del", params);
+    return await this.post<API.SetRole.Data>("/sys/role/edit", params);
   }
 }
