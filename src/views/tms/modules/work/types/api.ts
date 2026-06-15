@@ -10,13 +10,7 @@ export declare namespace API {
       size: number;
     }
 
-    export interface Data {
-      size: number;
-      pages: number;
-      total: number;
-      records: Teacher[];
-      current: number;
-    }
+    export type Data = Teacher[];
 
     export type Response = BaseRequest.Response<Data>;
   }

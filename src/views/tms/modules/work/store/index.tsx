@@ -15,23 +15,17 @@ export class WorkStore extends Store<Api> {
     keyword: undefined,
   };
 
-  public teacherData: API.TeacherList.Data = {
-    size: 10,
-    pages: 0,
-    total: 0,
-    records: [],
-    current: 1,
-  };
+  public teacherList: API.TeacherList.Data = [];
 
   constructor() {
     super(new Api(axios));
     makeObservable(this, {
       loading: observable,
       teacherParams: observable,
-      teacherData: observable,
+      teacherList: observable,
       $setLoading: action,
       $setTeacherParams: action,
-      $setTeacherData: action,
+      $setTeacherList: action,
     });
   }
 
@@ -43,12 +37,8 @@ export class WorkStore extends Store<Api> {
     Object.assign(this.teacherParams, params);
   }
 
-  public $setTeacherData(data: API.TeacherList.Data): void {
-    Object.assign(this.teacherData, data);
-  }
-
-  public get teacherList() {
-    return this.teacherData.records;
+  public $setTeacherList(data: API.TeacherList.Data): void {
+    this.teacherList = data;
   }
 
   public async getTeacherList(): Promise<void> {
@@ -56,7 +46,7 @@ export class WorkStore extends Store<Api> {
     const [err, data] = await this.api.getTeacherList(this.teacherParams);
     this.$setLoading(false);
     if (!err) {
-      this.$setTeacherData(data);
+      this.$setTeacherList(Array.isArray(data) ? data : []);
     }
   }
 

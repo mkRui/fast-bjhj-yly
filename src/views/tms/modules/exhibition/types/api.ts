@@ -57,13 +57,7 @@ export declare namespace API {
       name: string;
     }
 
-    export interface Data {
-      size: number;
-      pages: number;
-      total: number;
-      records: RecordItem[];
-      current: number;
-    }
+    export type Data = RecordItem[];
 
     export type Response = BaseRequest.Response<Data>;
   }

@@ -31,7 +31,7 @@ const SelectTeacher: FC<SelectTeacherProps> = (props) => {
       showSearch
       filterOption={false}
       onSearch={(v) => onSearch?.(v)}
-      onChange={(v) => onChange?.(typeof v === "number" ? v : undefined)}
+      onChange={(v) => onChange?.(v ? String(v) : undefined)}
       optionLabelProp="label"
     >
       {options.map((t) => (

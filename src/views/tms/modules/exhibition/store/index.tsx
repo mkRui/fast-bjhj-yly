@@ -58,7 +58,8 @@ export class ExhibitionStore extends Store<Api> {
     const [err, data] = await this.api.getTeacherList({ current: 1, size: 999 });
     if (err) return;
     const map: Record<string, string> = {};
-    (data.records || []).forEach((item) => {
+    const list = Array.isArray(data) ? data : [];
+    list.forEach((item) => {
       map[item.id] = item.name;
     });
     this.$setTeacherMap(map);
