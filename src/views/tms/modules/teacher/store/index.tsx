@@ -62,7 +62,7 @@ export class TeacherStore extends Store<Api> {
   }
 
   public async getInfo(id: string): Promise<API.Info.Data | null> {
-    const [err, data] = await this.api.getInfo({ id });
+    const [err, data] = await this.api.getInfo({ teacherId: id });
     if (!err) {
       return data;
     }

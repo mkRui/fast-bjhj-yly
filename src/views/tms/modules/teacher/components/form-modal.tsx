@@ -370,7 +370,7 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
                       <Input placeholder="请输入职称" />
                     </Item>
                     <Item label="取得时间" name={[field.name, "evaluationDate"]}>
-                      <Input placeholder="请输入取得时间（字符串）" />
+                      <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} placeholder="请选择取得时间" />
                     </Item>
                     <div style={{ paddingBottom: 24 }}>
                       <Button type="link" action="del" onConfirm={() => remove(field.name)}>

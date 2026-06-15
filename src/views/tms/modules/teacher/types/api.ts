@@ -35,7 +35,7 @@ export declare namespace API {
 
   export namespace Info {
     export interface Params {
-      id: string;
+      teacherId: string;
     }
 
     export interface Data {
