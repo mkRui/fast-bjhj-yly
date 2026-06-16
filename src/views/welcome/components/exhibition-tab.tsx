@@ -4,6 +4,7 @@ import { Pagination, Space, Spin } from "antd";
 
 import axios from "@/api";
 import Button from "@/components/button";
+import PageToolbar from "@/components/page-toolbar";
 import MorTable from "@/components/table";
 import RunComponents from "@/components/run-component";
 import { toastRequestResult } from "@/utils/common/mutation-success";
@@ -12,6 +13,7 @@ import { Api } from "../api";
 import { API } from "../types/api";
 import ExhibitionFormModal from "./exhibition-form-modal";
 import ExhibitionAttachmentModal from "./exhibition-attachment-modal";
+import { useRegisterUserPageToolbar } from "../pages/user-page-layout";
 
 const ExhibitionTab: FC = () => {
   const api = useMemo(() => new Api(axios), []);
@@ -159,14 +161,10 @@ const ExhibitionTab: FC = () => {
     },
   ];
 
-  return (
-    <Spin spinning={loading}>
-      <div className="theme-panel p-6 mb-4">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <div className="text-xl font-semibold mb-1">展会信息</div>
-            <div className="text-gray-600">管理我的展会记录及附件</div>
-          </div>
+  const toolbar = useMemo(
+    () => (
+      <PageToolbar
+        actions={
           <Space>
             <Button type="primary" action="add" onClick={openAddModal}>
               新增展会
@@ -175,9 +173,16 @@ const ExhibitionTab: FC = () => {
               刷新
             </Button>
           </Space>
-        </div>
-      </div>
+        }
+      />
+    ),
+    []
+  );
 
+  useRegisterUserPageToolbar(toolbar);
+
+  return (
+    <Spin spinning={loading}>
       <div className="theme-panel p-6 h-[520px]">
         <div className="text-base font-semibold mb-4">我的展会</div>
         <MorTable

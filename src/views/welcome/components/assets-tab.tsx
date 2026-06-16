@@ -5,6 +5,7 @@ import type { ModalProps } from "antd/lib/modal";
 
 import axios from "@/api";
 import Button from "@/components/button";
+import PageToolbar, { FilterField } from "@/components/page-toolbar";
 import CheckStatusTag from "@/components/check-status-tag";
 import MorTable from "@/components/table";
 import RunComponents from "@/components/run-component";
@@ -779,9 +780,48 @@ const AssetsTab: FC = () => {
           label: "申请易耗品",
           children: (
             <Spin spinning={loading}>
-              <div className="theme-panel p-6 mb-4">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="text-gray-600">选择分类后查询并提交申请</div>
+              <PageToolbar
+                variant="panel"
+                filters={
+                  <>
+                    <FilterField label="资产分类" width={220}>
+                      <Select
+                        value={categoryId || undefined}
+                        loading={categoryLoading}
+                        onChange={(v) => setCategoryId(String(v || ""))}
+                        style={{ width: "100%" }}
+                        placeholder="请选择资产分类"
+                      >
+                        {categories.map((item) => (
+                          <Option value={item.id} key={item.id}>
+                            <span aria-label={item.name}>{item.name}</span>
+                          </Option>
+                        ))}
+                      </Select>
+                    </FilterField>
+                    <FilterField label="关键字" width={260}>
+                      <Input
+                        value={keyword}
+                        allowClear
+                        placeholder="请输入易耗品名称/代码关键字"
+                        onChange={(e) => setKeyword(e.target.value)}
+                        onPressEnter={() => {
+                          void loadPage({ current: 1, keyword: keyword || undefined });
+                        }}
+                      />
+                    </FilterField>
+                    <Button
+                      type="primary"
+                      action="search"
+                      onClick={() => {
+                        void loadPage({ current: 1, keyword: keyword || undefined });
+                      }}
+                    >
+                      查询
+                    </Button>
+                  </>
+                }
+                actions={
                   <Space>
                     <Button
                       action="reset"
@@ -801,62 +841,8 @@ const AssetsTab: FC = () => {
                       重置筛选
                     </Button>
                   </Space>
-                </div>
-              </div>
-
-              <div className="theme-panel p-6 mb-4">
-                <div className="text-sm text-gray-600 mb-2">筛选</div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <div className="text-sm text-gray-600 mb-1">资产分类</div>
-                    <Select
-                      value={categoryId || undefined}
-                      loading={categoryLoading}
-                      onChange={(v) => setCategoryId(String(v || ""))}
-                      style={{ width: "100%" }}
-                      placeholder="请选择资产分类"
-                    >
-                      {categories.map((item) => (
-                        <Option value={item.id} key={item.id}>
-                          <span aria-label={item.name}>{item.name}</span>
-                        </Option>
-                      ))}
-                    </Select>
-                  </div>
-                  <div>
-                    <div className="text-sm text-gray-600 mb-1">关键字</div>
-                    <Input
-                      value={keyword}
-                      allowClear
-                      placeholder="请输入易耗品名称/代码关键字"
-                      onChange={(e) => setKeyword(e.target.value)}
-                      onPressEnter={() => {
-                        void loadPage({ current: 1, keyword: keyword || undefined });
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="flex justify-end mt-4">
-                  <Space>
-                    <Button
-                      type="primary"
-                      onClick={() => {
-                        void loadPage({ current: 1, keyword: keyword || undefined });
-                      }}
-                    >
-                      查询
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setKeyword("");
-                        void loadPage({ current: 1, keyword: undefined });
-                      }}
-                    >
-                      清空关键字
-                    </Button>
-                  </Space>
-                </div>
-              </div>
+                }
+              />
 
               <div className="theme-panel p-6 h-[520px]">
                 <div className="text-base font-semibold mb-4">易耗品列表</div>
@@ -882,11 +868,48 @@ const AssetsTab: FC = () => {
           label: "申请固定资产",
           children: (
             <Spin spinning={assetsLoading}>
-              <div className="theme-panel p-6 mb-4">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="text-gray-600">
-                    选择分类后查询并进入实体列表提交申请
-                  </div>
+              <PageToolbar
+                variant="panel"
+                filters={
+                  <>
+                    <FilterField label="资产分类" width={220}>
+                      <Select
+                        value={assetsCategoryId || undefined}
+                        loading={categoryLoading}
+                        onChange={(v) => setAssetsCategoryId(String(v || ""))}
+                        style={{ width: "100%" }}
+                        placeholder="请选择资产分类"
+                      >
+                        {categories.map((item) => (
+                          <Option value={item.id} key={item.id}>
+                            <span aria-label={item.name}>{item.name}</span>
+                          </Option>
+                        ))}
+                      </Select>
+                    </FilterField>
+                    <FilterField label="关键字" width={260}>
+                      <Input
+                        value={assetsKeyword}
+                        allowClear
+                        placeholder="请输入固定资产名称/代码关键字"
+                        onChange={(e) => setAssetsKeyword(e.target.value)}
+                        onPressEnter={() => {
+                          void loadAssetsPage({ current: 1, keyword: assetsKeyword || undefined });
+                        }}
+                      />
+                    </FilterField>
+                    <Button
+                      type="primary"
+                      action="search"
+                      onClick={() => {
+                        void loadAssetsPage({ current: 1, keyword: assetsKeyword || undefined });
+                      }}
+                    >
+                      查询
+                    </Button>
+                  </>
+                }
+                actions={
                   <Space>
                     <Button
                       action="reset"
@@ -906,62 +929,8 @@ const AssetsTab: FC = () => {
                       重置筛选
                     </Button>
                   </Space>
-                </div>
-              </div>
-
-              <div className="theme-panel p-6 mb-4">
-                <div className="text-sm text-gray-600 mb-2">筛选</div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <div className="text-sm text-gray-600 mb-1">资产分类</div>
-                    <Select
-                      value={assetsCategoryId || undefined}
-                      loading={categoryLoading}
-                      onChange={(v) => setAssetsCategoryId(String(v || ""))}
-                      style={{ width: "100%" }}
-                      placeholder="请选择资产分类"
-                    >
-                      {categories.map((item) => (
-                        <Option value={item.id} key={item.id}>
-                          <span aria-label={item.name}>{item.name}</span>
-                        </Option>
-                      ))}
-                    </Select>
-                  </div>
-                  <div>
-                    <div className="text-sm text-gray-600 mb-1">关键字</div>
-                    <Input
-                      value={assetsKeyword}
-                      allowClear
-                      placeholder="请输入固定资产名称/代码关键字"
-                      onChange={(e) => setAssetsKeyword(e.target.value)}
-                      onPressEnter={() => {
-                        void loadAssetsPage({ current: 1, keyword: assetsKeyword || undefined });
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="flex justify-end mt-4">
-                  <Space>
-                    <Button
-                      type="primary"
-                      onClick={() => {
-                        void loadAssetsPage({ current: 1, keyword: assetsKeyword || undefined });
-                      }}
-                    >
-                      查询
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setAssetsKeyword("");
-                        void loadAssetsPage({ current: 1, keyword: undefined });
-                      }}
-                    >
-                      清空关键字
-                    </Button>
-                  </Space>
-                </div>
-              </div>
+                }
+              />
 
               <div className="theme-panel p-6 h-[520px]">
                 <div className="text-base font-semibold mb-4">固定资产列表</div>

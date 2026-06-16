@@ -23,6 +23,7 @@ const UserWork = dynamicImport(() => import("@/views/welcome/pages/work-page"));
 const UserLeave = dynamicImport(() => import("@/views/welcome/pages/leave-page"));
 const UserAssets = dynamicImport(() => import("@/views/welcome/pages/assets-page"));
 const UserCar = dynamicImport(() => import("@/views/welcome/pages/car-page"));
+const UserExhibition = dynamicImport(() => import("@/views/welcome/pages/exhibition-page"));
 const PersonalInfo = dynamicImport(() => import("@/views/personal-info"));
 const Tms = dynamicImport(() => import("@/views/tms"));
 const Sms = dynamicImport(() => import("@/views/sms"));
@@ -41,6 +42,7 @@ export default {
   UserLeave,
   UserAssets,
   UserCar,
+  UserExhibition,
   PersonalInfo,
   Tms,
   Sms,

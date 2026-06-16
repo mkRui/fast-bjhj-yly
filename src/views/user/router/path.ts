@@ -4,6 +4,7 @@ enum UserPath {
   LEAVE = "/user/leave",
   ASSETS = "/user/assets",
   CAR = "/user/car",
+  EXHIBITION = "/user/exhibition",
 }
 
 enum UserFullPath {
@@ -12,6 +13,7 @@ enum UserFullPath {
   LEAVE = "/user/leave",
   ASSETS = "/user/assets",
   CAR = "/user/car",
+  EXHIBITION = "/user/exhibition",
 }
 
 export { UserPath, UserFullPath };

@@ -57,6 +57,12 @@ export const mainRoutes: RouteTypes[] = [
     fullPath: UserFullPath.CAR,
   },
   {
+    path: UserFullPath.EXHIBITION,
+    component: Pages.UserExhibition,
+    title: "展会上报",
+    fullPath: UserFullPath.EXHIBITION,
+  },
+  {
     path: "/personal-info",
     component: Pages.PersonalInfo,
     title: "教师信息",

@@ -17,6 +17,7 @@ export interface FilterParams {
 export interface LeaveFilterParams {
   current: number;
   size: number;
+  checkedFlag?: string;
 }
 
 export class WelcomeStore extends Store<Api> {
@@ -142,6 +143,7 @@ export class WelcomeStore extends Store<Api> {
     const [err, data] = await this.api.getLeavePage({
       current: this.leaveFilter.current,
       size: this.leaveFilter.size,
+      checkedFlag: this.leaveFilter.checkedFlag,
     });
     this.$setLeaveLoading(false);
     if (!err) {

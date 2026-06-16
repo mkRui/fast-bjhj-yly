@@ -3,12 +3,16 @@ import { BaseRequest } from "mor-request";
 
 export declare namespace API {
   export namespace SubmitWork {
+    export interface WorkItem {
+      subject: number;
+      num: number;
+    }
+
     export interface Params {
       date: string;
       year: number;
       month: number;
-      subject: number;
-      num: number;
+      workList: WorkItem[];
     }
 
     export type Data = null;
@@ -76,6 +80,7 @@ export declare namespace API {
     export interface Params {
       current: number;
       size: number;
+      checkedFlag?: string;
     }
 
     export interface RecordItem {
@@ -147,7 +152,7 @@ export declare namespace API {
 
   export namespace ConsumablesApplyPage {
     export interface Params {
-      consumablesId: string;
+      consumablesId?: string;
       current: number;
       size: number;
     }
@@ -254,7 +259,7 @@ export declare namespace API {
 
   export namespace AssetsItemApplyPage {
     export interface Params {
-      itemId: string;
+      itemId?: string;
       current: number;
       size: number;
     }
@@ -344,6 +349,7 @@ export declare namespace API {
       purposeId: string;
       applyReason: string;
       rentalTime: string;
+      estimatedReturnTime: string;
       origin: string;
       destination: string;
       passengerNum: number;
@@ -371,6 +377,7 @@ export declare namespace API {
       purpose?: string;
       reason?: string;
       rentalTime?: string;
+      estimatedReturnTime?: string;
       origin?: string;
       destination?: string;
       passengerNum?: number;

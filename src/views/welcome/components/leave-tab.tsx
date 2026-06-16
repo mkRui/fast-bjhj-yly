@@ -1,8 +1,9 @@
-import { FC, useContext, useEffect } from "react";
+import { FC, useContext, useEffect, useMemo } from "react";
 import { observer } from "mobx-react";
-import { Pagination, Space, Spin } from "antd";
+import { Pagination, Select, Space, Spin } from "antd";
 
 import Button from "@/components/button";
+import PageToolbar, { FilterField } from "@/components/page-toolbar";
 import CheckStatusTag from "@/components/check-status-tag";
 import MorTable from "@/components/table";
 import RunComponents from "@/components/run-component";
@@ -13,6 +14,9 @@ import { useDict } from "@/hooks/use-dict";
 import StoreContext from "../store";
 import { API } from "../types/api";
 import LeaveSubmitModal from "./leave-submit-modal";
+import { useRegisterUserPageToolbar } from "../pages/user-page-layout";
+
+const Option = Select.Option;
 
 const LeaveTab: FC = () => {
   const store = useContext(StoreContext);
@@ -21,6 +25,11 @@ const LeaveTab: FC = () => {
   useEffect(() => {
     void store.fetchLeavePage();
   }, [store]);
+
+  const handleFilter = (params: Partial<typeof store.leaveFilter>): void => {
+    store.$setLeaveFilter({ ...params, current: 1 });
+    void store.fetchLeavePage();
+  };
 
   const openLeaveModal = (): void => {
     const now = new Date();
@@ -79,10 +88,37 @@ const LeaveTab: FC = () => {
     { title: "事由", dataIndex: "leaveReason" },
   ];
 
-  return (
-    <Spin spinning={store.leaveLoading}>
-      <div className="theme-panel p-6 mb-4">
-        <div className="flex items-center justify-end gap-4">
+  const toolbar = useMemo(
+    () => (
+      <PageToolbar
+        filters={
+          <Space align="end" size={16} wrap>
+            <FilterField label="审核状态" width={180}>
+              <Select
+                allowClear
+                style={{ width: "100%" }}
+                placeholder="全部状态"
+                value={store.leaveFilter.checkedFlag}
+                onChange={(v) => {
+                  handleFilter({ checkedFlag: v || undefined });
+                }}
+              >
+                <Option value="true">已审核</Option>
+                <Option value="false">未审核</Option>
+              </Select>
+            </FilterField>
+            <Button
+              action="reset"
+              onClick={() => {
+                store.$setLeaveFilter({ checkedFlag: undefined, current: 1, size: 10 });
+                void store.fetchLeavePage();
+              }}
+            >
+              重置
+            </Button>
+          </Space>
+        }
+        actions={
           <Space>
             <Button type="primary" action="add" onClick={openLeaveModal}>
               提交请假
@@ -96,16 +132,24 @@ const LeaveTab: FC = () => {
               刷新
             </Button>
           </Space>
-        </div>
-      </div>
+        }
+      />
+    ),
+    [store.leaveFilter.checkedFlag]
+  );
 
-      <div className="theme-panel p-6 h-[300px]">
+  useRegisterUserPageToolbar(toolbar);
+
+  return (
+    <Spin spinning={store.leaveLoading}>
+      <div className="theme-panel p-6 h-[520px]">
         <div className="text-base font-semibold mb-4">请假记录</div>
         <MorTable
           rowKey="id"
           columns={columns as any}
           dataSource={store.leavePage.records || []}
           pagination={false}
+          auto
         />
         <div className="flex justify-end mt-4">
           <Pagination
@@ -113,6 +157,7 @@ const LeaveTab: FC = () => {
             pageSize={store.leaveFilter.size}
             total={store.leavePage.total || 0}
             showSizeChanger
+            showQuickJumper
             onChange={(current, pageSize) => {
               store.$setLeaveFilter({ current, size: pageSize });
               void store.fetchLeavePage();

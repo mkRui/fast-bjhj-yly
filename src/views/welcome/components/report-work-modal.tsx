@@ -1,10 +1,11 @@
-import { FC, useState } from "react";
+import { FC, useContext, useMemo, useState } from "react";
 import { observer } from "mobx-react";
 import { Form, InputNumber, Modal, Space, Switch } from "antd";
 import type { ModalProps } from "antd/lib/modal";
 
-import SelectEnum from "@/micro/select-enum";
 import DatePicker from "@/components/date-picker";
+import { toast } from "@/components/message";
+import RootContext from "@/stores/root-context";
 import { DictCode } from "@/constants/dict-code";
 import { useFormInitialValues } from "@/hooks/use-form-initial-values";
 import { API } from "../types/api";
@@ -14,7 +15,7 @@ const Item = Form.Item;
 export interface ReportWorkModalProps {
   title: string;
   loading?: boolean;
-  init?: Partial<API.SubmitWork.Params>;
+  init?: Partial<API.SubmitWork.Params> & { items?: Record<string, number> };
   onCancel: ModalProps["onCancel"];
   onOk: (params: API.SubmitWork.Params) => void | Promise<void>;
 }
@@ -22,6 +23,13 @@ export interface ReportWorkModalProps {
 const ReportWorkModal: FC<ReportWorkModalProps> = (props) => {
   const { title, loading, init, onCancel, onOk } = props;
   const [form] = Form.useForm();
+  const root = useContext(RootContext);
+
+  const subjectList = useMemo(
+    () => root.getEnumData(DictCode.WORK_SUBJECT) || [],
+    [root.enumList]
+  );
+
   const initMode: "day" | "month" = (() => {
     const hasDate = !!init?.date;
     const hasYearMonth = !!init?.year && !!init?.month;
@@ -33,21 +41,36 @@ const ReportWorkModal: FC<ReportWorkModalProps> = (props) => {
 
   useFormInitialValues(form, init as Record<string, unknown> | undefined);
 
+  const buildBaseParams = (values: Record<string, unknown>) => {
+    const date = String(values.date || "");
+    const year = Number(values.year || 0);
+    const month = Number(values.month || 0);
+
+    return {
+      date: mode === "day" ? date : "",
+      year: mode === "day" ? Number(String(date).slice(0, 4) || 0) : year,
+      month: mode === "day" ? Number(String(date).slice(5, 7) || 0) : month,
+    };
+  };
+
   const handleOk = (): void => {
-    void form.validateFields().then(async (values: any) => {
-      const date = String(values.date || "");
-      const year = Number(values.year || 0);
-      const month = Number(values.month || 0);
+    void form.validateFields().then(async (values: Record<string, unknown>) => {
+      const items = (values.items || {}) as Record<string, number>;
+      const workList = subjectList
+        .map((item) => ({
+          subject: Number(item.code),
+          num: Number(items[item.code] || 0),
+        }))
+        .filter((item) => item.num > 0);
+
+      if (!workList.length) {
+        toast("warning", "请至少填写一项课时数量");
+        return;
+      }
 
       await onOk({
-        date: mode === "day" ? date : "",
-        year: mode === "day" ? Number(String(date).slice(0, 4) || 0) : year,
-        month:
-          mode === "day"
-            ? Number(String(date).slice(5, 7) || 0)
-            : month,
-        subject: Number(values.subject || 0),
-        num: Number(values.num || 0),
+        ...buildBaseParams(values),
+        workList,
       });
     });
   };
@@ -61,6 +84,7 @@ const ReportWorkModal: FC<ReportWorkModalProps> = (props) => {
       okText="提交"
       cancelText="取消"
       confirmLoading={loading}
+      width={560}
     >
       <Form form={form} layout="vertical">
         <Item label="上报方式">
@@ -131,26 +155,20 @@ const ReportWorkModal: FC<ReportWorkModalProps> = (props) => {
         >
           <InputNumber style={{ width: "100%" }} min={1} max={12} />
         </Item>
-        <Item
-          label="上报科目"
-          name="subject"
-          rules={[{ required: true, message: "请选择上报科目" }]}
-        >
-          <SelectEnum
-            name={DictCode.WORK_SUBJECT}
-            placeholder="请选择上报科目"
-            allowClear
-            handleInitChange={(code) => {
-              form.setFieldValue("subject", code);
-            }}
-          />
-        </Item>
-        <Item
-          label="数量"
-          name="num"
-          rules={[{ required: true, message: "请输入数量" }]}
-        >
-          <InputNumber style={{ width: "100%" }} min={0} />
+        <Item label="上报种类" required>
+          <div className="rounded-lg border border-gray-200 divide-y divide-gray-100">
+            {subjectList.map((item) => (
+              <div
+                key={item.code}
+                className="flex items-center justify-between gap-4 px-4 py-3"
+              >
+                <span className="text-gray-700 shrink-0">{item.desc}</span>
+                <Item name={["items", item.code]} noStyle initialValue={0}>
+                  <InputNumber min={0} placeholder="0" style={{ width: 120 }} />
+                </Item>
+              </div>
+            ))}
+          </div>
         </Item>
       </Form>
     </Modal>

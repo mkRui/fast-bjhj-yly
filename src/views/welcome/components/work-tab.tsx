@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import { InputNumber, Pagination, Space, Spin } from "antd";
 
 import Button from "@/components/button";
+import PageToolbar, { FilterField } from "@/components/page-toolbar";
 import MorTable from "@/components/table";
 import { toastActionResult } from "@/utils/common/mutation-success";
 import RootContext from "@/stores/root-context";
@@ -14,6 +15,7 @@ import StoreContext from "../store";
 import { API } from "../types/api";
 import WorkStatisticsChart, { WorkStatisticsItem } from "./work-statistics-chart";
 import ReportWorkModal from "./report-work-modal";
+import { useRegisterUserPageToolbar } from "../pages/user-page-layout";
 
 const WorkTab: FC = () => {
   const store = useContext(StoreContext);
@@ -55,12 +57,12 @@ const WorkTab: FC = () => {
       render: (state) => (
         <ReportWorkModal
           {...state}
-          title="上报工时"
+          title="上报课时"
           init={{
             date,
             year: store.filter.year || yyyy,
             month: store.filter.month || mm,
-            num: 0,
+            items: {},
           }}
           onCancel={() => modal.unmount()}
           onOk={async (params: API.SubmitWork.Params) => {
@@ -88,13 +90,39 @@ const WorkTab: FC = () => {
     { title: "时数数量", dataIndex: "num", width: 120 },
   ];
 
-  return (
-    <Spin spinning={store.loading}>
-      <div className="theme-panel p-6 mb-4">
-        <div className="flex items-center justify-end gap-4">
+  const toolbar = useMemo(
+    () => (
+      <PageToolbar
+        filters={
+          <>
+            <FilterField label="年份" width={140}>
+              <InputNumber
+                style={{ width: "100%" }}
+                value={store.filter.year}
+                onChange={(val) => {
+                  void handleFilter({ year: Number(val || 0), current: 1 });
+                }}
+                min={2000}
+                max={2100}
+              />
+            </FilterField>
+            <FilterField label="月份" width={120}>
+              <InputNumber
+                style={{ width: "100%" }}
+                value={store.filter.month}
+                onChange={(val) => {
+                  void handleFilter({ month: Number(val || 0), current: 1 });
+                }}
+                min={1}
+                max={12}
+              />
+            </FilterField>
+          </>
+        }
+        actions={
           <Space>
             <Button type="primary" action="add" onClick={openReportModal}>
-              上报工时
+              上报课时
             </Button>
             <Button
               action="reset"
@@ -105,46 +133,22 @@ const WorkTab: FC = () => {
               刷新
             </Button>
           </Space>
-        </div>
-      </div>
+        }
+      />
+    ),
+    [store.filter.year, store.filter.month]
+  );
 
-      <div className="theme-panel p-6 mb-4">
-        <div className="text-sm text-gray-600 mb-2">筛选</div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <div className="text-sm text-gray-600 mb-1">年份</div>
-            <InputNumber
-              style={{ width: "100%" }}
-              value={store.filter.year}
-              onChange={(val) => {
-                void handleFilter({ year: Number(val || 0), current: 1 });
-              }}
-              min={2000}
-              max={2100}
-            />
-          </div>
-          <div>
-            <div className="text-sm text-gray-600 mb-1">月份</div>
-            <InputNumber
-              style={{ width: "100%" }}
-              value={store.filter.month}
-              onChange={(val) => {
-                void handleFilter({ month: Number(val || 0), current: 1 });
-              }}
-              min={1}
-              max={12}
-            />
-          </div>
-        </div>
-      </div>
+  useRegisterUserPageToolbar(toolbar);
 
-
+  return (
+    <Spin spinning={store.loading}>
        <div className="mb-2">
-          <WorkStatisticsChart title="当前用户工时统计（按科目）" data={statisticsData} />
+          <WorkStatisticsChart title="当前用户课时统计（按科目）" data={statisticsData} />
        </div>
 
       <div className="theme-panel p-6 h-[300px]">
-        <div className="text-base font-semibold mb-4">工时记录</div>
+        <div className="text-base font-semibold mb-4">课时记录</div>
         <MorTable rowKey="id" columns={columns as any} dataSource={store.page.records || []} pagination={false} />
         <div className="flex justify-end mt-4">
           <Pagination

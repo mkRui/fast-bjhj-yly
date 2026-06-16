@@ -5,6 +5,7 @@ import type { ModalProps } from "antd/lib/modal";
 
 import axios from "@/api";
 import Button from "@/components/button";
+import PageToolbar, { FilterField } from "@/components/page-toolbar";
 import CheckStatusTag from "@/components/check-status-tag";
 import DatePicker from "@/components/date-picker";
 import MorTable from "@/components/table";
@@ -16,6 +17,7 @@ import { Api } from "../api";
 import { API } from "../types/api";
 import CarSelect from "./car-select";
 import CarPurposeSelect from "./car-purpose-select";
+import { useRegisterUserPageToolbar } from "../pages/user-page-layout";
 
 const Item = Form.Item;
 
@@ -55,6 +57,7 @@ const CarApplyModal: FC<CarApplyModalProps> = (props) => {
     purposeId: init?.purposeId,
     applyReason: init?.applyReason || "",
     rentalTime: init?.rentalTime || "",
+    estimatedReturnTime: init?.estimatedReturnTime || "",
     origin: init?.origin || "",
     destination: init?.destination || "",
     passengerNum: init?.passengerNum ?? 1,
@@ -73,6 +76,7 @@ const CarApplyModal: FC<CarApplyModalProps> = (props) => {
         purposeId: String(values.purposeId || ""),
         applyReason: String(values.applyReason || ""),
         rentalTime: String(values.rentalTime || ""),
+        estimatedReturnTime: String(values.estimatedReturnTime || ""),
         origin: String(values.origin || ""),
         destination: String(values.destination || ""),
         passengerNum: Number(values.passengerNum || 0),
@@ -126,6 +130,18 @@ const CarApplyModal: FC<CarApplyModalProps> = (props) => {
         </Item>
         <Item label="用车时间" name="rentalTime" rules={[{ required: true, message: "请选择用车时间" }]}>
           <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" style={{ width: "100%" }} placeholder="请选择用车时间" />
+        </Item>
+        <Item
+          label="预计返回时间"
+          name="estimatedReturnTime"
+          rules={[{ required: true, message: "请选择预计返回时间" }]}
+        >
+          <DatePicker
+            showTime
+            format="YYYY-MM-DD HH:mm:ss"
+            style={{ width: "100%" }}
+            placeholder="请选择预计返回时间"
+          />
         </Item>
         <Item label="起始地" name="origin" rules={[{ required: true, message: "请输入起始地" }]}>
           <Input placeholder="请输入起始地" />
@@ -217,6 +233,7 @@ const CarTab: FC = () => {
             purposeId: "",
             applyReason: "",
             rentalTime: "",
+            estimatedReturnTime: "",
             origin: "",
             destination: "",
             passengerNum: 1,
@@ -252,6 +269,7 @@ const CarTab: FC = () => {
     { title: "用途", dataIndex: "purpose", width: 140 },
     { title: "用车理由", dataIndex: "reason", width: 220 },
     { title: "用车时间", dataIndex: "rentalTime", width: 180 },
+    { title: "预计返回时间", dataIndex: "estimatedReturnTime", width: 180 },
     { title: "起始地", dataIndex: "origin", width: 160 },
     { title: "目的地", dataIndex: "destination", width: 160 },
     { title: "人数", dataIndex: "passengerNum", width: 100 },
@@ -259,34 +277,11 @@ const CarTab: FC = () => {
     { title: "金额", dataIndex: "amountPrice", width: 120 },
   ];
 
-  return (
-    <Spin spinning={loading}>
-      <div className="theme-panel p-6 mb-4">
-        <div className="flex items-center justify-between gap-4">
-          <div className="text-gray-600">
-            选择车型筛选申请记录，点击按钮提交申请
-          </div>
-          <Space>
-            <Button type="primary" action="add" onClick={openApplyModal}>
-              申请用车
-            </Button>
-            <Button
-              action="reset"
-              onClick={() => {
-                void load({ current: 1, carId: filterCarId || undefined });
-              }}
-            >
-              刷新
-            </Button>
-          </Space>
-        </div>
-      </div>
-
-      <div className="theme-panel p-6 mb-4">
-        <div className="text-sm text-gray-600 mb-2">筛选</div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <div className="text-sm text-gray-600 mb-1">车型</div>
+  const toolbar = useMemo(
+    () => (
+      <PageToolbar
+        filters={
+          <FilterField label="车型" width={260}>
             <CarSelect
               allowClear
               value={filterCarId || undefined}
@@ -301,11 +296,32 @@ const CarTab: FC = () => {
                 void load({ current: 1, carId: next || undefined });
               }}
             />
-          </div>
-          <div />
-        </div>
-      </div>
+          </FilterField>
+        }
+        actions={
+          <Space>
+            <Button type="primary" action="add" onClick={openApplyModal}>
+              申请用车
+            </Button>
+            <Button
+              action="reset"
+              onClick={() => {
+                void load({ current: 1, carId: filterCarId || undefined });
+              }}
+            >
+              刷新
+            </Button>
+          </Space>
+        }
+      />
+    ),
+    [filterCarId]
+  );
 
+  useRegisterUserPageToolbar(toolbar);
+
+  return (
+    <Spin spinning={loading}>
       <div className="theme-panel p-6 h-[520px]">
         <div className="text-base font-semibold mb-4">我的用车申请</div>
         <MorTable rowKey="id" columns={columns as any} dataSource={data.records || []} pagination={false} />
