@@ -47,6 +47,8 @@ const MODULE_ENTRY_POINTS = [
   "@/views/sms/modules/ams-category",
   "@/views/sms/modules/ams-assets",
   "@/views/sms/modules/ams-consumables",
+  "@/views/sms/modules/ams-assets-check",
+  "@/views/sms/modules/ams-consumables-check",
   "@/views/sms/modules/car",
   "@/views/sms/modules/car-apply",
   "@/views/salary/modules/salary-base",
