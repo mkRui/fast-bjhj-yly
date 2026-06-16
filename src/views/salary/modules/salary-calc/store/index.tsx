@@ -73,6 +73,14 @@ export class SalaryCalcStore extends Store<Api> {
     const [err] = await this.api.delSubject({ id });
     return resolveMutation(err, () => this.fetchPage());
   }
+
+  public async calculateSalary() {
+    const { year, month } = this.params;
+    this.$setLoading(true);
+    const [err] = await this.api.calculate({ year, month });
+    this.$setLoading(false);
+    return resolveMutation(err, () => this.fetchPage());
+  }
 }
 
 const SalaryCalcContext = createContext<SalaryCalcStore>({} as SalaryCalcStore);

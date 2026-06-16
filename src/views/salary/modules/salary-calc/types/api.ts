@@ -66,4 +66,14 @@ export declare namespace API {
     export type Data = null;
     export type Response = BaseRequest.Response<Data>;
   }
+
+  export namespace Calculate {
+    export interface Params {
+      year: number;
+      month: number;
+    }
+
+    export type Data = Record<string, never>;
+    export type Response = BaseRequest.Response<Data>;
+  }
 }

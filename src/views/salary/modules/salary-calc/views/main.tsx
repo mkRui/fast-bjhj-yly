@@ -4,6 +4,7 @@ import { InputNumber, Pagination, Space, Spin } from "antd";
 
 import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
+import PageToolbar, { FilterField } from "@/components/page-toolbar";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
@@ -73,6 +74,16 @@ const SalaryCalcMain: FC = () => {
     void store.fetchPage();
   };
 
+  const handleCalculate = async (): Promise<void> => {
+    const { year, month } = store.params;
+    if (!year || !month) {
+      toast("warning", "请先选择年份和月份");
+      return;
+    }
+    const ok = await store.calculateSalary();
+    toastActionResult(ok, "测算成功", "测算失败");
+  };
+
   const columns = [
     { title: "教师", dataIndex: "teacherUserName", width: 140 },
     { title: "年份", dataIndex: "year", width: 100 },
@@ -110,47 +121,50 @@ const SalaryCalcMain: FC = () => {
           <HeaderTitle>工资测算</HeaderTitle>
         </Content.Header>
         <Content.Header>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-end",
-              width: "100%",
-            }}
-          >
-            <Space align="end" size={16}>
-              <div>
-                <div className="text-sm text-gray-600 mb-1">年份</div>
-                <InputNumber
-                  style={{ width: 140 }}
-                  value={store.params.year}
-                  min={2000}
-                  max={2100}
-                  onChange={(val) => {
-                    store.$setParams({ year: Number(val || 0) });
-                  }}
-                />
-              </div>
-              <div>
-                <div className="text-sm text-gray-600 mb-1">月份</div>
-                <InputNumber
-                  style={{ width: 120 }}
-                  value={store.params.month}
-                  min={1}
-                  max={12}
-                  onChange={(val) => {
-                    store.$setParams({ month: Number(val || 0) });
-                  }}
-                />
-              </div>
-              <Button action="search" onClick={handleSearch}>
-                查询
+          <PageToolbar
+            filters={
+              <Space align="end" size={16}>
+                <FilterField label="年份" width={140}>
+                  <InputNumber
+                    style={{ width: "100%" }}
+                    value={store.params.year}
+                    min={2000}
+                    max={2100}
+                    onChange={(val) => {
+                      store.$setParams({ year: Number(val || 0) });
+                    }}
+                  />
+                </FilterField>
+                <FilterField label="月份" width={120}>
+                  <InputNumber
+                    style={{ width: "100%" }}
+                    value={store.params.month}
+                    min={1}
+                    max={12}
+                    onChange={(val) => {
+                      store.$setParams({ month: Number(val || 0) });
+                    }}
+                  />
+                </FilterField>
+                <Button action="search" onClick={handleSearch}>
+                  查询
+                </Button>
+                <Button
+                  type="primary"
+                  title={`确认对 ${store.params.year} 年 ${store.params.month} 月工资进行测算？`}
+                  description="测算将按基础工资及课时等规则重新生成当月工资数据"
+                  onConfirm={() => void handleCalculate()}
+                >
+                  开始测算
+                </Button>
+              </Space>
+            }
+            actions={
+              <Button type="primary" action="add" onClick={openAddModal}>
+                新增工资明细
               </Button>
-            </Space>
-            <Button type="primary" action="add" onClick={openAddModal}>
-              新增工资明细
-            </Button>
-          </div>
+            }
+          />
         </Content.Header>
         <Content.Main>
           <Spin spinning={store.loading}>

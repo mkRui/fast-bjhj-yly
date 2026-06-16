@@ -19,4 +19,8 @@ export class Api extends Request {
   public async delSubject(params: API.SubjectDel.Params): Promise<API.SubjectDel.Response> {
     return await this.post<API.SubjectDel.Data>("/sms/salary/subject/del", params);
   }
+
+  public async calculate(params: API.Calculate.Params): Promise<API.Calculate.Response> {
+    return await this.post<API.Calculate.Data>("/sms/salary/calculate", params);
+  }
 }
