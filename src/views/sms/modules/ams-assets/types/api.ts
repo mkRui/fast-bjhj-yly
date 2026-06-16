@@ -124,7 +124,7 @@ export declare namespace API {
 
   export namespace ItemApplyPage {
     export interface Params {
-      itemId: string;
+      itemId?: string;
       current: number;
       size: number;
     }

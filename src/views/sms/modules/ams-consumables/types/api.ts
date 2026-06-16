@@ -90,7 +90,7 @@ export declare namespace API {
 
   export namespace ApplyPage {
     export interface Params {
-      consumablesId: string;
+      consumablesId?: string;
       current: number;
       size: number;
     }

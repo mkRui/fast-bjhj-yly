@@ -1,21 +1,16 @@
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { observer } from "mobx-react";
-import { Form, Input, Modal, Pagination, Radio, Tabs } from "antd";
+import { Input, Modal, Pagination, Tabs } from "antd";
 import type { ModalProps } from "antd/lib/modal";
 
 import axios from "@/api";
 import Button from "@/components/button";
-import CheckStatusTag, { isCheckFlagSet } from "@/components/check-status-tag";
+import CheckStatusTag from "@/components/check-status-tag";
 import MorTable from "@/components/table";
 import { DictCode } from "@/constants/dict-code";
 import { useDict } from "@/hooks/use-dict";
-import { toastRequestResult } from "@/utils/common/mutation-success";
 import { Api } from "../api";
 import { API } from "../types/api";
-
-const Item = Form.Item;
-
-type CheckType = "apply" | "dispose";
 
 export interface AssetsItemListsModalProps {
   title: string;
@@ -23,12 +18,6 @@ export interface AssetsItemListsModalProps {
   initialActiveKey?: "items" | "applies";
   loading?: boolean;
   onCancel: ModalProps["onCancel"];
-}
-
-interface CheckModalState {
-  open: boolean;
-  type: CheckType;
-  applyId: string;
 }
 
 const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
@@ -71,14 +60,6 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
   });
   const [applyLoading, setApplyLoading] = useState(false);
 
-  const [checkModal, setCheckModal] = useState<CheckModalState>({
-    open: false,
-    type: "apply",
-    applyId: "",
-  });
-  const [checkLoading, setCheckLoading] = useState(false);
-  const [checkForm] = Form.useForm();
-
   const loadItemList = async (next?: Partial<API.ItemPage.Params>) => {
     const params = { ...itemParams, ...(next || {}) };
     setItemLoading(true);
@@ -120,31 +101,6 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
     await loadApplyList({ itemId: nextId, current: 1 });
   };
 
-  const openCheckModal = (type: CheckType, applyId: string) => {
-    checkForm.resetFields();
-    checkForm.setFieldsValue({ checkedFlag: true, comment: "" });
-    setCheckModal({ open: true, type, applyId: String(applyId || "") });
-  };
-
-  const submitCheck = async () => {
-    void checkForm.validateFields().then(async (values: any) => {
-      const checkedFlag = Boolean(values.checkedFlag);
-      const comment = String(values.comment || "");
-      const applyId = String(checkModal.applyId || "");
-      if (!applyId) return;
-
-      setCheckLoading(true);
-      const [err] =
-        checkModal.type === "dispose"
-          ? await api.disposeCheck({ applyId, checkedFlag, comment })
-          : await api.applyCheck({ applyId, checkedFlag, comment });
-      setCheckLoading(false);
-      if (!toastRequestResult(err, "操作成功", "操作失败")) return;
-      setCheckModal((s) => ({ ...s, open: false }));
-      await loadApplyList();
-    });
-  };
-
   const itemColumns = [
     {
       title: "资产分类",
@@ -179,8 +135,6 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
     },
   ];
 
-  const isChecked = isCheckFlagSet;
-
   const applyColumns = [
     { title: "申请审核意见", dataIndex: "applyCheckedComment", width: 200 },
     {
@@ -207,36 +161,10 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
         <CheckStatusTag checkedFlag={record.disposeCheckedFlag} unsetText="-" />
       ),
     },
-    {
-      title: "操作",
-      width: 220,
-      fixed: "right" as const,
-      render: (_: any, record: API.ItemApplyPage.RecordItem) => (
-        <Button.Group>
-          <Button
-            type="link"
-            linkType="warning"
-            disabled={isChecked(record.applyCheckedFlag)}
-            onClick={() => openCheckModal("apply", record.id)}
-          >
-            申请审核
-          </Button>
-          <Button
-            type="link"
-            linkType="warning"
-            disabled={isChecked(record.disposeCheckedFlag)}
-            onClick={() => openCheckModal("dispose", record.id)}
-          >
-            处置审核
-          </Button>
-        </Button.Group>
-      ),
-    },
   ];
 
   return (
-    <>
-      <Modal title={title} open={true} onCancel={onCancel} footer={null} width={1200}>
+    <Modal title={title} open={true} onCancel={onCancel} footer={null} width={1200}>
         <Tabs
           activeKey={activeKey}
           onChange={(k) => setActiveKey(k as any)}
@@ -345,36 +273,6 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
           ]}
         />
       </Modal>
-
-      <Modal
-        title={checkModal.type === "dispose" ? "固定资产处置审核" : "固定资产申请审核"}
-        open={checkModal.open}
-        onCancel={() => setCheckModal((s) => ({ ...s, open: false }))}
-        onOk={submitCheck}
-        confirmLoading={checkLoading}
-        okText="提交"
-        cancelText="取消"
-        width={520}
-      >
-        <Form form={checkForm} layout="vertical">
-          <Item
-            label="审核结果"
-            name="checkedFlag"
-            rules={[{ required: true, message: "请选择审核结果" }]}
-          >
-            <Radio.Group
-              options={[
-                { label: "通过", value: true },
-                { label: "不通过", value: false },
-              ]}
-            />
-          </Item>
-          <Item label="审核意见" name="comment">
-            <Input.TextArea rows={3} placeholder="请输入审核意见" />
-          </Item>
-        </Form>
-      </Modal>
-    </>
   );
 };
 
