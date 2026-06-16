@@ -13,9 +13,11 @@ export const MenuCode = {
   USER_LEAVE: "user:leave",
   USER_ASSETS: "user:assets",
   USER_CAR: "user:car",
+  USER_EXHIBITION: "user:exhibition",
 
   // 工资管理 sms
   SMS_SALARY: "sms:salary",
+  SMS_BASE: "sms:base",
 
   // 教师管理 tms
   TMS_TEACHER: "tms:teacher",
@@ -27,6 +29,8 @@ export const MenuCode = {
   AMS_ASSETS: "ams:assets",
   AMS_CATEGORY: "ams:category",
   AMS_CONSUMABLES: "ams:consumables",
+  AMS_ASSETS_CHECK: "ams:assetsCheck",
+  AMS_CONSUMABLES_CHECK: "ams:consumablesCheck",
 
   // 用车管理 crms
   CRMS_CAR: "crms:car",

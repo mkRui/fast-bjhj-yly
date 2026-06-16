@@ -9,6 +9,7 @@ import {
   EditOutlined,
   FolderOpenOutlined,
   FundOutlined,
+  PayCircleOutlined,
   IdcardOutlined,
   SafetyOutlined,
   SettingOutlined,
@@ -94,6 +95,14 @@ const UserMenuList: MenuType[] = [
     parentId: "9200000000000000",
     icon: <CarOutlined />,
   },
+  {
+    name: "展会上报",
+    href: UserFullPath.EXHIBITION,
+    code: MenuCode.USER_EXHIBITION,
+    id: "9200000000000006",
+    parentId: "9200000000000000",
+    icon: <ShopOutlined />,
+  },
 ];
 
 const SmsMenuList: MenuType[] = [
@@ -104,6 +113,14 @@ const SmsMenuList: MenuType[] = [
     id: "9100000000000002",
     parentId: "9100000000000000",
     icon: <FundOutlined />,
+  },
+  {
+    name: "基础工资",
+    href: SalaryFullPath.BASE,
+    code: MenuCode.SMS_BASE,
+    id: "9100000000000003",
+    parentId: "9100000000000000",
+    icon: <PayCircleOutlined />,
   },
 ];
 
@@ -166,6 +183,22 @@ const AmsMenuList: MenuType[] = [
     id: "9500000000000003",
     parentId: "9500000000000000",
     icon: <AppstoreOutlined />,
+  },
+  {
+    name: "固定资产审批",
+    href: SmsFullPath.AMS_ASSETS_CHECK,
+    code: MenuCode.AMS_ASSETS_CHECK,
+    id: "9500000000000004",
+    parentId: "9500000000000000",
+    icon: <AuditOutlined />,
+  },
+  {
+    name: "易耗品审批",
+    href: SmsFullPath.AMS_CONSUMABLES_CHECK,
+    code: MenuCode.AMS_CONSUMABLES_CHECK,
+    id: "9500000000000005",
+    parentId: "9500000000000000",
+    icon: <AuditOutlined />,
   },
 ];
 
