@@ -4,6 +4,7 @@ import { Input, Pagination, Space } from "antd";
 
 import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
+import PageToolbar from "@/components/page-toolbar";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
@@ -129,19 +130,23 @@ const TeacherMain: FC = () => {
           <HeaderTitle>教师管理</HeaderTitle>
         </Content.Header>
         <Content.Header>
-          <Space>
-            <Input
-              value={keyword}
-              placeholder="请输入关键词"
-              onChange={(e) => setKeyword(e.target.value)}
-              style={{ width: 260 }}
-              onPressEnter={handleSearch}
-              allowClear
-            />
-            <Button action="search" onClick={handleSearch}>
-              查询
-            </Button>
-          </Space>
+          <PageToolbar
+            filters={
+              <Space>
+                <Input
+                  value={keyword}
+                  placeholder="请输入关键词"
+                  onChange={(e) => setKeyword(e.target.value)}
+                  style={{ width: 260 }}
+                  onPressEnter={handleSearch}
+                  allowClear
+                />
+                <Button action="search" onClick={handleSearch}>
+                  查询
+                </Button>
+              </Space>
+            }
+          />
         </Content.Header>
         <Content.Main>
           <MorTable

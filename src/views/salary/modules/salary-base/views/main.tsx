@@ -71,7 +71,6 @@ const SalaryBaseMain: FC = () => {
     { title: "民族", dataIndex: ["teacher", "ethnicity"], width: 100 },
     { title: "基本工资", dataIndex: ["salaryBase", "salaryBase"], width: 120 },
     { title: "岗位工资", dataIndex: ["salaryBase", "salaryPosition"], width: 120 },
-    { title: "全勤奖", dataIndex: ["salaryBase", "salaryBonus"], width: 100 },
     { title: "校龄工资", dataIndex: ["salaryBase", "salarySeniority"], width: 120 },
     { title: "住房补贴", dataIndex: ["salaryBase", "salaryHousing"], width: 120 },
     { title: "交通补贴", dataIndex: ["salaryBase", "salaryTransportation"], width: 120 },

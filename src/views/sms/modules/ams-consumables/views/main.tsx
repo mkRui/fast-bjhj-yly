@@ -4,6 +4,7 @@ import { Form, Input, Pagination } from "antd";
 
 import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
+import PageToolbar from "@/components/page-toolbar";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
 import OverallSituationSearch from "@/components/overall-situation-search";
@@ -167,36 +168,37 @@ const AmsConsumablesMain: FC = () => {
     <Content>
       <Content.Layout>
         <Content.Header>
-          <HeaderTitle
-            insert={
+          <HeaderTitle>易耗品管理</HeaderTitle>
+        </Content.Header>
+        <Content.Header>
+          <PageToolbar
+            filters={
+              <OverallSituationSearch info={store.params} onFinish={onFinish} onReset={onReset}>
+                <Item name="categoryId">
+                  <AssetsCategorySelect
+                    allowClear
+                    value={store.params.categoryId}
+                    onInitChange={(v?: string) => {
+                      store.$setParams({ categoryId: v, current: 1 });
+                      void store.getList();
+                    }}
+                    onChange={(v?: string) => {
+                      store.$setParams({ categoryId: v, current: 1 });
+                      void store.getList();
+                    }}
+                  />
+                </Item>
+                <Item name="keyword">
+                  <Input placeholder="请输入易耗品名称/代码关键字" allowClear />
+                </Item>
+              </OverallSituationSearch>
+            }
+            actions={
               <Button type="primary" onClick={handleAdd}>
                 新增易耗品
               </Button>
             }
-          >
-            易耗品管理
-          </HeaderTitle>
-        </Content.Header>
-        <Content.Header>
-          <OverallSituationSearch info={store.params} onFinish={onFinish} onReset={onReset}>
-            <Item name="categoryId">
-              <AssetsCategorySelect
-                allowClear
-                value={store.params.categoryId}
-                onInitChange={(v?: string) => {
-                  store.$setParams({ categoryId: v, current: 1 });
-                  void store.getList();
-                }}
-                onChange={(v?: string) => {
-                  store.$setParams({ categoryId: v, current: 1 });
-                  void store.getList();
-                }}
-              />
-            </Item>
-            <Item name="keyword">
-              <Input placeholder="请输入易耗品名称/代码关键字" allowClear />
-            </Item>
-          </OverallSituationSearch>
+          />
         </Content.Header>
         <Content.Main>
           <MorTable

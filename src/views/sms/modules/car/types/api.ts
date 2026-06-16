@@ -131,6 +131,7 @@ export declare namespace API {
       purpose?: string;
       reason?: string;
       rentalTime?: string;
+      estimatedReturnTime?: string;
       origin?: string;
       destination?: string;
       passengerNum?: number;

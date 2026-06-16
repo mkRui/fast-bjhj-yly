@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import { Content } from "@/components/container";
 import RunComponents from "@/components/run-component";
 import HeaderTitle from "@/components/card-header";
+import PageToolbar from "@/components/page-toolbar";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
 import { toastActionResult } from "@/utils/common/mutation-success";
@@ -142,15 +143,16 @@ const AccountMain: FC = () => {
     <Content>
       <Content.Layout style={{ height: "100%" }}>
         <Content.Header>
-          <HeaderTitle
-            insert={
+          <HeaderTitle>角色管理</HeaderTitle>
+        </Content.Header>
+        <Content.Header>
+          <PageToolbar
+            actions={
               <Button type="primary" onClick={handleAddAccount}>
                 新增角色
               </Button>
             }
-          >
-            角色管理
-          </HeaderTitle>
+          />
         </Content.Header>
         <Content.Main>
           <MorTable

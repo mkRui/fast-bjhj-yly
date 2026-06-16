@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import { Content } from "@/components/container";
 import RunComponents from "@/components/run-component";
 import HeaderTitle from "@/components/card-header";
+import PageToolbar from "@/components/page-toolbar";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
 import { toastActionResult } from "@/utils/common/mutation-success";
@@ -27,7 +28,7 @@ const ResourcesMain: FC = () => {
     {
       title: "操作",
       dataIndex: "",
-      width: 140,
+      width: 180,
       fixed: "right" as const,
       render: (_text: any, record: API.List.Data) => {
         return (
@@ -130,15 +131,16 @@ const ResourcesMain: FC = () => {
     <Content>
       <Content.Layout style={{ height: "100%" }}>
         <Content.Header>
-          <HeaderTitle
-            insert={
+          <HeaderTitle>资源管理</HeaderTitle>
+        </Content.Header>
+        <Content.Header>
+          <PageToolbar
+            actions={
               <Button type="primary" onClick={() => handleAdd()}>
                 新增资源
               </Button>
             }
-          >
-            资源管理
-          </HeaderTitle>
+          />
         </Content.Header>
         <Content.Main>
           <MorTable

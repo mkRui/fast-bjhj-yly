@@ -5,6 +5,7 @@ import { Pagination, Form, Input } from "antd";
 import { Content } from "@/components/container";
 import RunComponents from "@/components/run-component";
 import HeaderTitle from "@/components/card-header";
+import PageToolbar from "@/components/page-toolbar";
 import MorTable from "@/components/table";
 import { fullDateFormat } from "@/utils/common/time-format";
 import Button from "@/components/button";
@@ -166,26 +167,27 @@ const AccountMain: FC = () => {
     <Content>
       <Content.Layout>
         <Content.Header>
-          <HeaderTitle
-            insert={
+          <HeaderTitle>用户管理</HeaderTitle>
+        </Content.Header>
+        <Content.Header>
+          <PageToolbar
+            filters={
+              <OverallSituationSearch
+                info={store.params}
+                onFinish={onFinish}
+                onReset={onReset}
+              >
+                <Item name="keyword">
+                  <Input placeholder="请搜索用户名关键字" />
+                </Item>
+              </OverallSituationSearch>
+            }
+            actions={
               <Button type="primary" onClick={handleAddAccount}>
                 新增用户
               </Button>
             }
-          >
-            用户管理
-          </HeaderTitle>
-        </Content.Header>
-        <Content.Header>
-          <OverallSituationSearch
-            info={store.params}
-            onFinish={onFinish}
-            onReset={onReset}
-          >
-            <Item name="keyword">
-              <Input placeholder="请搜索用户名关键字" />
-            </Item>
-          </OverallSituationSearch>
+          />
         </Content.Header>
         <Content.Main>
           <MorTable

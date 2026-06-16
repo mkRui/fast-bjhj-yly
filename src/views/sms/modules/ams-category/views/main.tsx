@@ -4,6 +4,7 @@ import { Form, Input, Pagination } from "antd";
 
 import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
+import PageToolbar from "@/components/page-toolbar";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
 import OverallSituationSearch from "@/components/overall-situation-search";
@@ -122,22 +123,23 @@ const AmsCategoryMain: FC = () => {
     <Content>
       <Content.Layout>
         <Content.Header>
-          <HeaderTitle
-            insert={
+          <HeaderTitle>资产分类</HeaderTitle>
+        </Content.Header>
+        <Content.Header>
+          <PageToolbar
+            filters={
+              <OverallSituationSearch info={store.params} onFinish={onFinish} onReset={onReset}>
+                <Item name="keyword">
+                  <Input placeholder="请输入分类名称/编码关键字" />
+                </Item>
+              </OverallSituationSearch>
+            }
+            actions={
               <Button type="primary" onClick={handleAdd}>
                 新增资产分类
               </Button>
             }
-          >
-            资产分类
-          </HeaderTitle>
-        </Content.Header>
-        <Content.Header>
-          <OverallSituationSearch info={store.params} onFinish={onFinish} onReset={onReset}>
-            <Item name="keyword">
-              <Input placeholder="请输入分类名称/编码关键字" />
-            </Item>
-          </OverallSituationSearch>
+          />
         </Content.Header>
         <Content.Main>
           <MorTable

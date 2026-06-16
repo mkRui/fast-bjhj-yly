@@ -4,6 +4,7 @@ import { Pagination, Select, Space, Spin } from "antd";
 
 import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
+import PageToolbar, { FilterField } from "@/components/page-toolbar";
 import CheckStatusTag, { isCheckFlagSet } from "@/components/check-status-tag";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
@@ -115,34 +116,50 @@ const LeaveMain: FC = () => {
           <HeaderTitle>请假管理</HeaderTitle>
         </Content.Header>
         <Content.Header>
-          <Space>
-            <Select
-              allowClear
-              style={{ width: 180 }}
-              placeholder="审核状态"
-              value={store.params.checkedFlag}
-              onChange={(v) => {
-                store.$setParams({ checkedFlag: v || undefined, current: "0" });
-                void store.fetchPage();
-              }}
-            >
-              <Option value="true">已审核</Option>
-              <Option value="false">未审核</Option>
-            </Select>
-            <Button
-              action="reset"
-              onClick={() => {
-                store.$setParams({
-                  checkedFlag: undefined,
-                  current: "0",
-                  size: "10",
-                });
-                void store.fetchPage();
-              }}
-            >
-              重置
-            </Button>
-          </Space>
+          <PageToolbar
+            filters={
+              <Space align="end" size={16} wrap>
+                <FilterField label="审核状态" width={180}>
+                  <Select
+                    allowClear
+                    style={{ width: "100%" }}
+                    placeholder="全部状态"
+                    value={store.params.checkedFlag}
+                    onChange={(v) => {
+                      store.$setParams({ checkedFlag: v || undefined, current: "0" });
+                      void store.fetchPage();
+                    }}
+                  >
+                    <Option value="true">已审核</Option>
+                    <Option value="false">未审核</Option>
+                  </Select>
+                </FilterField>
+                <Button
+                  action="reset"
+                  onClick={() => {
+                    store.$setParams({
+                      checkedFlag: undefined,
+                      current: "0",
+                      size: "10",
+                    });
+                    void store.fetchPage();
+                  }}
+                >
+                  重置
+                </Button>
+              </Space>
+            }
+            actions={
+              <Button
+                action="reset"
+                onClick={() => {
+                  void store.fetchPage();
+                }}
+              >
+                刷新
+              </Button>
+            }
+          />
         </Content.Header>
         <Content.Main>
           <Spin spinning={store.loading}>

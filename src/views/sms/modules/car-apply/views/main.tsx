@@ -5,6 +5,7 @@ import { Pagination, Select } from "antd";
 import axios from "@/api";
 import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
+import PageToolbar, { FilterField } from "@/components/page-toolbar";
 import CheckStatusTag, { isCheckFlagSet } from "@/components/check-status-tag";
 import MorTable from "@/components/table";
 import Button from "@/components/button";
@@ -80,6 +81,7 @@ const CarApplyMain: FC = () => {
     { title: "用途", dataIndex: "purpose", width: 140 },
     { title: "用车事由", dataIndex: "reason", width: 200 },
     { title: "用车时间", dataIndex: "rentalTime", width: 180 },
+    { title: "预计返回时间", dataIndex: "estimatedReturnTime", width: 180 },
     { title: "起始地", dataIndex: "origin", width: 140 },
     { title: "目的地", dataIndex: "destination", width: 140 },
     { title: "乘车人数", dataIndex: "passengerNum", width: 100 },
@@ -123,25 +125,28 @@ const CarApplyMain: FC = () => {
     <Content>
       <Content.Layout style={{ height: "100%" }}>
         <Content.Header>
-          <HeaderTitle
-            insert={
-              <Select
-                allowClear
-                placeholder="筛选车型"
-                style={{ width: 200 }}
-                value={store.params.carId}
-                onChange={handleCarFilter}
-              >
-                {carOptions.map((item) => (
-                  <Option key={item.value} value={item.value}>
-                    {item.label}
-                  </Option>
-                ))}
-              </Select>
+          <HeaderTitle>用车审核</HeaderTitle>
+        </Content.Header>
+        <Content.Header>
+          <PageToolbar
+            filters={
+              <FilterField label="车型" width={200}>
+                <Select
+                  allowClear
+                  placeholder="筛选车型"
+                  style={{ width: "100%" }}
+                  value={store.params.carId}
+                  onChange={handleCarFilter}
+                >
+                  {carOptions.map((item) => (
+                    <Option key={item.value} value={item.value}>
+                      {item.label}
+                    </Option>
+                  ))}
+                </Select>
+              </FilterField>
             }
-          >
-            用车审核
-          </HeaderTitle>
+          />
         </Content.Header>
         <Content.Main>
           <MorTable
