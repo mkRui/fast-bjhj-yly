@@ -1,254 +1,210 @@
-import { FC, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { FC, useContext, useEffect } from "react";
 import { observer } from "mobx-react";
-import { InputNumber, Pagination, Space, Spin } from "antd";
+import { Input, InputNumber, Pagination, Space, Spin } from "antd";
+import { useNavigate } from "react-router-dom";
 
 import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
+import PageToolbar, { FilterField } from "@/components/page-toolbar";
 import MorTable from "@/components/table";
-import RootContext from "@/stores/root-context";
-import { DictCode } from "@/constants/dict-code";
-import { getDictLabel } from "@/utils/common/dict";
+import Button from "@/components/button";
+import { TmsFullPath } from "@/views/tms/router/path";
 
 import StoreContext from "../store";
-import WorkStatisticsChart, { WorkStatisticsItem } from "@/views/welcome/components/work-statistics-chart";
-import SelectTeacher from "../components/select-teacher";
+import { API } from "../types/api";
+import { WORK_STAT_FIELDS } from "../constants";
+
+const genderText = (gender?: number): string => {
+  if (gender === 1) return "男";
+  if (gender === 2) return "女";
+  return "未知";
+};
 
 const WorkMain: FC = () => {
   const store = useContext(StoreContext);
-  const root = useContext(RootContext);
-
-  const [teacherId, setTeacherId] = useState<string | undefined>(undefined);
-  const [year, setYear] = useState<number>(new Date().getFullYear());
-  const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
-  const [current, setCurrent] = useState(1);
-  const [size, setSize] = useState(10);
-  const [page, setPage] = useState({
-    size: 10,
-    pages: 0,
-    total: 0,
-    records: [] as any[],
-    current: 1,
-  });
-
-  const subjectDict = useMemo(() => {
-    const list = root.getEnumData(DictCode.WORK_SUBJECT) || [];
-    return {
-      label: (value: unknown) => getDictLabel(list, value),
-    };
-  }, [root.enumList]);
-
-  const statisticsData: WorkStatisticsItem[] = useMemo(() => {
-    const map = new Map<string, number>();
-    (page.records || []).forEach((r: any) => {
-      const k = String(r.subject ?? "");
-      map.set(k, (map.get(k) || 0) + Number(r.num || 0));
-    });
-    return Array.from(map.entries()).map(([k, v]) => ({
-      label: subjectDict.label(k),
-      value: v,
-    }));
-  }, [page.records, subjectDict]);
-
-  const loadRecords = useCallback(
-    async (next?: Partial<{ year: number; month: number; current: number; size: number }>) => {
-      if (!teacherId) return;
-      const nextYear = next?.year ?? year;
-      const nextMonth = next?.month ?? month;
-      const nextCurrent = next?.current ?? current;
-      const nextSize = next?.size ?? size;
-
-      const data = await store.getWorkPage({
-        teacherId: String(teacherId),
-        keyword: undefined,
-        year: nextYear,
-        month: nextMonth,
-        current: nextCurrent,
-        size: nextSize,
-      });
-      if (data) {
-        setPage(data as any);
-      }
-    },
-    [teacherId, year, month, current, size, store]
-  );
+  const navigate = useNavigate();
 
   useEffect(() => {
-    store.$setTeacherParams({ current: 1, size: 20, keyword: undefined });
-    void store.getTeacherList();
+    void store.getList();
   }, [store]);
 
-  useEffect(() => {
-    if (teacherId) {
-      setCurrent(1);
-      void loadRecords({ current: 1 });
+  const openDetail = (record: API.StatisticsPage.RecordItem): void => {
+    const teacherId = String(record.teacher?.id || "");
+    if (!teacherId) return;
+    const params = new URLSearchParams({
+      teacherId,
+      year: String(store.params.year),
+      month: String(store.params.month),
+    });
+    if (record.teacher?.name) {
+      params.set("teacherName", record.teacher.name);
     }
-  }, [teacherId, loadRecords]);
-
-  const selectedTeacher = useMemo(() => {
-    return store.teacherList.find((t: any) => String(t.id) === String(teacherId));
-  }, [store.teacherList, teacherId]);
-
-  const columns = [
-    { title: "上报日期", dataIndex: "date" },
-    { title: "上报年份", dataIndex: "year", width: 120 },
-    { title: "上报月份", dataIndex: "month", width: 120 },
-    {
-      title: "上报科目",
-      dataIndex: "subject",
-      render: (val: any) => subjectDict.label(val),
-    },
-    { title: "上报数量", dataIndex: "num", width: 120 },
-  ];
-
-  const handleChange = (c: number): void => {
-    setCurrent(c);
-    void loadRecords({ current: c });
+    navigate(`${TmsFullPath.WORK_DETAIL}?${params.toString()}`);
   };
 
-  const handlePageSize = (c: number, ps: number): void => {
-    setCurrent(c);
-    setSize(ps);
-    void loadRecords({ current: c, size: ps });
+  const columns = [
+    {
+      title: "教师",
+      width: 200,
+      render: (_: unknown, record: API.StatisticsPage.RecordItem) => (
+        <Space>
+          {record.teacher?.idPhoto ? (
+            <img
+              src={record.teacher.idPhoto}
+              alt={record.teacher.name}
+              style={{ width: 32, height: 32, borderRadius: 16, objectFit: "cover" }}
+            />
+          ) : (
+            <div style={{ width: 32, height: 32, borderRadius: 16, background: "#f0f0f0" }} />
+          )}
+          <span>{record.teacher?.name || "-"}</span>
+        </Space>
+      ),
+    },
+    {
+      title: "性别",
+      width: 80,
+      render: (_: unknown, record: API.StatisticsPage.RecordItem) =>
+        genderText(Number(record.teacher?.gender || 0)),
+    },
+    ...WORK_STAT_FIELDS.map(({ key, label }) => ({
+      title: label,
+      dataIndex: key,
+      width: 110,
+      render: (val: unknown) => Number(val || 0),
+    })),
+    {
+      title: "操作",
+      width: 100,
+      fixed: "right" as const,
+      render: (_: unknown, record: API.StatisticsPage.RecordItem) => (
+        <Button type="link" onClick={() => openDetail(record)}>
+          详情
+        </Button>
+      ),
+    },
+  ];
+
+  const handleChange = (page: number): void => {
+    store.$setParams({ current: page });
+    void store.getList();
+  };
+
+  const handlePageSize = (_current: number, size: number): void => {
+    store.$setParams({ current: 1, size });
+    void store.getList();
   };
 
   return (
     <Content style={{ flex: 1 }}>
       <Content.Layout style={{ height: "100%" }}>
         <Content.Header>
-          <HeaderTitle
-            insert={
-              <Space>
-                <SelectTeacher
-                  value={teacherId}
-                  options={store.teacherList}
-                  loading={store.loading}
-                  placeholder="请选择教师"
-                  onSearch={(v) => {
-                    store.$setTeacherParams({ keyword: v || undefined, current: 1, size: 20 });
-                    void store.getTeacherList();
+          <HeaderTitle>课时管理</HeaderTitle>
+        </Content.Header>
+        <Content.Header>
+          <PageToolbar
+            filters={
+              <Space align="end" size={16} wrap>
+                <FilterField label="年份" width={140}>
+                  <InputNumber
+                    style={{ width: "100%" }}
+                    value={store.params.year}
+                    onChange={(val) => {
+                      store.$setParams({ year: Number(val || 0), current: 1 });
+                      void store.getList();
+                    }}
+                    min={2000}
+                    max={2100}
+                  />
+                </FilterField>
+                <FilterField label="月份" width={120}>
+                  <InputNumber
+                    style={{ width: "100%" }}
+                    value={store.params.month}
+                    onChange={(val) => {
+                      store.$setParams({ month: Number(val || 0), current: 1 });
+                      void store.getList();
+                    }}
+                    min={1}
+                    max={12}
+                  />
+                </FilterField>
+                <FilterField label="关键字" width={200}>
+                  <Input
+                    allowClear
+                    placeholder="教师姓名"
+                    value={store.params.keyword}
+                    onChange={(e) => {
+                      store.$setParams({ keyword: e.target.value || undefined });
+                    }}
+                    onPressEnter={() => {
+                      store.$setParams({ current: 1 });
+                      void store.getList();
+                    }}
+                  />
+                </FilterField>
+                <Button
+                  action="reset"
+                  onClick={() => {
+                    const now = new Date();
+                    store.$setParams({
+                      year: now.getFullYear(),
+                      month: now.getMonth() + 1,
+                      keyword: undefined,
+                      current: 1,
+                      size: 10,
+                    });
+                    void store.getList();
                   }}
-                  onChange={(v) => {
-                    setTeacherId(v);
-                  }}
-                />
+                >
+                  重置
+                </Button>
               </Space>
             }
-          >
-            课时管理
-          </HeaderTitle>
+            actions={
+              <Button action="reset" onClick={() => void store.getList()}>
+                刷新
+              </Button>
+            }
+          />
         </Content.Header>
         <Content.Main style={{ overflow: "unset" }}>
           <Spin spinning={store.loading}>
-            <div className="theme-panel p-6 mb-4">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <div className="text-xl font-semibold mb-1">教师课时</div>
-                  <div className="text-gray-600">
-                    当前选择：{selectedTeacher?.name || "未选择"}
-                  </div>
-                </div>
-                {selectedTeacher?.idPhoto ? (
-                  <img
-                    src={selectedTeacher.idPhoto}
-                    alt={selectedTeacher.name}
-                    style={{ width: 48, height: 48, borderRadius: 24, objectFit: "cover" }}
-                  />
-                ) : (
-                  <div style={{ width: 48, height: 48, borderRadius: 24, background: "#f0f0f0" }} />
-                )}
-              </div>
+            <div className="theme-panel ">
+              <MorTable
+                bordered
+                rowKey={(record, index) => String(record.teacher?.id ?? index)}
+                columns={columns as any}
+                dataSource={store.list}
+                pagination={false}
+                auto={true}
+              />
             </div>
-
-            {teacherId ? (
-              <>
-                <div className="theme-panel p-6 mb-4">
-                  <div className="grid grid-cols-4 gap-4">
-                    <div className="col-span-4 md:col-span-2">
-                      <div className="text-sm text-gray-600 mb-2">筛选</div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <div className="text-sm text-gray-600 mb-1">年份</div>
-                          <InputNumber
-                            style={{ width: "100%" }}
-                            value={year}
-                            onChange={(val) => {
-                              const y = Number(val || 0);
-                              setYear(y);
-                              setCurrent(1);
-                              void loadRecords({ year: y, current: 1 });
-                            }}
-                            min={2000}
-                            max={2100}
-                          />
-                        </div>
-                        <div>
-                          <div className="text-sm text-gray-600 mb-1">月份</div>
-                          <InputNumber
-                            style={{ width: "100%" }}
-                            value={month}
-                            onChange={(val) => {
-                              const m = Number(val || 0);
-                              setMonth(m);
-                              setCurrent(1);
-                              void loadRecords({ month: m, current: 1 });
-                            }}
-                            min={1}
-                            max={12}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-span-4 md:col-span-2">
-                      <WorkStatisticsChart title="工时统计（按科目）" data={statisticsData} />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="theme-panel p-6 h-[300px]">
-                  <div className="text-base font-semibold mb-4">工时记录</div>
-                  <MorTable
-                    bordered
-                    rowKey={(record: any) => record.id}
-                    columns={columns as any}
-                    dataSource={page.records || []}
-                    pagination={false}
-                    auto={true}
-                  />
-                </div>
-              </>
-            ) : (
-              <div className="theme-panel p-6">
-                <div className="text-gray-500">请选择教师后查看课时统计与记录</div>
-              </div>
-            )}
           </Spin>
         </Content.Main>
-      </Content.Layout>
-      {!!teacherId && (
         <Content.Footer>
           <div
             style={{
               height: "49px",
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: "flex-end",
               alignItems: "center",
               padding: "0px 12px",
               boxSizing: "border-box",
             }}
           >
-            <div></div>
             <Pagination
               showTotal={(total) => `共有 ${total} 条`}
               showSizeChanger={true}
               showQuickJumper={true}
               onChange={handleChange}
               onShowSizeChange={handlePageSize}
-              total={page.total || 0}
-              current={current}
+              total={store.data.total || 0}
+              current={store.data.current || 1}
             />
           </div>
         </Content.Footer>
-      )}
+      </Content.Layout>
     </Content>
   );
 };

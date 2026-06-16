@@ -18,6 +18,6 @@ export class Api extends Request {
   public async getTeacherList(
     params: API.TeacherList.Params
   ): Promise<API.TeacherList.Response> {
-    return await this.get<API.TeacherList.Data>("/tms/work/teacher/list", params);
+    return await this.get<API.TeacherList.Data>("/tms/teacher/page", params);
   }
 }

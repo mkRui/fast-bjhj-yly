@@ -3,24 +3,42 @@ import { BaseRequest } from "mor-request";
 import type { Teacher } from "@/views/personal-info/types/api";
 
 export declare namespace API {
-  export namespace TeacherList {
+  export namespace StatisticsPage {
     export interface Params {
+      year: number;
+      month: number;
       keyword?: string;
       current: number;
       size: number;
     }
 
-    export type Data = Teacher[];
+    export interface RecordItem {
+      teacher: Teacher;
+      morningReadNum?: number;
+      eveningStudyNum?: number;
+      classHour?: number;
+      oralPracticeNum?: number;
+      collegeCounselingNum?: number;
+      overtimeNum?: number;
+      exhibitionNum?: number;
+    }
+
+    export interface Data {
+      size: number;
+      pages: number;
+      total: number;
+      records: RecordItem[];
+      current: number;
+    }
 
     export type Response = BaseRequest.Response<Data>;
   }
 
   export namespace WorkPage {
     export interface Params {
-      teacherId: string;
-      keyword?: string;
-      year?: number;
-      month?: number;
+      selectedTeacherId: string;
+      year: number;
+      month: number;
       current: number;
       size: number;
     }
@@ -46,4 +64,3 @@ export declare namespace API {
     export type Response = BaseRequest.Response<Data>;
   }
 }
-

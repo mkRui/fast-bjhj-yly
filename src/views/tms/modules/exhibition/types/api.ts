@@ -52,12 +52,18 @@ export declare namespace API {
       keyword?: string;
     }
 
+    export interface Data {
+      size: number;
+      pages: number;
+      total: number;
+      records: RecordItem[];
+      current: number;
+    }
+
     export interface RecordItem {
       id: string;
       name: string;
     }
-
-    export type Data = RecordItem[];
 
     export type Response = BaseRequest.Response<Data>;
   }
