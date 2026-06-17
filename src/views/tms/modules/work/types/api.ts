@@ -20,7 +20,6 @@ export declare namespace API {
       oralPracticeNum?: number;
       collegeCounselingNum?: number;
       overtimeNum?: number;
-      exhibitionNum?: number;
     }
 
     export interface Data {
@@ -46,7 +45,7 @@ export declare namespace API {
     export interface RecordItem {
       id: string;
       teacherId: string;
-      subject: number;
+      subject: string;
       date: string;
       year: number;
       month: number;

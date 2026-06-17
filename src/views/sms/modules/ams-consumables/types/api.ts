@@ -96,15 +96,19 @@ export declare namespace API {
 
     export interface RecordItem {
       id: string;
+      categoryId?: string;
+      categoryName?: string;
       consumableId?: string;
+      consumableName?: string;
+      applyNum?: number;
       applyTime?: string;
       applyReason?: string;
       applyUserId?: string;
       applyUserName?: string;
-      checkedFlag?: boolean;
-      checkedUserId?: string;
-      checkedUserName?: string;
-      checkedComment?: string;
+      applyCheckedFlag?: boolean;
+      applyCheckedUserId?: string;
+      applyCheckedUserName?: string;
+      applyCheckedComment?: string;
     }
 
     export interface Data {
@@ -122,7 +126,7 @@ export declare namespace API {
     export interface Params {
       applyId: string;
       checkedFlag: boolean;
-      comment?: string;
+      comment: string;
     }
 
     export type Data = null;

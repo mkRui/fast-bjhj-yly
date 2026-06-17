@@ -40,7 +40,7 @@ export declare namespace API {
       filename: string;
       filepath: string;
       suffix: string;
-      type: number;
+      type: string;
     }
 
     export type Response = BaseRequest.Response<Data[]>;

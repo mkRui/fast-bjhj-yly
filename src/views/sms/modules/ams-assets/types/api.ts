@@ -17,7 +17,9 @@ export declare namespace API {
       name?: string;
       remark?: string;
       selfCode?: string;
-      stockNum?: number;
+      fullCode?: string;
+      totalNum?: number;
+      availableNum?: number;
     }
 
     export interface Data {
@@ -104,7 +106,7 @@ export declare namespace API {
       assetId?: string;
       assetName?: string;
       fullCode?: string;
-      status?: number;
+      status?: string;
       remark?: string;
       stockInTime?: string;
       currentApplyId?: string;
@@ -132,8 +134,11 @@ export declare namespace API {
     export interface RecordItem {
       id: string;
       categoryId?: string;
+      categoryName?: string;
       assetId?: string;
+      assetName?: string;
       itemId?: string;
+      itemFullCode?: string;
       applyTime?: string;
       applyReason?: string;
       applyUserId?: string;
@@ -142,7 +147,7 @@ export declare namespace API {
       applyCheckedUserId?: string;
       applyCheckedUserName?: string;
       applyCheckedComment?: string;
-      disposeType?: number;
+      dispose?: string;
       disposeCheckedFlag?: boolean;
       disposeCheckedUserId?: string;
       disposeCheckedUserName?: string;
@@ -164,7 +169,7 @@ export declare namespace API {
     export interface Params {
       applyId: string;
       checkedFlag: boolean;
-      comment?: string;
+      comment: string;
     }
 
     export type Data = null;
@@ -175,7 +180,7 @@ export declare namespace API {
     export interface Params {
       applyId: string;
       checkedFlag: boolean;
-      comment?: string;
+      comment: string;
     }
 
     export type Data = null;

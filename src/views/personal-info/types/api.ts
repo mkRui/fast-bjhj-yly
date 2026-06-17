@@ -4,7 +4,7 @@ import { BaseRequest } from "mor-request";
 export interface Teacher {
   id: string;
   name: string;
-  gender: number;
+  gender: string;
   ethnicity: string;
   idPhoto: string;
 }
@@ -15,22 +15,22 @@ export interface TeacherInfo {
   idNo: string;
   registeredAddress: string;
   currentResidentialAddress: string;
-  politicalStatus: number;
+  politicalStatus: string;
   phone: string;
   emergencyContact: string;
   emergencyContactPhone: string;
   firstDegreeGraduationInstitution: string;
   firstDegreeMajor: string;
-  firstDegreeDuration: number;
-  firstDegree: number;
+  firstDegreeDuration: string;
+  firstDegree: string;
   firstDegreeGraduationDate: string;
   highestDegreeGraduationInstitution: string;
   highestDegreeMajor: string;
-  highestDegreeDuration: number;
-  highestDegree: number;
+  highestDegreeDuration: string;
+  highestDegree: string;
   highestDegreeGraduationDate: string;
   teachingLicense: boolean;
-  teachingLicenseType: number;
+  teachingLicenseType: string;
   teachingLicenseSubject: string;
   teachingLicenseCertificateNumber: string;
   teachingLicenseIssuingAuthority: string;
@@ -44,7 +44,7 @@ export interface TeacherInfo {
 export interface FamilyMember {
   id: string;
   teacherId: string;
-  relation: number;
+  relation: string;
   name: string;
   employer: string;
 }
@@ -88,7 +88,7 @@ export interface InfoRes {
 }
 
 export interface EditFamilyMember {
-  relation: number;
+  relation: string;
   name: string;
   employer: string;
 }
@@ -117,22 +117,22 @@ export interface EditTeacherInfoBody {
   idNo: string;
   registeredAddress: string;
   currentResidentialAddress: string;
-  politicalStatus: number;
+  politicalStatus: string;
   phone: string;
   emergencyContact: string;
   emergencyContactPhone: string;
   firstDegreeGraduationInstitution: string;
   firstDegreeMajor: string;
-  firstDegreeDuration: number;
-  firstDegree: number;
+  firstDegreeDuration: string;
+  firstDegree: string;
   firstDegreeGraduationDate: string;
   highestDegreeGraduationInstitution: string;
   highestDegreeMajor: string;
-  highestDegreeDuration: number;
-  highestDegree: number;
+  highestDegreeDuration: string;
+  highestDegree: string;
   highestDegreeGraduationDate: string;
   teachingLicense: boolean;
-  teachingLicenseType: number;
+  teachingLicenseType: string;
   teachingLicenseSubject: string;
   teachingLicenseCertificateNumber: string;
   teachingLicenseIssuingAuthority: string;

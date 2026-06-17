@@ -4,7 +4,7 @@ import { BaseRequest } from "mor-request";
 export declare namespace API {
   export namespace SubmitWork {
     export interface WorkItem {
-      subject: number;
+      subject: string;
       num: number;
     }
 
@@ -68,7 +68,7 @@ export declare namespace API {
       leaveDate: string;
       leaveStartTime: string;
       leaveEndTime: string;
-      leaveType: number;
+      leaveType: string;
       leaveReason: string;
     }
 
@@ -86,11 +86,13 @@ export declare namespace API {
     export interface RecordItem {
       id: string;
       teacherId: string;
+      leaveYear?: number;
+      leaveMonth?: number;
       leaveDate: string;
       leaveStartTime: string;
       leaveEndTime: string;
       leaveNum: number;
-      leaveType: number;
+      leaveType: string;
       leaveReason: string;
       checkedFlag: boolean;
       checkedUserId?: string;
@@ -159,7 +161,9 @@ export declare namespace API {
     export interface RecordItem {
       id: string;
       categoryId?: string;
+      categoryName?: string;
       consumableId?: string;
+      consumableName?: string;
       applyNum?: number;
       applyTime?: string;
       applyReason?: string;
@@ -238,7 +242,7 @@ export declare namespace API {
       assetId?: string;
       assetName?: string;
       fullCode?: string;
-      status?: number;
+      status?: string;
       remark?: string;
       stockInTime?: string;
       currentApplyId?: string;
@@ -258,7 +262,6 @@ export declare namespace API {
 
   export namespace AssetsItemApplyPage {
     export interface Params {
-      itemId?: string;
       current: number;
       size: number;
     }
@@ -266,8 +269,11 @@ export declare namespace API {
     export interface RecordItem {
       id: string;
       categoryId?: string;
+      categoryName?: string;
       assetId?: string;
+      assetName?: string;
       itemId?: string;
+      itemFullCode?: string;
       applyTime?: string;
       applyReason?: string;
       applyUserId?: string;
@@ -276,7 +282,7 @@ export declare namespace API {
       applyCheckedUserId?: string;
       applyCheckedUserName?: string;
       applyCheckedComment?: string;
-      dispose?: number;
+      dispose?: string;
       disposeCheckedFlag?: boolean;
       disposeCheckedUserId?: string;
       disposeCheckedUserName?: string;
@@ -307,7 +313,7 @@ export declare namespace API {
   export namespace AssetsItemDispose {
     export interface Params {
       applyId: string;
-      dispose: number;
+      dispose: string;
     }
 
     export type Data = null;
@@ -481,7 +487,7 @@ export declare namespace API {
       filename: string;
       filepath: string;
       suffix: string;
-      type: number;
+      type: string;
     }
 
     export type Response = BaseRequest.Response<Data[]>;

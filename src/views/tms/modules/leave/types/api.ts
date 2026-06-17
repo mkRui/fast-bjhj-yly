@@ -12,11 +12,13 @@ export declare namespace API {
     export interface RecordItem {
       id: string;
       teacherId: string;
+      leaveYear?: number;
+      leaveMonth?: number;
       leaveDate: string;
       leaveStartTime: string;
       leaveEndTime: string;
       leaveNum: number;
-      leaveType: number;
+      leaveType: string;
       leaveReason: string;
       checkedFlag: boolean | null;
       checkedUserId?: string;

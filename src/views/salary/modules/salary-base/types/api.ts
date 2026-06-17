@@ -6,7 +6,7 @@ export declare namespace API {
     export interface Data {
       id: string;
       name: string;
-      gender: number;
+      gender: string;
       ethnicity: string;
       idPhoto: string;
     }
@@ -17,7 +17,6 @@ export declare namespace API {
       id: string;
       salaryBase: number;
       salaryPosition: number;
-      salaryBonus: number;
       salarySeniority: number;
       salaryHousing: number;
       salaryTransportation: number;
@@ -52,7 +51,6 @@ export declare namespace API {
       id: string;
       salaryBase: number;
       salaryPosition: number;
-      salaryBonus: number;
       salarySeniority: number;
       salaryHousing: number;
       salaryTransportation: number;
