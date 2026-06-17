@@ -11,7 +11,19 @@ export class Api extends Request {
   }
 
   public async edit(params: API.Edit.Params): Promise<API.Edit.Response> {
-    return await this.post<API.Edit.Data>("/tms/teacher/edit", params);
+    const { id, teacher, teacherInfo, familyMember, professionalTitle, teachingExperience, workExperience } =
+      params;
+    return await this.post<API.Edit.Data>("/tms/teacher/edit", {
+      id,
+      teacher: {
+        teacher,
+        teacherInfo,
+        familyMember,
+        professionalTitle,
+        teachingExperience,
+        workExperience,
+      },
+    });
   }
 
   public async del(params: API.Del.Params): Promise<API.Del.Response> {
