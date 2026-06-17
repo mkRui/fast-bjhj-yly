@@ -5,7 +5,6 @@ export const WORK_STAT_FIELDS = [
   { key: "oralPracticeNum", label: "口语练习" },
   { key: "collegeCounselingNum", label: "升学指导" },
   { key: "overtimeNum", label: "加班" },
-  { key: "exhibitionNum", label: "展会" },
 ] as const;
 
 export type WorkStatFieldKey = (typeof WORK_STAT_FIELDS)[number]["key"];
