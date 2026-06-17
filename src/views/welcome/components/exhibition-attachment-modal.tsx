@@ -2,6 +2,7 @@ import { FC, useCallback, useEffect, useState } from "react";
 import { Modal, Spin } from "antd";
 import type { ModalProps } from "antd/lib/modal";
 
+import AttachmentFilenameCell from "@/components/attachment-filename-cell";
 import Button from "@/components/button";
 import MorTable from "@/components/table";
 import Upload from "@/components/upload";
@@ -55,9 +56,18 @@ const ExhibitionAttachmentModal: FC<ExhibitionAttachmentModalProps> = (props) =>
   };
 
   const columns = [
-    { title: "文件名", dataIndex: "filename" },
+    {
+      title: "文件名",
+      dataIndex: "filename",
+      render: (_: unknown, record: API.ExhibitionAttachmentList.Data) => (
+        <AttachmentFilenameCell
+          filename={record.filename}
+          filepath={record.filepath}
+          suffix={record.suffix}
+        />
+      ),
+    },
     { title: "后缀", dataIndex: "suffix", width: 100 },
-    { title: "类型", dataIndex: "type", width: 80 },
     {
       title: "操作",
       width: 100,
@@ -108,6 +118,7 @@ const ExhibitionAttachmentModal: FC<ExhibitionAttachmentModalProps> = (props) =>
           dataSource={list}
           columns={columns as any}
           rowKey={(record) => record.id}
+          auto
         />
       </Spin>
     </Modal>

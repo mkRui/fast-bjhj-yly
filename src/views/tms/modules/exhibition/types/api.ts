@@ -38,6 +38,7 @@ export declare namespace API {
       id: string;
       exhibitionId: string;
       filename: string;
+      filepath: string;
       suffix: string;
       type: number;
     }
