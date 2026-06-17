@@ -12,15 +12,15 @@ import { API } from "../types/api";
 
 export interface ConsumablesApplyListModalProps {
   title: string;
-  consumablesId: string;
+  consumableId: string;
   onCancel: ModalProps["onCancel"];
 }
 
 const ConsumablesApplyListModal: FC<ConsumablesApplyListModalProps> = (props) => {
-  const { title, consumablesId, onCancel } = props;
+  const { title, consumableId, onCancel } = props;
   const api = useMemo(() => new Api(axios), []);
 
-  const [params, setParams] = useState<API.ApplyPage.Params>({ consumablesId, current: 1, size: 10 });
+  const [params, setParams] = useState<API.ApplyPage.Params>({ consumableId, current: 1, size: 10 });
   const [data, setData] = useState<API.ApplyPage.Data>({ size: 10, pages: 0, total: 0, records: [], current: 1 });
   const [loading, setLoading] = useState(false);
 
@@ -35,8 +35,8 @@ const ConsumablesApplyListModal: FC<ConsumablesApplyListModalProps> = (props) =>
   };
 
   useEffect(() => {
-    void loadList({ consumablesId, current: 1 });
-  }, [consumablesId]);
+    void loadList({ consumableId, current: 1 });
+  }, [consumableId]);
 
   const columns = [
     { title: "审核意见", dataIndex: "checkedComment", width: 200 },

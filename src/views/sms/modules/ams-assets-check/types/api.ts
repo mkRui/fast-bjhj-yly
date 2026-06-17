@@ -6,6 +6,7 @@ export declare namespace API {
     export interface Params {
       current: number;
       size: number;
+      itemId?: string;
       applyCheckedFlag?: string;
       disposeCheckedFlag?: string;
     }

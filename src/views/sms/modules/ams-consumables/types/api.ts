@@ -80,7 +80,7 @@ export declare namespace API {
 
   export namespace StockIn {
     export interface Params {
-      consumablesId: string;
+      consumableId: string;
       num: number;
     }
 
@@ -90,14 +90,13 @@ export declare namespace API {
 
   export namespace ApplyPage {
     export interface Params {
-      consumablesId?: string;
       current: number;
       size: number;
     }
 
     export interface RecordItem {
       id: string;
-      consumablesId?: string;
+      consumableId?: string;
       applyTime?: string;
       applyReason?: string;
       applyUserId?: string;

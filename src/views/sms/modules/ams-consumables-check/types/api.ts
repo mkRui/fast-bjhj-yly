@@ -11,7 +11,7 @@ export declare namespace API {
 
     export interface RecordItem {
       id: string;
-      consumablesId?: string;
+      consumableId?: string;
       consumablesName?: string;
       applyNum?: number;
       applyTime?: string;
@@ -22,6 +22,7 @@ export declare namespace API {
       checkedUserId?: string;
       checkedUserName?: string;
       checkedComment?: string;
+      applyCheckedFlag?: boolean;
     }
 
     export interface Data {

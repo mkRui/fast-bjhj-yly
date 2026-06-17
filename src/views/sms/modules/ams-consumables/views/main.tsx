@@ -74,7 +74,7 @@ const AmsConsumablesMain: FC = () => {
         <StockInModal
           {...state}
           title="易耗品入库"
-          init={{ consumablesId: record.id }}
+          init={{ consumableId: record.id }}
           onCancel={() => modal.unmount()}
           onOk={async (params) => {
             modal.setState({ loading: true });
@@ -95,7 +95,7 @@ const AmsConsumablesMain: FC = () => {
       render: () => (
         <ConsumablesApplyListModal
           title={`查看申请：${record.name || record.selfCode || record.id}`}
-          consumablesId={record.id}
+          consumableId={record.id}
           onCancel={() => modal.unmount()}
         />
       ),

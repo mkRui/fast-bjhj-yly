@@ -47,7 +47,6 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
   const [selectedItemId, setSelectedItemId] = useState<string>("");
 
   const [applyParams, setApplyParams] = useState<API.ItemApplyPage.Params>({
-    itemId: "",
     current: 1,
     size: 10,
   });
@@ -69,18 +68,20 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
     setItemParams(params);
     setItemData(data);
 
-    if (shouldAutoOpenApplies.current && data.records?.length) {
+    if (shouldAutoOpenApplies.current) {
       shouldAutoOpenApplies.current = false;
-      const firstId = String(data.records[0].id);
-      setSelectedItemId(firstId);
       setActiveKey("applies");
-      await loadApplyList({ itemId: firstId, current: 1 });
+      await loadApplyList({ current: 1 });
     }
   };
 
   const loadApplyList = async (next?: Partial<API.ItemApplyPage.Params>) => {
-    const params = { ...applyParams, ...(next || {}) };
-    if (!params.itemId) return;
+    const merged = { ...applyParams, ...(next || {}) };
+    const params: API.ItemApplyPage.Params = {
+      current: merged.current,
+      size: merged.size,
+      ...(merged.itemId ? { itemId: merged.itemId } : {}),
+    };
     setApplyLoading(true);
     const [err, data] = await api.getItemApplyPage(params);
     setApplyLoading(false);
@@ -91,6 +92,9 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
 
   useEffect(() => {
     void loadItemList({ assetId, current: 1 });
+    if (initialActiveKey === "applies") {
+      void loadApplyList({ current: 1 });
+    }
   }, [assetId]);
 
   const openApplyTabByItem = async (itemId: string) => {
@@ -167,7 +171,13 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
     <Modal title={title} open={true} onCancel={onCancel} footer={null} width={1200}>
         <Tabs
           activeKey={activeKey}
-          onChange={(k) => setActiveKey(k as any)}
+          onChange={(k) => {
+            const key = k as "items" | "applies";
+            setActiveKey(key);
+            if (key === "applies") {
+              void loadApplyList({ current: 1 });
+            }
+          }}
           items={[
             {
               key: "items",
@@ -208,6 +218,7 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
                         onChange: (keys: any[]) => {
                           const nextId = String(keys?.[0] || "");
                           setSelectedItemId(nextId);
+                          void loadApplyList({ itemId: nextId || undefined, current: 1 });
                         },
                       }}
                       onRow={(record: API.ItemPage.RecordItem) => ({
@@ -236,12 +247,16 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div style={{ color: "#999" }}>
-                      {applyParams.itemId ? `当前实体ID：${applyParams.itemId}` : "请先在实体列表选择一条记录"}
+                      {applyParams.itemId ? `当前筛选实体：${applyParams.itemId}` : "显示全部申请"}
                     </div>
                     <Button
                       type="primary"
-                      disabled={!selectedItemId}
-                      onClick={() => void loadApplyList({ itemId: selectedItemId, current: 1 })}
+                      onClick={() =>
+                        void loadApplyList({
+                          itemId: selectedItemId || undefined,
+                          current: 1,
+                        })
+                      }
                     >
                       刷新
                     </Button>

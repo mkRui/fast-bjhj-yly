@@ -3,7 +3,7 @@ import { API } from "../types/api";
 
 export class Api extends Request {
   public async getApplyPage(params: API.ApplyPage.Params): Promise<API.ApplyPage.Response> {
-    return await this.get<API.ApplyPage.Data>("/ams/assets/item/apply/page", params);
+    return await this.get<API.ApplyPage.Data>("/ams/assets/apply/page", params);
   }
 
   public async applyCheck(params: API.ApplyCheck.Params): Promise<API.ApplyCheck.Response> {

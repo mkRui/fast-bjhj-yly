@@ -10,7 +10,7 @@ const Item = Form.Item;
 export interface StockInModalProps {
   title: string;
   loading?: boolean;
-  init: { consumablesId: string };
+  init: { consumableId: string };
   onCancel: ModalProps["onCancel"];
   onOk: (params: API.StockIn.Params) => void | Promise<void>;
 }
@@ -20,13 +20,13 @@ const StockInModal: FC<StockInModalProps> = (props) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    form.setFieldsValue({ consumablesId: init.consumablesId, num: 1 });
-  }, [form, init.consumablesId]);
+    form.setFieldsValue({ consumableId: init.consumableId, num: 1 });
+  }, [form, init.consumableId]);
 
   const handleOk = (): void => {
     void form.validateFields().then(async (values: any) => {
       await onOk({
-        consumablesId: String(values.consumablesId || ""),
+        consumableId: String(values.consumableId || ""),
         num: Number(values.num || 0),
       });
     });
@@ -44,7 +44,7 @@ const StockInModal: FC<StockInModalProps> = (props) => {
       width={520}
     >
       <Form form={form} layout="vertical">
-        <Item name="consumablesId" hidden>
+        <Item name="consumableId" hidden>
           <Input />
         </Item>
         <Item label="数量" name="num" rules={[{ required: true, message: "请输入数量" }]}>

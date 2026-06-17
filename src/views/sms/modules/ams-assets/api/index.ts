@@ -20,7 +20,7 @@ export class Api extends Request {
   }
 
   public async getItemApplyPage(params: API.ItemApplyPage.Params): Promise<API.ItemApplyPage.Response> {
-    return await this.get<API.ItemApplyPage.Data>("/ams/assets/item/apply/page", params);
+    return await this.get<API.ItemApplyPage.Data>("/ams/assets/apply/page", params);
   }
 
   public async add(params: API.Add.Params): Promise<API.Add.Response> {

@@ -55,7 +55,7 @@ const ConsumablesCheckMain: FC = () => {
       title: "审核状态",
       width: 110,
       render: (_: unknown, record: API.ApplyPage.RecordItem) => (
-        <CheckStatusTag checkedFlag={record.checkedFlag} />
+        <CheckStatusTag checkedFlag={record.applyCheckedFlag} />
       ),
     },
     { title: "申请时间", dataIndex: "applyTime", width: 180 },
@@ -65,16 +65,18 @@ const ConsumablesCheckMain: FC = () => {
       title: "操作",
       width: 100,
       fixed: "right" as const,
-      render: (_: unknown, record: API.ApplyPage.RecordItem) => (
-        <Button
-          type="link"
-          linkType="warning"
-          disabled={isChecked(record.checkedFlag)}
-          onClick={() => openCheckModal(record)}
-        >
-          审核
-        </Button>
-      ),
+      render: (_: unknown, record: API.ApplyPage.RecordItem) => {
+        if (isChecked(record.applyCheckedFlag)) return '-';
+        return (
+          <Button
+            type="link"
+            linkType="warning"
+            onClick={() => openCheckModal(record)}
+          >
+            审核
+          </Button>
+        );
+      },
     },
   ];
 
