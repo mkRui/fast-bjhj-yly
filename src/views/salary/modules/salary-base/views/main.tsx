@@ -12,12 +12,8 @@ import { toastActionResult } from "@/utils/common/mutation-success";
 import StoreContext from "../store";
 import { API } from "../types/api";
 import SalaryBaseFormModal from "../components/form-modal";
-
-const genderText = (gender: number): string => {
-  if (gender === 1) return "男";
-  if (gender === 2) return "女";
-  return "未知";
-};
+import { EnumLabel } from "@/micro/select-enum";
+import { DictCode } from "@/constants/dict-code";
 
 const SalaryBaseMain: FC = () => {
   const store = useContext(StoreContext);
@@ -40,7 +36,6 @@ const SalaryBaseMain: FC = () => {
             id: salaryBase?.id,
             salaryBase: salaryBase?.salaryBase,
             salaryPosition: salaryBase?.salaryPosition,
-            salaryBonus: salaryBase?.salaryBonus,
             salarySeniority: salaryBase?.salarySeniority,
             salaryHousing: salaryBase?.salaryHousing,
             salaryTransportation: salaryBase?.salaryTransportation,
@@ -65,8 +60,9 @@ const SalaryBaseMain: FC = () => {
     {
       title: "性别",
       width: 80,
-      render: (_: unknown, record: API.Page.RecordItem) =>
-        genderText(Number(record.teacher?.gender || 0)),
+      render: (_: unknown, record: API.Page.RecordItem) => (
+        <EnumLabel name={DictCode.GENDER} value={record.teacher?.gender} />
+      ),
     },
     { title: "民族", dataIndex: ["teacher", "ethnicity"], width: 100 },
     { title: "基本工资", dataIndex: ["salaryBase", "salaryBase"], width: 120 },

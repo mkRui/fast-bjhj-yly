@@ -1,6 +1,9 @@
 import { FC } from "react";
 import { Select, Space } from "antd";
 
+import { EnumLabel } from "@/micro/select-enum";
+import { DictCode } from "@/constants/dict-code";
+import { useDict } from "@/hooks/use-dict";
 import type { Teacher } from "@/views/personal-info/types/api";
 
 export interface SelectTeacherProps {
@@ -12,14 +15,9 @@ export interface SelectTeacherProps {
   onSearch?: (keyword: string) => void;
 }
 
-const genderText = (gender: number): string => {
-  if (gender === 1) return "男";
-  if (gender === 2) return "女";
-  return "未知";
-};
-
 const SelectTeacher: FC<SelectTeacherProps> = (props) => {
   const { value, onChange, options, loading, placeholder, onSearch } = props;
+  const genderDict = useDict(DictCode.GENDER);
 
   return (
     <Select
@@ -38,7 +36,7 @@ const SelectTeacher: FC<SelectTeacherProps> = (props) => {
         <Select.Option
           key={t.id}
           value={t.id}
-          label={`${t.name || ""}（${genderText(Number(t.gender || 0))}）`}
+          label={`${t.name || ""}（${genderDict.label(t.gender)}）`}
         >
           <Space>
             {t.idPhoto ? (
@@ -63,7 +61,7 @@ const SelectTeacher: FC<SelectTeacherProps> = (props) => {
               />
             )}
             <span>{t.name}</span>
-            <span style={{ color: "#999" }}>{genderText(Number(t.gender || 0))}</span>
+            <EnumLabel name={DictCode.GENDER} value={t.gender} style={{ color: "#999" }} />
           </Space>
         </Select.Option>
       ))}
@@ -72,4 +70,3 @@ const SelectTeacher: FC<SelectTeacherProps> = (props) => {
 };
 
 export default SelectTeacher;
-

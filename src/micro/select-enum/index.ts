@@ -1,3 +1,3 @@
-import AccountUser from "./view/main";
-
-export default AccountUser;
+export { default } from "./view/main";
+export { default as SelectEnum } from "./view/main";
+export { default as EnumLabel } from "./view/label";

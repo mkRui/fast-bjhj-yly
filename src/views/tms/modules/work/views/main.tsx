@@ -13,12 +13,8 @@ import { TmsFullPath } from "@/views/tms/router/path";
 import StoreContext from "../store";
 import { API } from "../types/api";
 import { WORK_STAT_FIELDS } from "../constants";
-
-const genderText = (gender?: number): string => {
-  if (gender === 1) return "男";
-  if (gender === 2) return "女";
-  return "未知";
-};
+import { EnumLabel } from "@/micro/select-enum";
+import { DictCode } from "@/constants/dict-code";
 
 const WorkMain: FC = () => {
   const store = useContext(StoreContext);
@@ -64,8 +60,9 @@ const WorkMain: FC = () => {
     {
       title: "性别",
       width: 80,
-      render: (_: unknown, record: API.StatisticsPage.RecordItem) =>
-        genderText(Number(record.teacher?.gender || 0)),
+      render: (_: unknown, record: API.StatisticsPage.RecordItem) => (
+        <EnumLabel name={DictCode.GENDER} value={record.teacher?.gender} />
+      ),
     },
     ...WORK_STAT_FIELDS.map(({ key, label }) => ({
       title: label,

@@ -15,12 +15,11 @@ import StoreContext from "../store";
 import { API } from "../types/api";
 import TeacherFormModal from "../components/form-modal";
 import { DictCode } from "@/constants/dict-code";
-import { useDict } from "@/hooks/use-dict";
+import { EnumLabel } from "@/micro/select-enum";
 
 const TeacherMain: FC = () => {
   const store = useContext(StoreContext);
   const [keyword, setKeyword] = useState<string>(store.params.keyword || "");
-  const genderDict = useDict(DictCode.GENDER);
 
   const columns = [
     { title: "姓名", dataIndex: "name" },
@@ -28,7 +27,7 @@ const TeacherMain: FC = () => {
       title: "性别",
       dataIndex: "gender",
       width: 120,
-      render: (val: unknown) => genderDict.label(val),
+      render: (val: unknown) => <EnumLabel name={DictCode.GENDER} value={val} />,
     },
     { title: "民族", dataIndex: "ethnicity" },
     {
