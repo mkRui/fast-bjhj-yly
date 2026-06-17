@@ -25,6 +25,7 @@ const UserAssets = dynamicImport(() => import("@/views/welcome/pages/assets-page
 const UserCar = dynamicImport(() => import("@/views/welcome/pages/car-page"));
 const UserExhibition = dynamicImport(() => import("@/views/welcome/pages/exhibition-page"));
 const PersonalInfo = dynamicImport(() => import("@/views/personal-info"));
+const Notification = dynamicImport(() => import("@/views/notification"));
 const Tms = dynamicImport(() => import("@/views/tms"));
 const Sms = dynamicImport(() => import("@/views/sms"));
 const Salary = dynamicImport(() => import("@/views/salary"));
@@ -44,6 +45,7 @@ export default {
   UserCar,
   UserExhibition,
   PersonalInfo,
+  Notification,
   Tms,
   Sms,
   Salary,

@@ -15,6 +15,8 @@ import { Path } from "@/router/path";
 
 import SetPassword from "@/micro/set-password";
 import { toastActionResult } from "@/utils/common/mutation-success";
+import headerLogoImg from "@/assets/header-logo.png";
+import NotificationBell from "@/views/notification/components/notification-bell";
 
 const LayoutHeader: FC = () => {
   const { collapsed, setCollapsed } = useContext(AppContext);
@@ -84,12 +86,8 @@ const LayoutHeader: FC = () => {
       <div className={Style["header--flex-start"]}>
         <div className={headerLogo()}>
           <div className={Style["header-block_icon"]}>
-            <img
-              src="http://www.liangwannian.cn/img/header-logo-img.png"
-              alt="logo"
-            />
+            <img src={headerLogoImg} alt="101中学怀柔国际部" />
           </div>
-          {/* <span className={Style["header--title"]}>两万年</span> */}
         </div>
       </div>
       <div className={Style["header-block_function"]}>
@@ -99,6 +97,7 @@ const LayoutHeader: FC = () => {
           </div>
         </div>
         <div className={Style["header-block_user__container"]}>
+          <NotificationBell />
           <Screen />
           <ThemeSwitch />
           <Dropdown trigger={["click"]} overlay={MenuList}>

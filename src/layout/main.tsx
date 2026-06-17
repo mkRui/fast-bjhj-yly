@@ -1,5 +1,5 @@
 import { FC, useContext, useEffect, createContext, useState } from "react";
-import { ConfigProvider } from "antd";
+import { App, ConfigProvider } from "antd";
 import { Scrollbars } from "react-custom-scrollbars";
 import ClassNames from "classnames";
 import { observer } from "mobx-react";
@@ -16,6 +16,7 @@ import { applyTheme } from "@/utils/common/theme";
 
 import LayoutHeader from "./container/header";
 import LayoutAside from "./container/aside";
+import GlobalNotification from "@/views/notification/components/global-notification";
 
 import Styles from "./style/app.module.less";
 import "./style/common.less";
@@ -111,30 +112,33 @@ const MainLayout: FC = () => {
 
   return (
     <ConfigProvider theme={getAntdTheme(mode)}>
-      <AppContext.Provider value={Store}>
-      <Layout>
-        <Header>
-          <LayoutHeader />
-        </Header>
-        <Layout style={{ height: "calc(100vh - 50px)", minHeight: "auto" }}>
-          <Aside collapsed={collapsed}>
-            <LayoutAside />
-          </Aside>
-          <Main className={mainClass}>
-            <Scrollbars autoHide>
-              <div className={Styles[`main--content`]}>
-                <RouteComponent
-                  baseRouter="/"
-                  routes={mainRoutes}
-                  redirect={UserFullPath.SUBMIT}
-                />
-              </div>
-            </Scrollbars>
-          </Main>
-        </Layout>
-      </Layout>
-      <div id="portal-root"></div>
-    </AppContext.Provider>
+      <App>
+        <GlobalNotification />
+        <AppContext.Provider value={Store}>
+          <Layout>
+            <Header>
+              <LayoutHeader />
+            </Header>
+            <Layout style={{ height: "calc(100vh - 50px)", minHeight: "auto" }}>
+              <Aside collapsed={collapsed}>
+                <LayoutAside />
+              </Aside>
+              <Main className={mainClass}>
+                <Scrollbars autoHide>
+                  <div className={Styles[`main--content`]}>
+                    <RouteComponent
+                      baseRouter="/"
+                      routes={mainRoutes}
+                      redirect={UserFullPath.SUBMIT}
+                    />
+                  </div>
+                </Scrollbars>
+              </Main>
+            </Layout>
+          </Layout>
+          <div id="portal-root"></div>
+        </AppContext.Provider>
+      </App>
     </ConfigProvider>
   );
 };

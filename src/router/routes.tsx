@@ -68,6 +68,12 @@ export const mainRoutes: RouteTypes[] = [
     title: "教师信息",
     fullPath: "/personal-info",
   },
+  {
+    path: "/notification",
+    component: Pages.Notification,
+    title: "通知中心",
+    fullPath: "/notification",
+  },
   { path: BasePath.SYSTEM, component: Pages.System, children: SystemRouter },
   { path: BasePath.TMS, component: Pages.Tms, children: TmsRouter },
   { path: BasePath.SMS, component: Pages.Sms, children: SmsRouter },
