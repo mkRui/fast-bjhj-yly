@@ -60,8 +60,8 @@ export class SalaryCalcStore extends Store<Api> {
     params: API.SubjectList.Params
   ): Promise<API.SubjectList.Data[]> {
     const [err, data] = await this.api.getSubjectList(params);
-    if (err) return [];
-    return data || [];
+    if (err || !data) return [];
+    return Array.isArray(data) ? data : [];
   }
 
   public async addSubject(params: API.SubjectAdd.Params) {

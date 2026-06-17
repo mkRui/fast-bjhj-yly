@@ -42,6 +42,7 @@ export declare namespace API {
       salaryId: string;
       subject: string;
       amount: number;
+      manuallyEnteredFlag?: boolean;
     }
 
     export type Response = BaseRequest.Response<Data[]>;

@@ -14,7 +14,6 @@ import { toastActionResult } from "@/utils/common/mutation-success";
 import StoreContext from "../store";
 import { API } from "../types/api";
 import SubjectModal from "../components/subject-modal";
-import SubjectAddModal from "../components/subject-add-modal";
 
 const SalaryCalcMain: FC = () => {
   const store = useContext(StoreContext);
@@ -30,40 +29,10 @@ const SalaryCalcMain: FC = () => {
       render: () => (
         <SubjectModal
           record={record}
-          year={store.params.year}
-          month={store.params.month}
           fetchSubjects={store.fetchSubjectList.bind(store)}
           addSubject={store.addSubject.bind(store)}
           delSubject={store.delSubject.bind(store)}
           onCancel={() => modal.unmount()}
-        />
-      ),
-    });
-  };
-
-  const openAddModal = (): void => {
-    const records = store.page.records || [];
-    if (!records.length) {
-      toast("warning", "当前月份暂无工资数据，请先查询");
-      return;
-    }
-
-    const modal = new RunComponents({
-      state: { loading: false },
-      render: (state) => (
-        <SubjectAddModal
-          {...state}
-          title="新增工资明细"
-          records={records}
-          onCancel={() => modal.unmount()}
-          onOk={async (params) => {
-            modal.setState({ loading: true });
-            const ok = await store.addSubject(params);
-            modal.setState({ loading: false });
-            if (toastActionResult(ok, "新增成功", "新增失败")) {
-              modal.unmount();
-            }
-          }}
         />
       ),
     });
@@ -158,11 +127,6 @@ const SalaryCalcMain: FC = () => {
                   开始测算
                 </Button>
               </Space>
-            }
-            actions={
-              <Button type="primary" action="add" onClick={openAddModal}>
-                新增工资明细
-              </Button>
             }
           />
         </Content.Header>

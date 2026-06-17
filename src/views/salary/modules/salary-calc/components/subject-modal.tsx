@@ -12,8 +12,6 @@ import SubjectAddModal from "./subject-add-modal";
 
 interface SubjectModalProps {
   record: API.Page.RecordItem;
-  year: number;
-  month: number;
   fetchSubjects: (params: API.SubjectList.Params) => Promise<API.SubjectList.Data[]>;
   addSubject: (params: API.SubjectAdd.Params) => Promise<MutationResult>;
   delSubject: (id: string) => Promise<MutationResult>;
@@ -21,21 +19,22 @@ interface SubjectModalProps {
 }
 
 const SubjectModal: FC<SubjectModalProps> = (props) => {
-  const { record, year, month, fetchSubjects, addSubject, delSubject, onCancel } = props;
+  const { record, fetchSubjects, addSubject, delSubject, onCancel } = props;
 
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState<API.SubjectList.Data[]>([]);
 
   const load = useCallback(async (): Promise<void> => {
+    if (!record.teacherId) return;
     setLoading(true);
     const data = await fetchSubjects({
-      year,
-      month,
-      teacherId: record.teacherId,
+      year: record.year,
+      month: record.month,
+      teacherId: String(record.teacherId),
     });
     setList(data);
     setLoading(false);
-  }, [fetchSubjects, year, month, record.teacherId]);
+  }, [fetchSubjects, record.year, record.month, record.teacherId]);
 
   useEffect(() => {
     void load();
@@ -70,27 +69,30 @@ const SubjectModal: FC<SubjectModalProps> = (props) => {
     {
       title: "操作",
       width: 100,
-      render: (_: unknown, item: API.SubjectList.Data) => (
-        <Button
-          type="link"
-          linkType="danger"
-          action="del"
-          onConfirm={async () => {
-            const ok = await delSubject(item.id);
-            if (toastActionResult(ok, "删除成功", "删除失败")) {
-              await load();
-            }
-          }}
-        >
-          删除
-        </Button>
-      ),
+      render: (_: unknown, item: API.SubjectList.Data) =>
+        item.manuallyEnteredFlag === true ? (
+          <Button
+            type="link"
+            linkType="danger"
+            action="del"
+            onConfirm={async () => {
+              const ok = await delSubject(item.id);
+              if (toastActionResult(ok, "删除成功", "删除失败")) {
+                await load();
+              }
+            }}
+          >
+            删除
+          </Button>
+        ) : (
+          "-"
+        ),
     },
   ];
 
   return (
     <Modal
-      title={`工资明细 - ${record.teacherUserName || ""}（${year}年${month}月）`}
+      title={`工资明细 - ${record.teacherUserName || ""}（${record.year}年${record.month}月）`}
       open={true}
       width={720}
       onCancel={onCancel}
@@ -108,6 +110,7 @@ const SubjectModal: FC<SubjectModalProps> = (props) => {
         columns={columns as any}
         rowKey={(item) => item.id}
         loading={loading}
+        auto
       />
     </Modal>
   );
