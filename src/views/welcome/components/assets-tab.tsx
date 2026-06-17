@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { observer } from "mobx-react";
 import { Form, Input, InputNumber, Modal, Pagination, Select, Space, Spin, Tabs } from "antd";
 import type { ModalProps } from "antd/lib/modal";
@@ -23,23 +23,23 @@ const Option = Select.Option;
 interface ApplyModalProps {
   title: string;
   loading?: boolean;
-  consumablesId: string;
+  consumableId: string;
   onCancel: ModalProps["onCancel"];
   onOk: (params: API.ConsumablesApply.Params) => void | Promise<void>;
 }
 
 const ApplyModal: FC<ApplyModalProps> = (props) => {
-  const { title, loading, consumablesId, onCancel, onOk } = props;
+  const { title, loading, consumableId, onCancel, onOk } = props;
   const [form] = Form.useForm();
 
   useEffect(() => {
-    form.setFieldsValue({ consumablesId, applyNum: 1, applyReason: "" });
-  }, [form, consumablesId]);
+    form.setFieldsValue({ consumableId, applyNum: 1, applyReason: "" });
+  }, [form, consumableId]);
 
   const handleOk = (): void => {
     void form.validateFields().then(async (values: any) => {
       await onOk({
-        consumablesId: String(values.consumablesId || ""),
+        consumableId: String(values.consumableId || ""),
         applyReason: String(values.applyReason || ""),
         applyNum: Number(values.applyNum || 0),
       });
@@ -58,7 +58,7 @@ const ApplyModal: FC<ApplyModalProps> = (props) => {
       width={520}
     >
       <Form form={form} layout="vertical">
-        <Item name="consumablesId" hidden>
+        <Item name="consumableId" hidden>
           <Input />
         </Item>
         <Item label="申请数量" name="applyNum" rules={[{ required: true, message: "请输入申请数量" }]}>
@@ -72,17 +72,9 @@ const ApplyModal: FC<ApplyModalProps> = (props) => {
   );
 };
 
-interface ApplyListModalProps {
-  title: string;
-  consumablesId: string;
-  onCancel: ModalProps["onCancel"];
-}
-
-const ApplyListModal: FC<ApplyListModalProps> = (props) => {
-  const { title, consumablesId, onCancel } = props;
+const MyConsumablesApplyPanel: FC = () => {
   const api = useMemo(() => new Api(axios), []);
-
-  const [params, setParams] = useState<API.ConsumablesApplyPage.Params>({ consumablesId, current: 1, size: 10 });
+  const [params, setParams] = useState<API.ConsumablesApplyPage.Params>({ current: 1, size: 10 });
   const [data, setData] = useState<API.ConsumablesApplyPage.Data>({
     size: 10,
     pages: 0,
@@ -94,24 +86,29 @@ const ApplyListModal: FC<ApplyListModalProps> = (props) => {
 
   const load = async (next?: Partial<API.ConsumablesApplyPage.Params>) => {
     const merged = { ...params, ...(next || {}) };
+    const requestParams: API.ConsumablesApplyPage.Params = {
+      current: merged.current,
+      size: merged.size,
+      ...(merged.consumableId ? { consumableId: merged.consumableId } : {}),
+    };
     setLoading(true);
-    const [err, res] = await api.getConsumablesApplyPage(merged);
+    const [err, res] = await api.getConsumablesApplyPage(requestParams);
     setLoading(false);
     if (err) return;
-    setParams(merged);
+    setParams(requestParams);
     setData(res);
   };
 
   useEffect(() => {
-    void load({ consumablesId, current: 1 });
-  }, [consumablesId]);
+    void load({ current: 1 });
+  }, []);
 
   const columns = [
     { title: "审核意见", dataIndex: "applyCheckedComment", width: 220 },
     {
       title: "审核状态",
       width: 120,
-      render: (_: any, record: API.ConsumablesApplyPage.RecordItem) => (
+      render: (_: unknown, record: API.ConsumablesApplyPage.RecordItem) => (
         <CheckStatusTag checkedFlag={record.applyCheckedFlag} />
       ),
     },
@@ -121,31 +118,34 @@ const ApplyListModal: FC<ApplyListModalProps> = (props) => {
   ];
 
   return (
-    <Modal title={title} open={true} onCancel={onCancel} footer={null} width={1100}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        <div style={{ height: 520 }}>
-          <MorTable
-            bordered
-            pagination={false}
-            dataSource={data.records}
-            columns={columns as any}
-            rowKey={(record: any) => record.id}
-            loading={loading}
-          />
+    <Spin spinning={loading}>
+      <div className="theme-panel p-6 h-[520px]">
+        <div className="flex items-center justify-between mb-4">
+          <div className="text-base font-semibold">我的易耗品申请</div>
+          <Button action="reset" onClick={() => void load({ current: 1 })}>
+            刷新
+          </Button>
         </div>
-        <div className="flex justify-end">
+        <MorTable
+          rowKey="id"
+          columns={columns as any}
+          dataSource={data.records || []}
+          pagination={false}
+        />
+        <div className="flex justify-end mt-4">
           <Pagination
-            showTotal={(total) => `共有 ${total} 条`}
-            showSizeChanger={true}
-            showQuickJumper={true}
-            total={data.total}
-            current={data.current}
-            onChange={(page) => void load({ current: page })}
-            onShowSizeChange={(_c, size) => void load({ current: 1, size })}
+            current={params.current}
+            pageSize={params.size}
+            total={data.total || 0}
+            showSizeChanger
+            showQuickJumper
+            onChange={(current, pageSize) => {
+              void load({ current, size: pageSize });
+            }}
           />
         </div>
       </div>
-    </Modal>
+    </Spin>
   );
 };
 
@@ -245,21 +245,149 @@ const AssetsItemDisposeModal: FC<AssetsItemDisposeModalProps> = (props) => {
   );
 };
 
+const MyAssetsItemApplyPanel: FC = () => {
+  const api = useMemo(() => new Api(axios), []);
+  const assetsDisposeDict = useDict(DictCode.ASSETS_DISPOSE);
+  const [params, setParams] = useState<API.AssetsItemApplyPage.Params>({ current: 1, size: 10 });
+  const [data, setData] = useState<API.AssetsItemApplyPage.Data>({
+    size: 10,
+    pages: 0,
+    total: 0,
+    records: [],
+    current: 1,
+  });
+  const [loading, setLoading] = useState(false);
+
+  const load = async (next?: Partial<API.AssetsItemApplyPage.Params>) => {
+    const merged = { ...params, ...(next || {}) };
+    const requestParams: API.AssetsItemApplyPage.Params = {
+      current: merged.current,
+      size: merged.size,
+      ...(merged.itemId ? { itemId: merged.itemId } : {}),
+    };
+    setLoading(true);
+    const [err, res] = await api.getAssetsItemApplyPage(requestParams);
+    setLoading(false);
+    if (err) return;
+    setParams(requestParams);
+    setData(res);
+  };
+
+  useEffect(() => {
+    void load({ current: 1 });
+  }, []);
+
+  const openDisposeModal = (record: API.AssetsItemApplyPage.RecordItem) => {
+    const modal = new RunComponents({
+      state: { loading: false },
+      render: (state) => (
+        <AssetsItemDisposeModal
+          {...state}
+          title="处置固定资产"
+          applyId={record.id}
+          onCancel={() => modal.unmount()}
+          onOk={async (disposeParams) => {
+            modal.setState({ loading: true });
+            const [err] = await api.disposeAssetsItem(disposeParams);
+            modal.setState({ loading: false });
+            if (toastRequestResult(err, "提交成功", "提交失败")) {
+              modal.unmount();
+              await load();
+            }
+          }}
+        />
+      ),
+    });
+  };
+
+  const columns = [
+    { title: "申请审核意见", dataIndex: "applyCheckedComment", width: 200 },
+    {
+      title: "申请审核",
+      width: 120,
+      render: (_: unknown, record: API.AssetsItemApplyPage.RecordItem) => (
+        <CheckStatusTag checkedFlag={record.applyCheckedFlag} />
+      ),
+    },
+    { title: "申请时间", dataIndex: "applyTime", width: 180 },
+    { title: "申请理由", dataIndex: "applyReason", width: 200 },
+    {
+      title: "处置类型",
+      dataIndex: "dispose",
+      width: 120,
+      render: (val: unknown) => assetsDisposeDict.label(val),
+    },
+    { title: "处置审核意见", dataIndex: "disposeCheckedComment", width: 200 },
+    {
+      title: "处置审核",
+      width: 120,
+      render: (_: unknown, record: API.AssetsItemApplyPage.RecordItem) => (
+        <CheckStatusTag checkedFlag={record.disposeCheckedFlag} unsetText="-" />
+      ),
+    },
+    {
+      title: "操作",
+      width: 100,
+      fixed: "right" as const,
+      render: (_: unknown, record: API.AssetsItemApplyPage.RecordItem) => {
+        const canDispose =
+          record.applyCheckedFlag === true && (record.dispose === undefined || record.dispose === null);
+        return (
+          <Button
+            type="link"
+            linkType="warning"
+            disabled={!canDispose}
+            onClick={() => openDisposeModal(record)}
+          >
+            处置
+          </Button>
+        );
+      },
+    },
+  ];
+
+  return (
+    <Spin spinning={loading}>
+      <div className="theme-panel p-6 h-[520px]">
+        <div className="flex items-center justify-between mb-4">
+          <div className="text-base font-semibold">我的固定资产申请</div>
+          <Button action="reset" onClick={() => void load({ current: 1 })}>
+            刷新
+          </Button>
+        </div>
+        <MorTable
+          rowKey="id"
+          columns={columns as any}
+          dataSource={data.records || []}
+          pagination={false}
+        />
+        <div className="flex justify-end mt-4">
+          <Pagination
+            current={params.current}
+            pageSize={params.size}
+            total={data.total || 0}
+            showSizeChanger
+            showQuickJumper
+            onChange={(current, pageSize) => {
+              void load({ current, size: pageSize });
+            }}
+          />
+        </div>
+      </div>
+    </Spin>
+  );
+};
+
 export interface AssetsItemListsModalProps {
   title: string;
   assetId: string;
-  initialActiveKey?: "items" | "applies";
   onCancel: ModalProps["onCancel"];
 }
 
 const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
-  const { title, assetId, initialActiveKey = "items", onCancel } = props;
+  const { title, assetId, onCancel } = props;
   const api = useMemo(() => new Api(axios), []);
-  const shouldAutoOpenApplies = useRef(initialActiveKey === "applies");
   const assetsStatusDict = useDict(DictCode.ASSETS_STATUS);
-  const assetsDisposeDict = useDict(DictCode.ASSETS_DISPOSE);
-
-  const [activeKey, setActiveKey] = useState<"items" | "applies">(initialActiveKey);
 
   const [itemParams, setItemParams] = useState<API.AssetsItemPage.Params>({
     assetId,
@@ -275,21 +403,6 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
     current: 1,
   });
   const [itemLoading, setItemLoading] = useState(false);
-  const [selectedItemId, setSelectedItemId] = useState<string>("");
-
-  const [applyParams, setApplyParams] = useState<API.AssetsItemApplyPage.Params>({
-    itemId: "",
-    current: 1,
-    size: 10,
-  });
-  const [applyData, setApplyData] = useState<API.AssetsItemApplyPage.Data>({
-    size: 10,
-    pages: 0,
-    total: 0,
-    records: [],
-    current: 1,
-  });
-  const [applyLoading, setApplyLoading] = useState(false);
 
   const loadItemList = async (next?: Partial<API.AssetsItemPage.Params>) => {
     const params = { ...itemParams, ...(next || {}) };
@@ -299,38 +412,11 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
     if (err) return;
     setItemParams(params);
     setItemData(data);
-
-    if (shouldAutoOpenApplies.current && data.records?.length) {
-      shouldAutoOpenApplies.current = false;
-      const firstId = String(data.records[0].id);
-      setSelectedItemId(firstId);
-      setActiveKey("applies");
-      await loadApplyList({ itemId: firstId, current: 1 });
-    }
-  };
-
-  const loadApplyList = async (next?: Partial<API.AssetsItemApplyPage.Params>) => {
-    const params = { ...applyParams, ...(next || {}) };
-    if (!params.itemId) return;
-    setApplyLoading(true);
-    const [err, data] = await api.getAssetsItemApplyPage(params);
-    setApplyLoading(false);
-    if (err) return;
-    setApplyParams(params);
-    setApplyData(data);
   };
 
   useEffect(() => {
     void loadItemList({ assetId, current: 1 });
   }, [assetId]);
-
-  const openApplyTabByItem = async (itemId: string) => {
-    const nextId = String(itemId || "");
-    if (!nextId) return;
-    setSelectedItemId(nextId);
-    setActiveKey("applies");
-    await loadApplyList({ itemId: nextId, current: 1 });
-  };
 
   const openApplyModal = (record: API.AssetsItemPage.RecordItem) => {
     const modal = new RunComponents({
@@ -347,30 +433,6 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
             modal.setState({ loading: false });
             if (toastRequestResult(err, "申请成功", "申请失败")) {
               modal.unmount();
-              await openApplyTabByItem(record.id);
-            }
-          }}
-        />
-      ),
-    });
-  };
-
-  const openDisposeModal = (record: API.AssetsItemApplyPage.RecordItem) => {
-    const modal = new RunComponents({
-      state: { loading: false },
-      render: (state) => (
-        <AssetsItemDisposeModal
-          {...state}
-          title="处置固定资产"
-          applyId={record.id}
-          onCancel={() => modal.unmount()}
-          onOk={async (params) => {
-            modal.setState({ loading: true });
-            const [err] = await api.disposeAssetsItem(params);
-            modal.setState({ loading: false });
-            if (toastRequestResult(err, "提交成功", "提交失败")) {
-              modal.unmount();
-              await loadApplyList();
             }
           }}
         />
@@ -382,12 +444,14 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
     {
       title: "资产分类",
       width: 160,
-      render: (_: any, record: API.AssetsItemPage.RecordItem) => record.categoryName || record.categoryId || "-",
+      render: (_: unknown, record: API.AssetsItemPage.RecordItem) =>
+        record.categoryName || record.categoryId || "-",
     },
     {
       title: "固定资产",
       width: 220,
-      render: (_: any, record: API.AssetsItemPage.RecordItem) => record.assetName || record.assetId || "-",
+      render: (_: unknown, record: API.AssetsItemPage.RecordItem) =>
+        record.assetName || record.assetId || "-",
     },
     { title: "完整代码", dataIndex: "fullCode", width: 200 },
     {
@@ -400,168 +464,61 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
     { title: "备注", dataIndex: "remark" },
     {
       title: "操作",
-      width: 220,
+      width: 100,
       fixed: "right" as const,
-      render: (_: any, record: API.AssetsItemPage.RecordItem) => (
-        <Button.Group>
-          <Button type="link" linkType="warning" onClick={() => openApplyModal(record)}>
-            申请
-          </Button>
-          <Button type="link" onClick={() => openApplyTabByItem(record.id)}>
-            查看申请
-          </Button>
-        </Button.Group>
+      render: (_: unknown, record: API.AssetsItemPage.RecordItem) => (
+        <Button type="link" linkType="warning" onClick={() => openApplyModal(record)}>
+          申请
+        </Button>
       ),
-    },
-  ];
-
-  const applyColumns = [
-    { title: "申请审核意见", dataIndex: "applyCheckedComment", width: 200 },
-    {
-      title: "申请审核",
-      width: 120,
-      render: (_: any, record: API.AssetsItemApplyPage.RecordItem) => (
-        <CheckStatusTag checkedFlag={record.applyCheckedFlag} />
-      ),
-    },
-    { title: "申请时间", dataIndex: "applyTime", width: 180 },
-    { title: "申请人", dataIndex: "applyUserName", width: 140 },
-    { title: "申请理由", dataIndex: "applyReason" },
-    { title: "处置类型", dataIndex: "dispose", width: 120, render: (val: unknown) => assetsDisposeDict.label(val) },
-    { title: "处置审核意见", dataIndex: "disposeCheckedComment", width: 200 },
-    {
-      title: "处置审核",
-      width: 120,
-      render: (_: any, record: API.AssetsItemApplyPage.RecordItem) => (
-        <CheckStatusTag checkedFlag={record.disposeCheckedFlag} unsetText="-" />
-      ),
-    },
-    {
-      title: "操作",
-      width: 140,
-      fixed: "right" as const,
-      render: (_: any, record: API.AssetsItemApplyPage.RecordItem) => {
-        const canDispose = record.applyCheckedFlag === true && (record.dispose === undefined || record.dispose === null);
-        return (
-          <Button.Group>
-            <Button type="link" linkType="warning" disabled={!canDispose} onClick={() => openDisposeModal(record)}>
-              处置
-            </Button>
-          </Button.Group>
-        );
-      },
     },
   ];
 
   return (
     <Modal title={title} open={true} onCancel={onCancel} footer={null} width={1200}>
-      <Tabs
-        activeKey={activeKey}
-        onChange={(k) => setActiveKey(k as any)}
-        items={[
-          {
-            key: "items",
-            label: "实体列表",
-            children: (
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                <div style={{ display: "flex", gap: 8 }}>
-                  <Input
-                    placeholder="请输入关键字"
-                    allowClear
-                    value={itemParams.keyword}
-                    onChange={(e) => setItemParams((p) => ({ ...p, keyword: e.target.value || undefined }))}
-                    onPressEnter={() => void loadItemList({ current: 1 })}
-                  />
-                  <Button type="primary" onClick={() => void loadItemList({ current: 1 })}>
-                    查询
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setItemParams((p) => ({ ...p, keyword: undefined, current: 1 }));
-                      void loadItemList({ keyword: undefined, current: 1 });
-                    }}
-                  >
-                    重置
-                  </Button>
-                </div>
-                <div style={{ height: 480 }}>
-                  <MorTable
-                    bordered
-                    pagination={false}
-                    dataSource={itemData.records}
-                    columns={itemColumns as any}
-                    rowKey={(record: any) => record.id}
-                    loading={itemLoading}
-                    rowSelection={{
-                      type: "radio",
-                      selectedRowKeys: selectedItemId ? [selectedItemId] : [],
-                      onChange: (keys: any[]) => {
-                        const nextId = String(keys?.[0] || "");
-                        setSelectedItemId(nextId);
-                      },
-                    }}
-                    onRow={(record: API.AssetsItemPage.RecordItem) => ({
-                      onDoubleClick: () => void openApplyTabByItem(record.id),
-                    })}
-                  />
-                </div>
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                  <Pagination
-                    showTotal={(total) => `共有 ${total} 条`}
-                    showSizeChanger={true}
-                    showQuickJumper={true}
-                    total={itemData.total}
-                    current={itemData.current}
-                    onChange={(page) => void loadItemList({ current: page })}
-                    onShowSizeChange={(_c, size) => void loadItemList({ current: 1, size })}
-                  />
-                </div>
-              </div>
-            ),
-          },
-          {
-            key: "applies",
-            label: "申请列表",
-            children: (
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div style={{ color: "#999" }}>
-                    {applyParams.itemId ? `当前实体ID：${applyParams.itemId}` : "请先在实体列表选择一条记录"}
-                  </div>
-                  <Button
-                    type="primary"
-                    disabled={!selectedItemId}
-                    onClick={() => void loadApplyList({ itemId: selectedItemId, current: 1 })}
-                  >
-                    刷新
-                  </Button>
-                </div>
-                <div style={{ height: 480 }}>
-                  <MorTable
-                    bordered
-                    pagination={false}
-                    dataSource={applyData.records}
-                    columns={applyColumns as any}
-                    rowKey={(record: any) => record.id}
-                    loading={applyLoading}
-                  />
-                </div>
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                  <Pagination
-                    showTotal={(total) => `共有 ${total} 条`}
-                    showSizeChanger={true}
-                    showQuickJumper={true}
-                    total={applyData.total}
-                    current={applyData.current}
-                    onChange={(page) => void loadApplyList({ current: page })}
-                    onShowSizeChange={(_c, size) => void loadApplyList({ current: 1, size })}
-                  />
-                </div>
-              </div>
-            ),
-          },
-        ]}
-      />
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div style={{ display: "flex", gap: 8 }}>
+          <Input
+            placeholder="请输入关键字"
+            allowClear
+            value={itemParams.keyword}
+            onChange={(e) => setItemParams((p) => ({ ...p, keyword: e.target.value || undefined }))}
+            onPressEnter={() => void loadItemList({ current: 1 })}
+          />
+          <Button type="primary" onClick={() => void loadItemList({ current: 1 })}>
+            查询
+          </Button>
+          <Button
+            onClick={() => {
+              setItemParams((p) => ({ ...p, keyword: undefined, current: 1 }));
+              void loadItemList({ keyword: undefined, current: 1 });
+            }}
+          >
+            重置
+          </Button>
+        </div>
+        <div style={{ height: 480 }}>
+          <MorTable
+            bordered
+            pagination={false}
+            dataSource={itemData.records}
+            columns={itemColumns as any}
+            rowKey={(record: API.AssetsItemPage.RecordItem) => record.id}
+            loading={itemLoading}
+          />
+        </div>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <Pagination
+            showTotal={(total) => `共有 ${total} 条`}
+            showSizeChanger={true}
+            showQuickJumper={true}
+            total={itemData.total}
+            current={itemData.current}
+            onChange={(page) => void loadItemList({ current: page })}
+            onShowSizeChange={(_c, size) => void loadItemList({ current: 1, size })}
+          />
+        </div>
+      </div>
     </Modal>
   );
 };
@@ -667,7 +624,7 @@ const AssetsTab: FC = () => {
         <ApplyModal
           {...state}
           title={`申请易耗品：${record.name || record.selfCode || record.id}`}
-          consumablesId={record.id}
+          consumableId={record.id}
           onCancel={() => modal.unmount()}
           onOk={async (params) => {
             modal.setState({ loading: true });
@@ -682,13 +639,14 @@ const AssetsTab: FC = () => {
     });
   };
 
-  const openApplyListModal = (record: API.ConsumablesPage.RecordItem): void => {
+  const openAssetsItemListsModal = (record: API.AssetsPage.RecordItem): void => {
+    const name = record.name || record.selfCode || record.id;
     const modal = new RunComponents({
       state: {},
       render: () => (
-        <ApplyListModal
-          title={`我的申请记录：${record.name || record.selfCode || record.id}`}
-          consumablesId={record.id}
+        <AssetsItemListsModal
+          title={`实体列表：${name}`}
+          assetId={record.id}
           onCancel={() => modal.unmount()}
         />
       ),
@@ -704,17 +662,12 @@ const AssetsTab: FC = () => {
     { title: "备注", dataIndex: "remark" },
     {
       title: "操作",
-      width: 220,
+      width: 100,
       fixed: "right" as const,
-      render: (_: any, record: API.ConsumablesPage.RecordItem) => (
-        <Button.Group>
-          <Button type="link" linkType="warning" onClick={() => openApplyModal(record)}>
-            申请
-          </Button>
-          <Button type="link" onClick={() => openApplyListModal(record)}>
-            查看申请
-          </Button>
-        </Button.Group>
+      render: (_: unknown, record: API.ConsumablesPage.RecordItem) => (
+        <Button type="link" linkType="warning" onClick={() => openApplyModal(record)}>
+          申请
+        </Button>
       ),
     },
   ];
@@ -725,29 +678,12 @@ const AssetsTab: FC = () => {
     return map;
   }, [categories]);
 
-  const openAssetsItemListsModal = (
-    record: API.AssetsPage.RecordItem,
-    tab: "items" | "applies" = "items"
-  ): void => {
-    const name = record.name || record.selfCode || record.id;
-    const modal = new RunComponents({
-      state: {},
-      render: () => (
-        <AssetsItemListsModal
-          title={tab === "applies" ? `申请列表：${name}` : `实体列表：${name}`}
-          assetId={record.id}
-          initialActiveKey={tab}
-          onCancel={() => modal.unmount()}
-        />
-      ),
-    });
-  };
-
   const assetsColumns = [
     {
       title: "资产分类",
       width: 160,
-      render: (_: any, record: API.AssetsPage.RecordItem) => categoryNameById.get(String(record.categoryId || "")) || record.categoryId || "-",
+      render: (_: unknown, record: API.AssetsPage.RecordItem) =>
+        categoryNameById.get(String(record.categoryId || "")) || record.categoryId || "-",
     },
     { title: "固定资产名称", dataIndex: "name", width: 220 },
     { title: "固定资产代码", dataIndex: "selfCode", width: 180 },
@@ -757,23 +693,19 @@ const AssetsTab: FC = () => {
     { title: "备注", dataIndex: "remark" },
     {
       title: "操作",
-      width: 220,
+      width: 100,
       fixed: "right" as const,
-      render: (_: any, record: API.AssetsPage.RecordItem) => (
-        <Button.Group>
-          <Button type="link" onClick={() => openAssetsItemListsModal(record, "items")}>
-            查看实体
-          </Button>
-          <Button type="link" onClick={() => openAssetsItemListsModal(record, "applies")}>
-            查看申请
-          </Button>
-        </Button.Group>
+      render: (_: unknown, record: API.AssetsPage.RecordItem) => (
+        <Button type="link" onClick={() => openAssetsItemListsModal(record)}>
+          查看实体
+        </Button>
       ),
     },
   ];
 
   return (
     <Tabs
+      destroyInactiveTabPane
       items={[
         {
           key: "consumables",
@@ -862,6 +794,11 @@ const AssetsTab: FC = () => {
               </div>
             </Spin>
           ),
+        },
+        {
+          key: "my-consumables-applies",
+          label: "我的易耗品申请",
+          children: <MyConsumablesApplyPanel />,
         },
         {
           key: "assets",
@@ -955,6 +892,11 @@ const AssetsTab: FC = () => {
               </div>
             </Spin>
           ),
+        },
+        {
+          key: "my-assets-applies",
+          label: "我的固定资产申请",
+          children: <MyAssetsItemApplyPanel />,
         },
       ]}
     />

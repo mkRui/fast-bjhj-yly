@@ -152,7 +152,6 @@ export declare namespace API {
 
   export namespace ConsumablesApplyPage {
     export interface Params {
-      consumablesId?: string;
       current: number;
       size: number;
     }
@@ -160,7 +159,7 @@ export declare namespace API {
     export interface RecordItem {
       id: string;
       categoryId?: string;
-      consumablesId?: string;
+      consumableId?: string;
       applyNum?: number;
       applyTime?: string;
       applyReason?: string;
@@ -185,7 +184,7 @@ export declare namespace API {
 
   export namespace ConsumablesApply {
     export interface Params {
-      consumablesId: string;
+      consumableId: string;
       applyReason: string;
       applyNum: number;
     }
@@ -480,6 +479,7 @@ export declare namespace API {
       id: string;
       exhibitionId: string;
       filename: string;
+      filepath: string;
       suffix: string;
       type: number;
     }
