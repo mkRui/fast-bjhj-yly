@@ -58,7 +58,7 @@ const ReportWorkModal: FC<ReportWorkModalProps> = (props) => {
       const items = (values.items || {}) as Record<string, number>;
       const workList = subjectList
         .map((item) => ({
-          subject: Number(item.code),
+          subject: String(item.code),
           num: Number(items[item.code] || 0),
         }))
         .filter((item) => item.num > 0);

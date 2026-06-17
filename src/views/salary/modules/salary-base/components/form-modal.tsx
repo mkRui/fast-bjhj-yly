@@ -23,7 +23,6 @@ const SalaryBaseFormModal: FC<SalaryBaseFormModalProps> = (props) => {
     id: init?.id,
     salaryBase: init?.salaryBase ?? 0,
     salaryPosition: init?.salaryPosition ?? 0,
-    salaryBonus: init?.salaryBonus ?? 0,
     salarySeniority: init?.salarySeniority ?? 0,
     salaryHousing: init?.salaryHousing ?? 0,
     salaryTransportation: init?.salaryTransportation ?? 0,
@@ -36,7 +35,6 @@ const SalaryBaseFormModal: FC<SalaryBaseFormModalProps> = (props) => {
         id: String(values.id),
         salaryBase: Number(values.salaryBase || 0),
         salaryPosition: Number(values.salaryPosition || 0),
-        salaryBonus: Number(values.salaryBonus || 0),
         salarySeniority: Number(values.salarySeniority || 0),
         salaryHousing: Number(values.salaryHousing || 0),
         salaryTransportation: Number(values.salaryTransportation || 0),
@@ -68,11 +66,6 @@ const SalaryBaseFormModal: FC<SalaryBaseFormModalProps> = (props) => {
           </Col>
           <Col span={12}>
             <Item label="岗位工资" name="salaryPosition" rules={[{ required: true, message: "请输入岗位工资" }]}>
-              <InputNumber style={{ width: "100%" }} min={0} precision={2} />
-            </Item>
-          </Col>
-          <Col span={12}>
-            <Item label="全勤奖" name="salaryBonus" rules={[{ required: true, message: "请输入全勤奖" }]}>
               <InputNumber style={{ width: "100%" }} min={0} precision={2} />
             </Item>
           </Col>

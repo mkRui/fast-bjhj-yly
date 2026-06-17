@@ -89,7 +89,6 @@ const MyConsumablesApplyPanel: FC = () => {
     const requestParams: API.ConsumablesApplyPage.Params = {
       current: merged.current,
       size: merged.size,
-      ...(merged.consumableId ? { consumableId: merged.consumableId } : {}),
     };
     setLoading(true);
     const [err, res] = await api.getConsumablesApplyPage(requestParams);
@@ -104,6 +103,7 @@ const MyConsumablesApplyPanel: FC = () => {
   }, []);
 
   const columns = [
+    { title: "易耗品", dataIndex: "consumableName", width: 160 },
     { title: "审核意见", dataIndex: "applyCheckedComment", width: 220 },
     {
       title: "审核状态",
@@ -217,7 +217,7 @@ const AssetsItemDisposeModal: FC<AssetsItemDisposeModalProps> = (props) => {
     void form.validateFields().then(async (values: any) => {
       await onOk({
         applyId: String(values.applyId || ""),
-        dispose: Number(values.dispose || 0),
+        dispose: String(values.dispose || ""),
       });
     });
   };
@@ -238,7 +238,7 @@ const AssetsItemDisposeModal: FC<AssetsItemDisposeModalProps> = (props) => {
           <Input />
         </Item>
         <Item label="处置类型" name="dispose" rules={[{ required: true, message: "请选择处置类型" }]}>
-          <SelectEnum name={DictCode.ASSETS_DISPOSE} valueType="number" allowClear />
+          <SelectEnum name={DictCode.ASSETS_DISPOSE} allowClear />
         </Item>
       </Form>
     </Modal>
@@ -263,7 +263,6 @@ const MyAssetsItemApplyPanel: FC = () => {
     const requestParams: API.AssetsItemApplyPage.Params = {
       current: merged.current,
       size: merged.size,
-      ...(merged.itemId ? { itemId: merged.itemId } : {}),
     };
     setLoading(true);
     const [err, res] = await api.getAssetsItemApplyPage(requestParams);
@@ -301,6 +300,9 @@ const MyAssetsItemApplyPanel: FC = () => {
   };
 
   const columns = [
+    { title: "资产分类", dataIndex: "categoryName", width: 140 },
+    { title: "固定资产", dataIndex: "assetName", width: 160 },
+    { title: "实体代码", dataIndex: "itemFullCode", width: 180 },
     { title: "申请审核意见", dataIndex: "applyCheckedComment", width: 200 },
     {
       title: "申请审核",
@@ -331,7 +333,7 @@ const MyAssetsItemApplyPanel: FC = () => {
       fixed: "right" as const,
       render: (_: unknown, record: API.AssetsItemApplyPage.RecordItem) => {
         const canDispose =
-          record.applyCheckedFlag === true && (record.dispose === undefined || record.dispose === null);
+          record.applyCheckedFlag === true && !record.dispose;
         return (
           <Button
             type="link"

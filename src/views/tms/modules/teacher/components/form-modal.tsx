@@ -117,7 +117,7 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
         id: String(info.teacher.id),
         teacher: {
           name: toText(vTeacher.name),
-          gender: toNumber(vTeacher.gender, 0),
+          gender: toText(vTeacher.gender),
           ethnicity: toText(vTeacher.ethnicity),
           idPhoto: toText(vTeacher.idPhoto),
         },
@@ -126,22 +126,22 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
           idNo: toText(vInfo.idNo),
           registeredAddress: toText(vInfo.registeredAddress),
           currentResidentialAddress: toText(vInfo.currentResidentialAddress),
-          politicalStatus: toNumber(vInfo.politicalStatus, 0),
+          politicalStatus: toText(vInfo.politicalStatus),
           phone: toText(vInfo.phone),
           emergencyContact: toText(vInfo.emergencyContact),
           emergencyContactPhone: toText(vInfo.emergencyContactPhone),
           firstDegreeGraduationInstitution: toText(vInfo.firstDegreeGraduationInstitution),
           firstDegreeMajor: toText(vInfo.firstDegreeMajor),
-          firstDegreeDuration: toNumber(vInfo.firstDegreeDuration, 0),
-          firstDegree: toNumber(vInfo.firstDegree, 0),
+          firstDegreeDuration: toText(vInfo.firstDegreeDuration),
+          firstDegree: toText(vInfo.firstDegree),
           firstDegreeGraduationDate: toText(vInfo.firstDegreeGraduationDate),
           highestDegreeGraduationInstitution: toText(vInfo.highestDegreeGraduationInstitution),
           highestDegreeMajor: toText(vInfo.highestDegreeMajor),
-          highestDegreeDuration: toNumber(vInfo.highestDegreeDuration, 0),
-          highestDegree: toNumber(vInfo.highestDegree, 0),
+          highestDegreeDuration: toText(vInfo.highestDegreeDuration),
+          highestDegree: toText(vInfo.highestDegree),
           highestDegreeGraduationDate: toText(vInfo.highestDegreeGraduationDate),
           teachingLicense: Boolean(vInfo.teachingLicense),
-          teachingLicenseType: toNumber(vInfo.teachingLicenseType, 0),
+          teachingLicenseType: toText(vInfo.teachingLicenseType),
           teachingLicenseSubject: toText(vInfo.teachingLicenseSubject),
           teachingLicenseCertificateNumber: toText(vInfo.teachingLicenseCertificateNumber),
           teachingLicenseIssuingAuthority: toText(vInfo.teachingLicenseIssuingAuthority),
@@ -153,7 +153,7 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
         },
         familyMember: Array.isArray(values?.familyMember)
           ? values.familyMember.map((item: any) => ({
-              relation: toNumber(item?.relation, 0),
+              relation: toText(item?.relation),
               name: toText(item?.name),
               employer: toText(item?.employer),
             }))
@@ -209,7 +209,7 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
               <Input placeholder="请输入姓名" />
             </Item>
             <Item label="性别" name={["teacher", "gender"]}>
-              <SelectEnum name={DictCode.GENDER} valueType="number" allowClear />
+              <SelectEnum name={DictCode.GENDER} allowClear />
             </Item>
             <Item label="民族" name={["teacher", "ethnicity"]}>
               <Input placeholder="请输入民族" />
@@ -237,7 +237,7 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
               <Input placeholder="请输入现居住地址" />
             </Item>
             <Item label="政治面貌" name={["teacherInfo", "politicalStatus"]}>
-              <SelectEnum name={DictCode.POLITICAL_STATUS} valueType="number" allowClear />
+              <SelectEnum name={DictCode.POLITICAL_STATUS} allowClear />
             </Item>
             <Item label="紧急联系人" name={["teacherInfo", "emergencyContact"]}>
               <Input placeholder="请输入紧急联系人" />
@@ -256,10 +256,10 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
               <Input placeholder="请输入第一学历专业" />
             </Item>
             <Item label="第一学历学制" name={["teacherInfo", "firstDegreeDuration"]}>
-              <SelectEnum name={DictCode.DEGREE_DURATION} valueType="number" allowClear />
+              <SelectEnum name={DictCode.DEGREE_DURATION} allowClear />
             </Item>
             <Item label="第一学历学位" name={["teacherInfo", "firstDegree"]}>
-              <SelectEnum name={DictCode.DEGREE} valueType="number" allowClear />
+              <SelectEnum name={DictCode.DEGREE} allowClear />
             </Item>
             <Item label="第一学历毕业日期" name={["teacherInfo", "firstDegreeGraduationDate"]}>
               <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} placeholder="请选择第一学历毕业日期" />
@@ -275,10 +275,10 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
               <Input placeholder="请输入最高学历专业" />
             </Item>
             <Item label="最高学历学制" name={["teacherInfo", "highestDegreeDuration"]}>
-              <SelectEnum name={DictCode.DEGREE_DURATION} valueType="number" allowClear />
+              <SelectEnum name={DictCode.DEGREE_DURATION} allowClear />
             </Item>
             <Item label="最高学历学位" name={["teacherInfo", "highestDegree"]}>
-              <SelectEnum name={DictCode.DEGREE} valueType="number" allowClear />
+              <SelectEnum name={DictCode.DEGREE} allowClear />
             </Item>
             <Item label="最高学历毕业日期" name={["teacherInfo", "highestDegreeGraduationDate"]}>
               <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} placeholder="请选择最高学历毕业日期" />
@@ -293,7 +293,7 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
             {hasTeachingLicense ? (
               <>
                 <Item label="教师资格证类型" name={["teacherInfo", "teachingLicenseType"]}>
-                  <SelectEnum name={DictCode.LICENSE_TYPE} valueType="number" allowClear />
+                  <SelectEnum name={DictCode.LICENSE_TYPE} allowClear />
                 </Item>
                 <Item label="教师资格证学科" name={["teacherInfo", "teachingLicenseSubject"]}>
                   <Input placeholder="请输入教师资格证学科" />
@@ -334,7 +334,7 @@ const TeacherFormModal: FC<TeacherFormModalProps> = (props) => {
                 {fields.map((field) => (
                   <div key={field.key} className="grid grid-cols-3 gap-4 items-end">
                     <Item label="关系" name={[field.name, "relation"]} rules={[{ required: true, message: "请选择关系" }]}>
-                      <SelectEnum name={DictCode.FAMILY_RELATION} valueType="number" allowClear />
+                      <SelectEnum name={DictCode.FAMILY_RELATION} allowClear />
                     </Item>
                     <Item label="姓名" name={[field.name, "name"]} rules={[{ required: true, message: "请输入姓名" }]}>
                       <Input placeholder="请输入姓名" />

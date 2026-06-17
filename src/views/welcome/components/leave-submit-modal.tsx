@@ -81,7 +81,7 @@ const LeaveSubmitModal: FC<LeaveSubmitModalProps> = (props) => {
         leaveDate: String(values.leaveDate || ""),
         leaveStartTime: isHalfDayLeave ? `${values.leaveStartTime || ""}:00` : "",
         leaveEndTime: isHalfDayLeave ? `${values.leaveEndTime || ""}:00` : "",
-        leaveType: Number(values.leaveType || 0),
+        leaveType: String(values.leaveType || ""),
         leaveReason: String(values.leaveReason || ""),
       });
     });

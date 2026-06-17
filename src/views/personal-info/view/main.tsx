@@ -55,7 +55,7 @@ const PersonalInfoMain: FC = () => {
       currentResidentialAddress: toText(
         vInfo.currentResidentialAddress ?? originTeacherInfo.currentResidentialAddress
       ),
-      politicalStatus: toNumber(vInfo.politicalStatus ?? originTeacherInfo.politicalStatus, 0),
+      politicalStatus: toText(vInfo.politicalStatus ?? originTeacherInfo.politicalStatus),
       phone: toText(vInfo.phone ?? originTeacherInfo.phone),
       emergencyContact: toText(vInfo.emergencyContact ?? originTeacherInfo.emergencyContact),
       emergencyContactPhone: toText(
@@ -65,8 +65,8 @@ const PersonalInfoMain: FC = () => {
         vInfo.firstDegreeGraduationInstitution ?? originTeacherInfo.firstDegreeGraduationInstitution
       ),
       firstDegreeMajor: toText(vInfo.firstDegreeMajor ?? originTeacherInfo.firstDegreeMajor),
-      firstDegreeDuration: toNumber(vInfo.firstDegreeDuration ?? originTeacherInfo.firstDegreeDuration, 0),
-      firstDegree: toNumber(vInfo.firstDegree ?? originTeacherInfo.firstDegree, 0),
+      firstDegreeDuration: toText(vInfo.firstDegreeDuration ?? originTeacherInfo.firstDegreeDuration),
+      firstDegree: toText(vInfo.firstDegree ?? originTeacherInfo.firstDegree),
       firstDegreeGraduationDate: toText(
         vInfo.firstDegreeGraduationDate ?? originTeacherInfo.firstDegreeGraduationDate
       ),
@@ -75,18 +75,16 @@ const PersonalInfoMain: FC = () => {
         originTeacherInfo.highestDegreeGraduationInstitution
       ),
       highestDegreeMajor: toText(vInfo.highestDegreeMajor ?? originTeacherInfo.highestDegreeMajor),
-      highestDegreeDuration: toNumber(
-        vInfo.highestDegreeDuration ?? originTeacherInfo.highestDegreeDuration,
-        0
+      highestDegreeDuration: toText(
+        vInfo.highestDegreeDuration ?? originTeacherInfo.highestDegreeDuration
       ),
-      highestDegree: toNumber(vInfo.highestDegree ?? originTeacherInfo.highestDegree, 0),
+      highestDegree: toText(vInfo.highestDegree ?? originTeacherInfo.highestDegree),
       highestDegreeGraduationDate: toText(
         vInfo.highestDegreeGraduationDate ?? originTeacherInfo.highestDegreeGraduationDate
       ),
       teachingLicense: Boolean(vInfo.teachingLicense ?? originTeacherInfo.teachingLicense ?? false),
-      teachingLicenseType: toNumber(
-        vInfo.teachingLicenseType ?? originTeacherInfo.teachingLicenseType,
-        0
+      teachingLicenseType: toText(
+        vInfo.teachingLicenseType ?? originTeacherInfo.teachingLicenseType
       ),
       teachingLicenseSubject: toText(
         vInfo.teachingLicenseSubject ?? originTeacherInfo.teachingLicenseSubject
@@ -108,14 +106,14 @@ const PersonalInfoMain: FC = () => {
     return {
       teacher: {
         name: toText(vTeacher.name ?? originTeacher.name),
-        gender: toNumber(vTeacher.gender ?? originTeacher.gender, 0),
+        gender: toText(vTeacher.gender ?? originTeacher.gender),
         ethnicity: toText(vTeacher.ethnicity ?? originTeacher.ethnicity),
         idPhoto: toText(vTeacher.idPhoto ?? originTeacher.idPhoto),
       },
       teacherInfo: editTeacherInfo,
       familyMember: Array.isArray(values?.familyMember)
         ? values.familyMember.map((item: any) => ({
-          relation: toNumber(item?.relation, 0),
+          relation: toText(item?.relation),
           name: toText(item?.name),
           employer: toText(item?.employer),
         }))
@@ -253,7 +251,7 @@ const PersonalInfoMain: FC = () => {
                     <Input placeholder="请输入姓名" />
                   </Item>
                   <Item label="性别" name={["teacher", "gender"]}>
-                    <SelectEnum name={DictCode.GENDER} valueType="number" allowClear />
+                    <SelectEnum name={DictCode.GENDER} allowClear />
                   </Item>
                   <Item label="民族" name={["teacher", "ethnicity"]}>
                     <Input placeholder="请输入民族" />
@@ -284,7 +282,7 @@ const PersonalInfoMain: FC = () => {
                     <Input placeholder="请输入现居住地址" />
                   </Item>
                   <Item label="政治面貌" name={["teacherInfo", "politicalStatus"]}>
-                    <SelectEnum name={DictCode.POLITICAL_STATUS} valueType="number" allowClear />
+                    <SelectEnum name={DictCode.POLITICAL_STATUS} allowClear />
                   </Item>
                   <Item label="紧急联系人" name={["teacherInfo", "emergencyContact"]}>
                     <Input placeholder="请输入紧急联系人" />
@@ -309,10 +307,10 @@ const PersonalInfoMain: FC = () => {
                     <Input placeholder="请输入第一学历专业" />
                   </Item>
                   <Item label="第一学历学制" name={["teacherInfo", "firstDegreeDuration"]}>
-                    <SelectEnum name={DictCode.DEGREE_DURATION} valueType="number" allowClear />
+                    <SelectEnum name={DictCode.DEGREE_DURATION} allowClear />
                   </Item>
                   <Item label="第一学历学位" name={["teacherInfo", "firstDegree"]}>
-                    <SelectEnum name={DictCode.DEGREE} valueType="number" allowClear />
+                    <SelectEnum name={DictCode.DEGREE} allowClear />
                   </Item>
                   <Item
                     label="第一学历毕业日期"
@@ -334,10 +332,10 @@ const PersonalInfoMain: FC = () => {
                     <Input placeholder="请输入最高学历专业" />
                   </Item>
                   <Item label="最高学历学制" name={["teacherInfo", "highestDegreeDuration"]}>
-                    <SelectEnum name={DictCode.DEGREE_DURATION} valueType="number" allowClear />
+                    <SelectEnum name={DictCode.DEGREE_DURATION} allowClear />
                   </Item>
                   <Item label="最高学历学位" name={["teacherInfo", "highestDegree"]}>
-                    <SelectEnum name={DictCode.DEGREE} valueType="number" allowClear />
+                    <SelectEnum name={DictCode.DEGREE} allowClear />
                   </Item>
                   <Item
                     label="最高学历毕业日期"
@@ -362,7 +360,7 @@ const PersonalInfoMain: FC = () => {
                         label="教师资格证类型"
                         name={["teacherInfo", "teachingLicenseType"]}
                       >
-                        <SelectEnum name={DictCode.LICENSE_TYPE} valueType="number" allowClear />
+                        <SelectEnum name={DictCode.LICENSE_TYPE} allowClear />
                       </Item>
                       <Item
                         label="教师资格证学科"
@@ -420,7 +418,7 @@ const PersonalInfoMain: FC = () => {
                             name={[field.name, "relation"]}
                             rules={[{ required: true, message: "请选择关系" }]}
                           >
-                            <SelectEnum name={DictCode.FAMILY_RELATION} valueType="number" allowClear />
+                            <SelectEnum name={DictCode.FAMILY_RELATION} allowClear />
                           </Item>
                           <Item
                             label="姓名"
