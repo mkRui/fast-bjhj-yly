@@ -20,7 +20,7 @@ const ConsumablesApplyListModal: FC<ConsumablesApplyListModalProps> = (props) =>
   const { title, consumableId, onCancel } = props;
   const api = useMemo(() => new Api(axios), []);
 
-  const [params, setParams] = useState<API.ApplyPage.Params>({ consumableId, current: 1, size: 10 });
+  const [params, setParams] = useState<API.ApplyPage.Params>({ current: 1, size: 10 });
   const [data, setData] = useState<API.ApplyPage.Data>({ size: 10, pages: 0, total: 0, records: [], current: 1 });
   const [loading, setLoading] = useState(false);
 
@@ -35,16 +35,16 @@ const ConsumablesApplyListModal: FC<ConsumablesApplyListModalProps> = (props) =>
   };
 
   useEffect(() => {
-    void loadList({ consumableId, current: 1 });
+    void loadList({ current: 1 });
   }, [consumableId]);
 
   const columns = [
-    { title: "审核意见", dataIndex: "checkedComment", width: 200 },
+    { title: "审核意见", dataIndex: "applyCheckedComment", width: 200 },
     {
       title: "审核状态",
       width: 120,
       render: (_: any, record: API.ApplyPage.RecordItem) => (
-        <CheckStatusTag checkedFlag={record.checkedFlag} />
+        <CheckStatusTag checkedFlag={record.applyCheckedFlag} />
       ),
     },
     { title: "申请时间", dataIndex: "applyTime", width: 180 },

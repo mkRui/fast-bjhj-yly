@@ -48,9 +48,9 @@ const ConsumablesCheckMain: FC = () => {
   };
 
   const columns = [
-    { title: "易耗品", dataIndex: "consumablesName", width: 180 },
+    { title: "易耗品", dataIndex: "consumableName", width: 180 },
     { title: "申请数量", dataIndex: "applyNum", width: 100 },
-    { title: "审核意见", dataIndex: "checkedComment", width: 200 },
+    { title: "审核意见", dataIndex: "applyCheckedComment", width: 200 },
     {
       title: "审核状态",
       width: 110,
@@ -105,9 +105,9 @@ const ConsumablesCheckMain: FC = () => {
                     allowClear
                     placeholder="全部状态"
                     style={{ width: "100%" }}
-                    value={store.params.checkedFlag}
+                    value={store.params.applyCheckedFlag}
                     onChange={(v) => {
-                      store.$setParams({ checkedFlag: v || undefined, current: 1 });
+                      store.$setParams({ applyCheckedFlag: v || undefined, current: 1 });
                       void store.getList();
                     }}
                   >
@@ -119,7 +119,7 @@ const ConsumablesCheckMain: FC = () => {
                   action="reset"
                   onClick={() => {
                     store.$setParams({
-                      checkedFlag: undefined,
+                      applyCheckedFlag: undefined,
                       current: 1,
                       size: 10,
                     });

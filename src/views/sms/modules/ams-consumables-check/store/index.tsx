@@ -13,7 +13,7 @@ export class ConsumablesCheckStore extends Store<Api> {
   public params: API.ApplyPage.Params = {
     current: 1,
     size: 10,
-    checkedFlag: undefined,
+    applyCheckedFlag: undefined,
   };
 
   public data: API.ApplyPage.Data = {

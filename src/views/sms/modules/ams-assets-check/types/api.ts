@@ -18,7 +18,7 @@ export declare namespace API {
       assetId?: string;
       assetName?: string;
       itemId?: string;
-      fullCode?: string;
+      itemFullCode?: string;
       applyTime?: string;
       applyReason?: string;
       applyUserId?: string;
@@ -27,8 +27,7 @@ export declare namespace API {
       applyCheckedUserId?: string;
       applyCheckedUserName?: string;
       applyCheckedComment?: string;
-      disposeType?: number;
-      dispose?: number;
+      dispose?: string;
       disposeCheckedFlag?: boolean;
       disposeCheckedUserId?: string;
       disposeCheckedUserName?: string;
@@ -50,7 +49,7 @@ export declare namespace API {
     export interface Params {
       applyId: string;
       checkedFlag: boolean;
-      comment?: string;
+      comment: string;
     }
 
     export type Data = null;
@@ -61,7 +60,7 @@ export declare namespace API {
     export interface Params {
       applyId: string;
       checkedFlag: boolean;
-      comment?: string;
+      comment: string;
     }
 
     export type Data = null;

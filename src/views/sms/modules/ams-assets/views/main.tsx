@@ -110,11 +110,9 @@ const AmsAssetsMain: FC = () => {
   const columns = [
     { title: "固定资产名称", dataIndex: "name", width: 220 },
     { title: "固定资产代码", dataIndex: "selfCode", width: 180 },
-    {
-      title: "库存数量",
-      width: 120,
-      render: (_: any, record: any) => record.stockNum ?? record.num ?? record.stock ?? "-",
-    },
+    { title: "完整代码", dataIndex: "fullCode", width: 180 },
+    { title: "库存总数", dataIndex: "totalNum", width: 100 },
+    { title: "可借数量", dataIndex: "availableNum", width: 100 },
     { title: "备注", dataIndex: "remark" },
     {
       title: "操作",

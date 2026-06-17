@@ -20,9 +20,6 @@ import DisposeCheckModal from "../components/dispose-check-modal";
 
 const Option = Select.Option;
 
-const getDisposeType = (record: API.ApplyPage.RecordItem): number | undefined =>
-  record.disposeType ?? record.dispose;
-
 const AssetsCheckMain: FC = () => {
   const store = useContext(StoreContext);
   const assetsDisposeDict = useDict(DictCode.ASSETS_DISPOSE);
@@ -79,7 +76,7 @@ const AssetsCheckMain: FC = () => {
   const columns = [
     { title: "资产分类", dataIndex: "categoryName", width: 140 },
     { title: "固定资产", dataIndex: "assetName", width: 180 },
-    { title: "完整代码", dataIndex: "fullCode", width: 180 },
+    { title: "完整代码", dataIndex: "itemFullCode", width: 180 },
     { title: "申请审核意见", dataIndex: "applyCheckedComment", width: 180 },
     {
       title: "申请审核",
@@ -93,10 +90,10 @@ const AssetsCheckMain: FC = () => {
     { title: "申请原因", dataIndex: "applyReason", width: 180 },
     {
       title: "处置类型",
-      dataIndex: "disposeType",
+      dataIndex: "dispose",
       width: 110,
       render: (_: unknown, record: API.ApplyPage.RecordItem) =>
-        assetsDisposeDict.label(getDisposeType(record)),
+        assetsDisposeDict.label(record.dispose),
     },
     { title: "处置审核意见", dataIndex: "disposeCheckedComment", width: 180 },
     {

@@ -68,7 +68,7 @@ const AssetsCheckModal: FC<AssetsCheckModalProps> = (props) => {
             ]}
           />
         </Item>
-        <Item label="审核意见" name="comment">
+        <Item label="审核意见" name="comment" rules={[{ required: true, message: "请输入审核意见" }]}>
           <Input.TextArea rows={3} placeholder="请输入审核意见" />
         </Item>
       </Form>

@@ -4,25 +4,26 @@ import { BaseRequest } from "mor-request";
 export declare namespace API {
   export namespace ApplyPage {
     export interface Params {
-      checkedFlag?: string;
+      applyCheckedFlag?: string;
       current: number;
       size: number;
     }
 
     export interface RecordItem {
       id: string;
+      categoryId?: string;
+      categoryName?: string;
       consumableId?: string;
-      consumablesName?: string;
+      consumableName?: string;
       applyNum?: number;
       applyTime?: string;
       applyReason?: string;
       applyUserId?: string;
       applyUserName?: string;
-      checkedFlag?: boolean;
-      checkedUserId?: string;
-      checkedUserName?: string;
-      checkedComment?: string;
       applyCheckedFlag?: boolean;
+      applyCheckedUserId?: string;
+      applyCheckedUserName?: string;
+      applyCheckedComment?: string;
     }
 
     export interface Data {
@@ -40,7 +41,7 @@ export declare namespace API {
     export interface Params {
       applyId: string;
       checkedFlag: boolean;
-      comment?: string;
+      comment: string;
     }
 
     export type Data = null;

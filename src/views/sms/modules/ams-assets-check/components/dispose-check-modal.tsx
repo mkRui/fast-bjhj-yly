@@ -22,7 +22,7 @@ const DisposeCheckModal: FC<DisposeCheckModalProps> = (props) => {
   const { title, loading, record, onCancel, onOk } = props;
   const [form] = Form.useForm();
   const assetsDisposeDict = useDict(DictCode.ASSETS_DISPOSE);
-  const disposeType = record.disposeType ?? record.dispose;
+  const disposeType = record.dispose;
 
   useEffect(() => {
     form.setFieldsValue({
@@ -56,7 +56,7 @@ const DisposeCheckModal: FC<DisposeCheckModalProps> = (props) => {
       <Descriptions column={2} size="small" bordered style={{ marginBottom: 16 }}>
         <Descriptions.Item label="资产分类">{record.categoryName || "-"}</Descriptions.Item>
         <Descriptions.Item label="固定资产">{record.assetName || "-"}</Descriptions.Item>
-        <Descriptions.Item label="完整代码">{record.fullCode || "-"}</Descriptions.Item>
+        <Descriptions.Item label="完整代码">{record.itemFullCode || "-"}</Descriptions.Item>
         <Descriptions.Item label="处置类型">{assetsDisposeDict.label(disposeType) || "-"}</Descriptions.Item>
         <Descriptions.Item label="申请人">{record.applyUserName || "-"}</Descriptions.Item>
         <Descriptions.Item label="申请时间">{record.applyTime || "-"}</Descriptions.Item>
@@ -80,7 +80,7 @@ const DisposeCheckModal: FC<DisposeCheckModalProps> = (props) => {
             ]}
           />
         </Item>
-        <Item label="审核意见" name="comment">
+        <Item label="审核意见" name="comment" rules={[{ required: true, message: "请输入审核意见" }]}>
           <Input.TextArea rows={3} placeholder="请输入处置审核意见" />
         </Item>
       </Form>

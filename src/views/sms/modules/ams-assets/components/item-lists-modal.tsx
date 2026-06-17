@@ -153,7 +153,7 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
     { title: "申请原因", dataIndex: "applyReason" },
     {
       title: "处置类型",
-      dataIndex: "disposeType",
+      dataIndex: "dispose",
       width: 120,
       render: (val: unknown) => assetsDisposeDict.label(val),
     },
