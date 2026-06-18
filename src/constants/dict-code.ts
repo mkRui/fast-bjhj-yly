@@ -11,6 +11,8 @@ export const DictCode = {
   WORK_SUBJECT: "TEACHER_WORK_SUBJECT",
   ASSETS_STATUS: "ASSETS_STATUS",
   ASSETS_DISPOSE: "ASSETS_DISPOSE",
+  MESSAGE_TARGET: "MESSAGE_TARGET",
+  MESSAGE_SSE: "MESSAGE_SSE",
 } as const;
 
 export type DictCodeKey = (typeof DictCode)[keyof typeof DictCode];
