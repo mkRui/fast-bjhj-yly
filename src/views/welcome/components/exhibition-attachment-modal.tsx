@@ -4,7 +4,7 @@ import type { ModalProps } from "antd/lib/modal";
 
 import AttachmentFilenameCell from "@/components/attachment-filename-cell";
 import Button from "@/components/button";
-import MorTable from "@/components/table";
+import MorTable, { TABLE_MODAL_BODY_STYLE, TABLE_SPIN_WRAPPER } from "@/components/table";
 import Upload from "@/components/upload";
 import { toastActionResult } from "@/utils/common/mutation-success";
 import { API } from "../types/api";
@@ -97,8 +97,8 @@ const ExhibitionAttachmentModal: FC<ExhibitionAttachmentModalProps> = (props) =>
       onCancel={onCancel}
       footer={null}
     >
-      <Spin spinning={loading || outerLoading || uploading}>
-        <div className="mb-4 flex items-center justify-between">
+      <div style={{ ...TABLE_MODAL_BODY_STYLE, height: 480 }}>
+        <div className="mb-4 flex shrink-0 items-center justify-between">
           <div className="text-sm text-gray-600">上传附件后将自动关联到当前展会</div>
           <Upload
             inline
@@ -112,15 +112,19 @@ const ExhibitionAttachmentModal: FC<ExhibitionAttachmentModalProps> = (props) =>
             </Button>
           </Upload>
         </div>
-        <MorTable
-          bordered
-          pagination={false}
-          dataSource={list}
-          columns={columns as any}
-          rowKey={(record) => record.id}
-          auto
-        />
-      </Spin>
+        <div style={{ flex: 1, minHeight: 0 }}>
+          <Spin spinning={loading || outerLoading || uploading} wrapperClassName={TABLE_SPIN_WRAPPER}>
+            <MorTable
+              bordered
+              pagination={false}
+              dataSource={list}
+              columns={columns as any}
+              rowKey={(record) => record.id}
+              auto
+            />
+          </Spin>
+        </div>
+      </div>
     </Modal>
   );
 };

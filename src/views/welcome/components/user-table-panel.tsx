@@ -2,6 +2,7 @@ import { FC, ReactNode } from "react";
 import { Pagination, PaginationProps, Spin } from "antd";
 
 import { Content } from "@/components/container";
+import { TABLE_MAIN_STYLE, TABLE_SPIN_WRAPPER } from "@/components/table";
 
 const FOOTER_STYLE: React.CSSProperties = {
   height: "49px",
@@ -39,11 +40,9 @@ const UserTablePanel: FC<UserTablePanelProps> = ({
     {extra ? <div className="mx-[10px] mb-2 shrink-0">{extra}</div> : null}
     <Content.Main
       style={{
+        ...TABLE_MAIN_STYLE,
         flex: 1,
-        minHeight: 0,
         overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
         marginBottom: 0,
       }}
     >
@@ -51,11 +50,8 @@ const UserTablePanel: FC<UserTablePanelProps> = ({
         <div className="mb-4 shrink-0">{toolbar}</div>
       ) : null}
       {title ? <div className="mb-4 shrink-0 text-base font-semibold">{title}</div> : null}
-      <Spin
-        spinning={loading}
-        wrapperClassName="min-h-0 flex-1 overflow-hidden [&_.ant-spin-container]:flex [&_.ant-spin-container]:h-full [&_.ant-spin-container]:min-h-0 [&_.ant-spin-container]:flex-col"
-      >
-        <div className="flex min-h-0 flex-1 flex-col overflow-hidden [&_.mor-table]:min-h-0 [&_.mor-table]:flex-1">
+      <Spin spinning={loading} wrapperClassName={TABLE_SPIN_WRAPPER}>
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden [&_.mor-table-host]:min-h-0 [&_.mor-table-host]:flex-1">
           {children}
         </div>
       </Spin>

@@ -21,42 +21,6 @@ import UserTablePanel, { UserPageTabs } from "./user-table-panel";
 const Item = Form.Item;
 const Option = Select.Option;
 
-const MOCK_CONSUMABLES: API.ConsumablesPage.RecordItem[] = Array.from({ length: 100 }, (_, index) => {
-  const no = index + 1;
-  return {
-    id: String(no),
-    categoryId: "1",
-    name: `易耗品-${no}`,
-    selfCode: `CODE${1000 + no}`,
-    fullCode: `FULL${1000 + no}`,
-    totalNum: (no % 20) + 1,
-    availableNum: no % 10,
-    remark: no % 3 === 0 ? `备注${no}` : "",
-  };
-});
-
-const mockConsumablesPage = (params: API.ConsumablesPage.Params): API.ConsumablesPage.Data => {
-  const keyword = params.keyword?.trim().toLowerCase();
-  const records = keyword
-    ? MOCK_CONSUMABLES.filter(
-        (item) =>
-          item.name?.toLowerCase().includes(keyword) ||
-          item.selfCode?.toLowerCase().includes(keyword) ||
-          item.fullCode?.toLowerCase().includes(keyword)
-      )
-    : MOCK_CONSUMABLES;
-  const { current, size } = params;
-  const start = (current - 1) * size;
-
-  return {
-    current,
-    size,
-    total: records.length,
-    pages: Math.max(1, Math.ceil(records.length / size)),
-    records: records.slice(start, start + size),
-  };
-};
-
 interface ApplyModalProps {
   title: string;
   loading?: boolean;
@@ -620,13 +584,6 @@ const AssetsTab: FC = () => {
     const merged: API.ConsumablesPage.Params = { ...pageParams, ...(next || {}) };
     if (!merged.categoryId) return;
     setLoading(true);
-    if (import.meta.env.DEV) {
-      await new Promise((resolve) => setTimeout(resolve, 200));
-      setLoading(false);
-      setPageParams(merged);
-      setPageData(mockConsumablesPage(merged));
-      return;
-    }
     const [err, data] = await api.getConsumablesPage(merged);
     setLoading(false);
     if (err) return;
