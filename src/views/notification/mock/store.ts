@@ -1,81 +1,55 @@
-import { NoticeStateEnum } from "@/types/enum-types";
-import { NoticeTypeEnum } from "@/types/enum-types";
-
 import type { API } from "../types/api";
 import { INITIAL_MOCK_NOTICES } from "./data";
 
-function cloneNotices(): API.Page.RecordItem[] {
+function cloneNotices(): API.List.RecordItem[] {
   return INITIAL_MOCK_NOTICES.map((item) => ({ ...item }));
 }
 
 class MockNoticeStore {
-  private notices: API.Page.RecordItem[] = cloneNotices();
+  private unreadNotices: API.List.RecordItem[] = cloneNotices();
+  private readNotices: API.List.RecordItem[] = [];
   private seq = INITIAL_MOCK_NOTICES.length;
 
   public getUnreadCount(): number {
-    return this.notices.filter((item) => item.state === NoticeStateEnum.UNREAD).length;
+    return this.unreadNotices.length;
   }
 
-  public getPage(params: API.Page.Params): API.Page.Data {
-    const current = Math.max(0, Number(params.current ?? "0"));
-    const size = Math.max(1, Number(params.size ?? "10"));
-    const state = params.state ? Number(params.state) : NoticeStateEnum.ALL;
-
-    let filtered = [...this.notices];
-    if (state === NoticeStateEnum.READ) {
-      filtered = filtered.filter((item) => item.state === NoticeStateEnum.READ);
-    } else if (state === NoticeStateEnum.UNREAD) {
-      filtered = filtered.filter((item) => item.state === NoticeStateEnum.UNREAD);
-    }
-
-    filtered.sort(
-      (a, b) => new Date(b.createTime).getTime() - new Date(a.createTime).getTime()
+  public getList(params: API.List.Params): API.List.RecordItem[] {
+    const source = params.readFlag ? this.readNotices : this.unreadNotices;
+    return [...source].sort(
+      (a, b) =>
+        new Date(b.alertTime || 0).getTime() - new Date(a.alertTime || 0).getTime()
     );
-
-    const total = filtered.length;
-    const pages = Math.max(1, Math.ceil(total / size));
-    const start = current * size;
-
-    return {
-      size,
-      pages,
-      total,
-      current,
-      records: filtered.slice(start, start + size),
-    };
   }
 
   public markRead(id: string): void {
-    const target = this.notices.find((item) => item.id === id);
-    if (target) {
-      target.state = NoticeStateEnum.READ;
-    }
+    const index = this.unreadNotices.findIndex((item) => item.id === id);
+    if (index < 0) return;
+    const [target] = this.unreadNotices.splice(index, 1);
+    this.readNotices.unshift(target);
   }
 
   public markAllRead(): void {
-    this.notices.forEach((item) => {
-      item.state = NoticeStateEnum.READ;
-    });
+    this.readNotices.unshift(...this.unreadNotices);
+    this.unreadNotices = [];
   }
 
   public addNotice(payload: {
     title: string;
     content: string;
-    type?: string;
-  }): API.Page.RecordItem {
+    target?: string;
+    targetId?: string;
+  }): API.List.RecordItem {
     this.seq += 1;
-    const notice: API.Page.RecordItem = {
-      id: `notice-mock-${this.seq}`,
+    const notice: API.List.RecordItem = {
+      id: String(this.seq),
       title: payload.title,
       content: payload.content,
-      type:
-        payload.type === NoticeTypeEnum.NOTICE
-          ? NoticeTypeEnum.NOTICE
-          : NoticeTypeEnum.MESSAGE,
-      state: NoticeStateEnum.UNREAD,
-      createTime: new Date().toISOString().slice(0, 19).replace("T", " "),
+      target: payload.target,
+      targetId: payload.targetId,
+      alertTime: new Date().toISOString().slice(0, 19).replace("T", " "),
     };
-    this.notices.unshift(notice);
+    this.unreadNotices.unshift(notice);
     return notice;
   }
 }

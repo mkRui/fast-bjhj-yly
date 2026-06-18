@@ -1,21 +1,14 @@
 import type { NotificationInstance } from "antd/es/notification/interface";
 
-import type { SseNoticeLevel, SseNoticePayload } from "../types/sse";
+export type NoticeLevel = "success" | "info" | "warning" | "error";
 
-export function parseNoticePayload(data: string): SseNoticePayload {
-  try {
-    const parsed = JSON.parse(data) as unknown;
-    if (typeof parsed === "object" && parsed !== null) {
-      return parsed as SseNoticePayload;
-    }
-  } catch {
-    // plain text payload
-  }
-
-  return { content: data };
+export interface NoticePayload {
+  title?: string;
+  content?: string;
+  type?: string;
 }
 
-export function resolveNoticeLevel(type?: string): SseNoticeLevel {
+export function resolveNoticeLevel(type?: string): NoticeLevel {
   switch (type) {
     case "success":
       return "success";
@@ -30,11 +23,11 @@ export function resolveNoticeLevel(type?: string): SseNoticeLevel {
 
 export function showGlobalNotice(
   notification: NotificationInstance,
-  payload: SseNoticePayload,
+  payload: NoticePayload,
   onClick?: () => void
 ): void {
   const level = resolveNoticeLevel(payload.type);
-  const title = payload.title || "新通知";
+  const title = payload.title || "新消息提醒";
   const description = payload.content;
 
   notification[level]({

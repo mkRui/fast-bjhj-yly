@@ -7,11 +7,11 @@ function delay(ms = 200): Promise<void> {
   });
 }
 
-export async function mockGetPage(
-  params: API.Page.Params
-): Promise<API.Page.Response> {
+export async function mockGetList(
+  params: API.List.Params
+): Promise<API.List.Response> {
   await delay();
-  return [null, mockNoticeStore.getPage(params)];
+  return [null, mockNoticeStore.getList(params)];
 }
 
 export async function mockGetUnreadCount(): Promise<API.UnreadCount.Response> {

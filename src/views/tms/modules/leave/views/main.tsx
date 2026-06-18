@@ -10,6 +10,7 @@ import MorTable from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
 import { toastActionResult } from "@/utils/common/mutation-success";
+import { useRefreshOnMessageList } from "@/views/notification/hooks/use-refresh-on-message-list";
 
 import StoreContext from "../store";
 import { API } from "../types/api";
@@ -26,6 +27,10 @@ const LeaveMain: FC = () => {
   useEffect(() => {
     void store.fetchPage();
   }, [store]);
+
+  useRefreshOnMessageList(() => {
+    void store.fetchPage();
+  });
 
   const uiCurrent = Math.max(1, Number(store.params.current || "0") + 1);
 

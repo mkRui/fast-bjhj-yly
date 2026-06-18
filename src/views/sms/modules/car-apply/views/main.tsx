@@ -11,6 +11,7 @@ import MorTable from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
 import { toastActionResult } from "@/utils/common/mutation-success";
+import { useRefreshOnMessageList } from "@/views/notification/hooks/use-refresh-on-message-list";
 import { Api as CarApi } from "../../car/api";
 
 import StoreContext from "../store";
@@ -41,6 +42,10 @@ const CarApplyMain: FC = () => {
     void loadCars();
     void store.getList();
   }, []);
+
+  useRefreshOnMessageList(() => {
+    void store.getList();
+  });
 
   const isChecked = isCheckFlagSet;
 

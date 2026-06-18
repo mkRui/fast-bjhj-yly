@@ -12,6 +12,7 @@ import RunComponents from "@/components/run-component";
 import { DictCode } from "@/constants/dict-code";
 import { useDict } from "@/hooks/use-dict";
 import { toastActionResult } from "@/utils/common/mutation-success";
+import { useRefreshOnMessageList } from "@/views/notification/hooks/use-refresh-on-message-list";
 
 import StoreContext from "../store";
 import { API } from "../types/api";
@@ -28,6 +29,10 @@ const AssetsCheckMain: FC = () => {
   useEffect(() => {
     void store.getList();
   }, [store]);
+
+  useRefreshOnMessageList(() => {
+    void store.getList();
+  });
 
   const openApplyCheckModal = (record: API.ApplyPage.RecordItem): void => {
     const modal = new RunComponents({

@@ -2,30 +2,21 @@
 import { BaseRequest } from "mor-request";
 
 export declare namespace API {
-  export namespace Page {
+  export namespace List {
     export interface Params {
-      state?: string;
-      current?: string;
-      size?: string;
+      readFlag: boolean;
     }
 
     export interface RecordItem {
       id: string;
-      title: string;
-      content: string;
-      type: string;
-      state: number;
-      createTime: string;
+      alertTime?: string;
+      title?: string;
+      content?: string;
+      target?: string;
+      targetId?: string;
     }
 
-    export interface Data {
-      size: number;
-      pages: number;
-      total: number;
-      records: RecordItem[];
-      current: number;
-    }
-
+    export type Data = RecordItem[];
     export type Response = BaseRequest.Response<Data>;
   }
 

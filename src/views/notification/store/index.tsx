@@ -10,32 +10,21 @@ import { API } from "../types/api";
 export class NotificationStore extends Store<Api> {
   public loading = false;
   public unreadCount = 0;
-
-  public params: API.Page.Params = {
-    state: undefined,
-    current: "0",
-    size: "10",
-  };
-
-  public page: API.Page.Data = {
-    size: 10,
-    pages: 0,
-    total: 0,
-    records: [],
-    current: 0,
-  };
+  /** false=未读列表，true=已读列表 */
+  public readFlag = false;
+  public list: API.List.RecordItem[] = [];
 
   constructor() {
     super(new Api(axios));
     makeObservable(this, {
       loading: observable,
       unreadCount: observable,
-      params: observable,
-      page: observable,
+      readFlag: observable,
+      list: observable,
       $setLoading: action,
       $setUnreadCount: action,
-      $setParams: action,
-      $setPage: action,
+      $setReadFlag: action,
+      $setList: action,
     });
   }
 
@@ -47,12 +36,12 @@ export class NotificationStore extends Store<Api> {
     this.unreadCount = count;
   }
 
-  public $setParams(params: Partial<API.Page.Params>): void {
-    Object.assign(this.params, params);
+  public $setReadFlag(readFlag: boolean): void {
+    this.readFlag = readFlag;
   }
 
-  public $setPage(data: API.Page.Data): void {
-    this.page = data;
+  public $setList(list: API.List.RecordItem[]): void {
+    this.list = list;
   }
 
   public async fetchUnreadCount(): Promise<void> {
@@ -62,11 +51,11 @@ export class NotificationStore extends Store<Api> {
     }
   }
 
-  public async fetchPage(): Promise<void> {
+  public async fetchList(): Promise<void> {
     this.$setLoading(true);
-    const [err, data] = await this.api.getPage(this.params);
+    const [err, data] = await this.api.getList({ readFlag: this.readFlag });
     this.$setLoading(false);
-    if (!err) this.$setPage(data);
+    if (!err) this.$setList(Array.isArray(data) ? data : []);
   }
 
   public async markRead(id: string) {
@@ -74,7 +63,7 @@ export class NotificationStore extends Store<Api> {
     const [err] = await this.api.read({ id });
     this.$setLoading(false);
     return resolveMutation(err, async () => {
-      await this.fetchPage();
+      await this.fetchList();
       await this.fetchUnreadCount();
     });
   }
@@ -84,7 +73,7 @@ export class NotificationStore extends Store<Api> {
     const [err] = await this.api.readAll();
     this.$setLoading(false);
     return resolveMutation(err, async () => {
-      await this.fetchPage();
+      await this.fetchList();
       await this.fetchUnreadCount();
     });
   }

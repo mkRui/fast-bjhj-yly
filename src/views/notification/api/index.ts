@@ -1,7 +1,7 @@
 import { Request } from "mor-request";
 import {
   NOTIFICATION_USE_MOCK,
-  mockGetPage,
+  mockGetList,
   mockGetUnreadCount,
   mockRead,
   mockReadAll,
@@ -9,31 +9,31 @@ import {
 import { API } from "../types/api";
 
 export class Api extends Request {
-  public async getPage(params: API.Page.Params): Promise<API.Page.Response> {
+  public async getList(params: API.List.Params): Promise<API.List.Response> {
     if (NOTIFICATION_USE_MOCK) {
-      return mockGetPage(params);
+      return mockGetList(params);
     }
-    return await this.get<API.Page.Data>("/user/notice/page", params);
+    return await this.get<API.List.Data>("/msg/message/list", params);
   }
 
   public async read(params: API.Read.Params): Promise<API.Read.Response> {
     if (NOTIFICATION_USE_MOCK) {
       return mockRead(params);
     }
-    return await this.post<API.Read.Data>("/user/notice/read", params);
+    return await this.post<API.Read.Data>("/msg/message/read", params);
   }
 
   public async readAll(): Promise<API.Read.Response> {
     if (NOTIFICATION_USE_MOCK) {
       return mockReadAll();
     }
-    return await this.post<API.Read.Data>("/user/notice/readAll", {});
+    return await this.post<API.Read.Data>("/msg/message/readAll", {});
   }
 
   public async getUnreadCount(): Promise<API.UnreadCount.Response> {
     if (NOTIFICATION_USE_MOCK) {
       return mockGetUnreadCount();
     }
-    return await this.get<API.UnreadCount.Data>("/user/notice/unreadCount");
+    return await this.get<API.UnreadCount.Data>("/msg/message/count");
   }
 }

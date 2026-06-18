@@ -10,6 +10,7 @@ import MorTable from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
 import { toastActionResult } from "@/utils/common/mutation-success";
+import { useRefreshOnMessageList } from "@/views/notification/hooks/use-refresh-on-message-list";
 
 import StoreContext from "../store";
 import { API } from "../types/api";
@@ -24,6 +25,10 @@ const ConsumablesCheckMain: FC = () => {
   useEffect(() => {
     void store.getList();
   }, [store]);
+
+  useRefreshOnMessageList(() => {
+    void store.getList();
+  });
 
   const openCheckModal = (record: API.ApplyPage.RecordItem): void => {
     const modal = new RunComponents({
