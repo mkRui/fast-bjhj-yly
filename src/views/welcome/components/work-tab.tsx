@@ -1,6 +1,6 @@
 import { FC, useContext, useEffect, useMemo } from "react";
 import { observer } from "mobx-react";
-import { InputNumber, Pagination, Space, Spin } from "antd";
+import { InputNumber, Space } from "antd";
 
 import Button from "@/components/button";
 import PageToolbar, { FilterField } from "@/components/page-toolbar";
@@ -16,6 +16,7 @@ import { API } from "../types/api";
 import WorkStatisticsChart, { WorkStatisticsItem } from "./work-statistics-chart";
 import ReportWorkModal from "./report-work-modal";
 import { useRegisterUserPageToolbar } from "../pages/user-page-layout";
+import UserTablePanel from "./user-table-panel";
 
 const WorkTab: FC = () => {
   const store = useContext(StoreContext);
@@ -142,28 +143,28 @@ const WorkTab: FC = () => {
   useRegisterUserPageToolbar(toolbar);
 
   return (
-    <Spin spinning={store.loading}>
-       <div className="mb-2">
-          <WorkStatisticsChart title="当前用户课时统计（按科目）" data={statisticsData} />
-       </div>
-
-      <div className="theme-panel p-6 h-[300px]">
-        <div className="text-base font-semibold mb-4">课时记录</div>
-        <MorTable rowKey="id" columns={columns as any} dataSource={store.page.records || []} pagination={false} />
-        <div className="flex justify-end mt-4">
-          <Pagination
-            current={store.filter.current}
-            pageSize={store.filter.size}
-            total={store.page.total || 0}
-            showSizeChanger
-            onChange={(current, pageSize) => {
-              store.$setFilter({ current, size: pageSize });
-              void store.fetchPage();
-            }}
-          />
-        </div>
-      </div>
-    </Spin>
+    <UserTablePanel
+      loading={store.loading}
+      extra={<WorkStatisticsChart title="当前用户课时统计（按科目）" data={statisticsData} />}
+      title="课时记录"
+      pagination={{
+        current: store.filter.current,
+        pageSize: store.filter.size,
+        total: store.page.total || 0,
+        onChange: (current, pageSize) => {
+          store.$setFilter({ current, size: pageSize });
+          void store.fetchPage();
+        },
+      }}
+    >
+      <MorTable
+        auto
+        rowKey="id"
+        columns={columns as any}
+        dataSource={store.page.records || []}
+        pagination={false}
+      />
+    </UserTablePanel>
   );
 };
 

@@ -15,7 +15,7 @@ export const useRegisterUserPageToolbar = (toolbar: ReactNode): void => {
   const setToolbar = useContext(UserPageToolbarContext);
 
   useEffect(() => {
-    if (!setToolbar) return;
+    if (!setToolbar || !toolbar) return;
     setToolbar(toolbar);
     return () => setToolbar(null);
   }, [setToolbar, toolbar]);
@@ -33,7 +33,18 @@ const UserPageLayout: FC<UserPageLayoutProps> = ({ title, toolbar: toolbarProp, 
             <HeaderTitle>{title}</HeaderTitle>
           </Content.Header>
           {toolbar ? <Content.Header>{toolbar}</Content.Header> : null}
-          <Content.Main style={{ overflow: "unset" }}>{children}</Content.Main>
+          <Content.Main
+            style={{
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+              minHeight: 0,
+              backgroundColor: "transparent",
+              padding: 0
+            }}
+          >
+            {children}
+          </Content.Main>
         </Content.Layout>
       </Content>
     </UserPageToolbarContext.Provider>

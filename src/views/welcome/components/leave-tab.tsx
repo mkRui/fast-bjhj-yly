@@ -1,6 +1,6 @@
 import { FC, useContext, useEffect, useMemo } from "react";
 import { observer } from "mobx-react";
-import { Pagination, Select, Space, Spin } from "antd";
+import { Select, Space } from "antd";
 
 import Button from "@/components/button";
 import PageToolbar, { FilterField } from "@/components/page-toolbar";
@@ -15,6 +15,7 @@ import StoreContext from "../store";
 import { API } from "../types/api";
 import LeaveSubmitModal from "./leave-submit-modal";
 import { useRegisterUserPageToolbar } from "../pages/user-page-layout";
+import UserTablePanel from "./user-table-panel";
 
 const Option = Select.Option;
 
@@ -141,31 +142,27 @@ const LeaveTab: FC = () => {
   useRegisterUserPageToolbar(toolbar);
 
   return (
-    <Spin spinning={store.leaveLoading}>
-      <div className="theme-panel p-6 h-[520px]">
-        <div className="text-base font-semibold mb-4">请假记录</div>
-        <MorTable
-          rowKey="id"
-          columns={columns as any}
-          dataSource={store.leavePage.records || []}
-          pagination={false}
-          auto
-        />
-        <div className="flex justify-end mt-4">
-          <Pagination
-            current={store.leaveFilter.current}
-            pageSize={store.leaveFilter.size}
-            total={store.leavePage.total || 0}
-            showSizeChanger
-            showQuickJumper
-            onChange={(current, pageSize) => {
-              store.$setLeaveFilter({ current, size: pageSize });
-              void store.fetchLeavePage();
-            }}
-          />
-        </div>
-      </div>
-    </Spin>
+    <UserTablePanel
+      loading={store.leaveLoading}
+      title="请假记录"
+      pagination={{
+        current: store.leaveFilter.current,
+        pageSize: store.leaveFilter.size,
+        total: store.leavePage.total || 0,
+        onChange: (current, pageSize) => {
+          store.$setLeaveFilter({ current, size: pageSize });
+          void store.fetchLeavePage();
+        },
+      }}
+    >
+      <MorTable
+        auto
+        rowKey="id"
+        columns={columns as any}
+        dataSource={store.leavePage.records || []}
+        pagination={false}
+      />
+    </UserTablePanel>
   );
 };
 

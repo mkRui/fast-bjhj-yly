@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo, useState } from "react";
 import { observer } from "mobx-react";
-import { Form, Input, InputNumber, Modal, Pagination, Space, Spin } from "antd";
+import { Form, Input, InputNumber, Modal, Space } from "antd";
 import type { ModalProps } from "antd/lib/modal";
 
 import axios from "@/api";
@@ -18,6 +18,7 @@ import { API } from "../types/api";
 import CarSelect from "./car-select";
 import CarPurposeSelect from "./car-purpose-select";
 import { useRegisterUserPageToolbar } from "../pages/user-page-layout";
+import UserTablePanel from "./user-table-panel";
 
 const Item = Form.Item;
 
@@ -321,24 +322,26 @@ const CarTab: FC = () => {
   useRegisterUserPageToolbar(toolbar);
 
   return (
-    <Spin spinning={loading}>
-      <div className="theme-panel p-6 h-[520px]">
-        <div className="text-base font-semibold mb-4">我的用车申请</div>
-        <MorTable rowKey="id" columns={columns as any} dataSource={data.records || []} pagination={false} />
-        <div className="flex justify-end mt-4">
-          <Pagination
-            current={params.current}
-            pageSize={params.size}
-            total={data.total || 0}
-            showSizeChanger
-            showQuickJumper
-            onChange={(current, pageSize) => {
-              void load({ current, size: pageSize });
-            }}
-          />
-        </div>
-      </div>
-    </Spin>
+    <UserTablePanel
+      loading={loading}
+      title="我的用车申请"
+      pagination={{
+        current: params.current,
+        pageSize: params.size,
+        total: data.total || 0,
+        onChange: (current, pageSize) => {
+          void load({ current, size: pageSize });
+        },
+      }}
+    >
+      <MorTable
+        auto
+        rowKey="id"
+        columns={columns as any}
+        dataSource={data.records || []}
+        pagination={false}
+      />
+    </UserTablePanel>
   );
 };
 

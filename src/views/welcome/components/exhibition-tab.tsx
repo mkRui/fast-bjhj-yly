@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo, useState } from "react";
 import { observer } from "mobx-react";
-import { Pagination, Space, Spin } from "antd";
+import { Space } from "antd";
 
 import axios from "@/api";
 import Button from "@/components/button";
@@ -14,6 +14,7 @@ import { API } from "../types/api";
 import ExhibitionFormModal from "./exhibition-form-modal";
 import ExhibitionAttachmentModal from "./exhibition-attachment-modal";
 import { useRegisterUserPageToolbar } from "../pages/user-page-layout";
+import UserTablePanel from "./user-table-panel";
 
 const ExhibitionTab: FC = () => {
   const api = useMemo(() => new Api(axios), []);
@@ -182,32 +183,29 @@ const ExhibitionTab: FC = () => {
   useRegisterUserPageToolbar(toolbar);
 
   return (
-    <Spin spinning={loading}>
-      <div className="theme-panel p-6 h-[520px]">
-        <div className="text-base font-semibold mb-4">我的展会</div>
-        <MorTable
-          rowKey="id"
-          columns={columns as any}
-          dataSource={data.records || []}
-          pagination={false}
-        />
-        <div className="flex justify-end mt-4">
-          <Pagination
-            current={uiCurrent}
-            pageSize={params.size}
-            total={data.total || 0}
-            showSizeChanger
-            showQuickJumper
-            onChange={(current, pageSize) => {
-              void load({
-                current: Math.max(0, current - 1),
-                size: pageSize,
-              });
-            }}
-          />
-        </div>
-      </div>
-    </Spin>
+    <UserTablePanel
+      loading={loading}
+      title="我的展会"
+      pagination={{
+        current: uiCurrent,
+        pageSize: params.size,
+        total: data.total || 0,
+        onChange: (current, pageSize) => {
+          void load({
+            current: Math.max(0, current - 1),
+            size: pageSize,
+          });
+        },
+      }}
+    >
+      <MorTable
+        auto
+        rowKey="id"
+        columns={columns as any}
+        dataSource={data.records || []}
+        pagination={false}
+      />
+    </UserTablePanel>
   );
 };
 

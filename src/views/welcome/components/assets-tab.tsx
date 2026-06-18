@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo, useState } from "react";
 import { observer } from "mobx-react";
-import { Form, Input, InputNumber, Modal, Pagination, Select, Space, Spin, Tabs } from "antd";
+import { Form, Input, InputNumber, Modal, Pagination, Select, Space, Tabs } from "antd";
 import type { ModalProps } from "antd/lib/modal";
 
 import axios from "@/api";
@@ -16,9 +16,46 @@ import { toastRequestResult } from "@/utils/common/mutation-success";
 
 import { Api } from "../api";
 import { API } from "../types/api";
+import UserTablePanel, { UserPageTabs } from "./user-table-panel";
 
 const Item = Form.Item;
 const Option = Select.Option;
+
+const MOCK_CONSUMABLES: API.ConsumablesPage.RecordItem[] = Array.from({ length: 100 }, (_, index) => {
+  const no = index + 1;
+  return {
+    id: String(no),
+    categoryId: "1",
+    name: `易耗品-${no}`,
+    selfCode: `CODE${1000 + no}`,
+    fullCode: `FULL${1000 + no}`,
+    totalNum: (no % 20) + 1,
+    availableNum: no % 10,
+    remark: no % 3 === 0 ? `备注${no}` : "",
+  };
+});
+
+const mockConsumablesPage = (params: API.ConsumablesPage.Params): API.ConsumablesPage.Data => {
+  const keyword = params.keyword?.trim().toLowerCase();
+  const records = keyword
+    ? MOCK_CONSUMABLES.filter(
+        (item) =>
+          item.name?.toLowerCase().includes(keyword) ||
+          item.selfCode?.toLowerCase().includes(keyword) ||
+          item.fullCode?.toLowerCase().includes(keyword)
+      )
+    : MOCK_CONSUMABLES;
+  const { current, size } = params;
+  const start = (current - 1) * size;
+
+  return {
+    current,
+    size,
+    total: records.length,
+    pages: Math.max(1, Math.ceil(records.length / size)),
+    records: records.slice(start, start + size),
+  };
+};
 
 interface ApplyModalProps {
   title: string;
@@ -118,34 +155,33 @@ const MyConsumablesApplyPanel: FC = () => {
   ];
 
   return (
-    <Spin spinning={loading}>
-      <div className="theme-panel p-6 h-[520px]">
-        <div className="flex items-center justify-between mb-4">
-          <div className="text-base font-semibold">我的易耗品申请</div>
+    <UserTablePanel
+      loading={loading}
+      title={
+        <div className="flex items-center justify-between">
+          <span>我的易耗品申请</span>
           <Button action="reset" onClick={() => void load({ current: 1 })}>
             刷新
           </Button>
         </div>
-        <MorTable
-          rowKey="id"
-          columns={columns as any}
-          dataSource={data.records || []}
-          pagination={false}
-        />
-        <div className="flex justify-end mt-4">
-          <Pagination
-            current={params.current}
-            pageSize={params.size}
-            total={data.total || 0}
-            showSizeChanger
-            showQuickJumper
-            onChange={(current, pageSize) => {
-              void load({ current, size: pageSize });
-            }}
-          />
-        </div>
-      </div>
-    </Spin>
+      }
+      pagination={{
+        current: params.current,
+        pageSize: params.size,
+        total: data.total || 0,
+        onChange: (current, pageSize) => {
+          void load({ current, size: pageSize });
+        },
+      }}
+    >
+      <MorTable
+        auto
+        rowKey="id"
+        columns={columns as any}
+        dataSource={data.records || []}
+        pagination={false}
+      />
+    </UserTablePanel>
   );
 };
 
@@ -349,34 +385,33 @@ const MyAssetsItemApplyPanel: FC = () => {
   ];
 
   return (
-    <Spin spinning={loading}>
-      <div className="theme-panel p-6 h-[520px]">
-        <div className="flex items-center justify-between mb-4">
-          <div className="text-base font-semibold">我的固定资产申请</div>
+    <UserTablePanel
+      loading={loading}
+      title={
+        <div className="flex items-center justify-between">
+          <span>我的固定资产申请</span>
           <Button action="reset" onClick={() => void load({ current: 1 })}>
             刷新
           </Button>
         </div>
-        <MorTable
-          rowKey="id"
-          columns={columns as any}
-          dataSource={data.records || []}
-          pagination={false}
-        />
-        <div className="flex justify-end mt-4">
-          <Pagination
-            current={params.current}
-            pageSize={params.size}
-            total={data.total || 0}
-            showSizeChanger
-            showQuickJumper
-            onChange={(current, pageSize) => {
-              void load({ current, size: pageSize });
-            }}
-          />
-        </div>
-      </div>
-    </Spin>
+      }
+      pagination={{
+        current: params.current,
+        pageSize: params.size,
+        total: data.total || 0,
+        onChange: (current, pageSize) => {
+          void load({ current, size: pageSize });
+        },
+      }}
+    >
+      <MorTable
+        auto
+        rowKey="id"
+        columns={columns as any}
+        dataSource={data.records || []}
+        pagination={false}
+      />
+    </UserTablePanel>
   );
 };
 
@@ -585,6 +620,13 @@ const AssetsTab: FC = () => {
     const merged: API.ConsumablesPage.Params = { ...pageParams, ...(next || {}) };
     if (!merged.categoryId) return;
     setLoading(true);
+    if (import.meta.env.DEV) {
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      setLoading(false);
+      setPageParams(merged);
+      setPageData(mockConsumablesPage(merged));
+      return;
+    }
     const [err, data] = await api.getConsumablesPage(merged);
     setLoading(false);
     if (err) return;
@@ -706,202 +748,203 @@ const AssetsTab: FC = () => {
   ];
 
   return (
-    <Tabs
-      destroyInactiveTabPane
-      items={[
-        {
-          key: "consumables",
-          label: "申请易耗品",
-          children: (
-            <Spin spinning={loading}>
-              <PageToolbar
-                variant="panel"
-                filters={
-                  <>
-                    <FilterField label="资产分类" width={220}>
-                      <Select
-                        value={categoryId || undefined}
-                        loading={categoryLoading}
-                        onChange={(v) => setCategoryId(String(v || ""))}
-                        style={{ width: "100%" }}
-                        placeholder="请选择资产分类"
-                      >
-                        {categories.map((item) => (
-                          <Option value={item.id} key={item.id}>
-                            <span aria-label={item.name}>{item.name}</span>
-                          </Option>
-                        ))}
-                      </Select>
-                    </FilterField>
-                    <FilterField label="关键字" width={260}>
-                      <Input
-                        value={keyword}
-                        allowClear
-                        placeholder="请输入易耗品名称/代码关键字"
-                        onChange={(e) => setKeyword(e.target.value)}
-                        onPressEnter={() => {
-                          void loadPage({ current: 1, keyword: keyword || undefined });
-                        }}
-                      />
-                    </FilterField>
-                    <Button
-                      type="primary"
-                      action="search"
-                      onClick={() => {
-                        void loadPage({ current: 1, keyword: keyword || undefined });
-                      }}
-                    >
-                      查询
-                    </Button>
-                  </>
-                }
-                actions={
-                  <Space>
-                    <Button
-                      action="reset"
-                      onClick={() => {
-                        void loadCategories();
-                      }}
-                    >
-                      刷新分类
-                    </Button>
-                    <Button
-                      action="reset"
-                      onClick={() => {
-                        setKeyword("");
-                        void loadPage({ current: 1, keyword: undefined });
-                      }}
-                    >
-                      重置筛选
-                    </Button>
-                  </Space>
-                }
-              />
-
-              <div className="theme-panel p-6 h-[520px]">
-                <div className="text-base font-semibold mb-4">易耗品列表</div>
-                <MorTable rowKey="id" columns={columns as any} dataSource={pageData.records || []} pagination={false} />
-                <div className="flex justify-end mt-4">
-                  <Pagination
-                    current={pageParams.current}
-                    pageSize={pageParams.size}
-                    total={pageData.total || 0}
-                    showSizeChanger
-                    showQuickJumper
-                    onChange={(current, pageSize) => {
-                      void loadPage({ current, size: pageSize });
-                    }}
+    <UserPageTabs>
+      <Tabs
+        destroyInactiveTabPane
+        items={[
+          {
+            key: "consumables",
+            label: "申请易耗品",
+            children: (
+              <UserTablePanel
+                loading={loading}
+                toolbarPlacement="inline"
+                toolbar={
+                  <PageToolbar
+                    filters={
+                      <Space align="end" size={16} wrap>
+                        <FilterField label="资产分类" width={220}>
+                          <Select
+                            value={categoryId || undefined}
+                            loading={categoryLoading}
+                            onChange={(v) => setCategoryId(String(v || ""))}
+                            style={{ width: "100%" }}
+                            placeholder="请选择资产分类"
+                          >
+                            {categories.map((item) => (
+                              <Option value={item.id} key={item.id}>
+                                <span aria-label={item.name}>{item.name}</span>
+                              </Option>
+                            ))}
+                          </Select>
+                        </FilterField>
+                        <FilterField label="关键字" width={260}>
+                          <Input
+                            value={keyword}
+                            allowClear
+                            placeholder="请输入易耗品名称/代码关键字"
+                            onChange={(e) => setKeyword(e.target.value)}
+                            onPressEnter={() => {
+                              void loadPage({ current: 1, keyword: keyword || undefined });
+                            }}
+                          />
+                        </FilterField>
+                        <Button
+                          type="primary"
+                          action="search"
+                          onClick={() => {
+                            void loadPage({ current: 1, keyword: keyword || undefined });
+                          }}
+                        >
+                          查询
+                        </Button>
+                      </Space>
+                    }
+                    actions={
+                      <Space>
+                        <Button action="reset" onClick={() => void loadCategories()}>
+                          刷新分类
+                        </Button>
+                        <Button
+                          action="reset"
+                          onClick={() => {
+                            setKeyword("");
+                            void loadPage({ current: 1, keyword: undefined });
+                          }}
+                        >
+                          重置筛选
+                        </Button>
+                      </Space>
+                    }
                   />
-                </div>
-              </div>
-            </Spin>
-          ),
-        },
-        {
-          key: "my-consumables-applies",
-          label: "我的易耗品申请",
-          children: <MyConsumablesApplyPanel />,
-        },
-        {
-          key: "assets",
-          label: "申请固定资产",
-          children: (
-            <Spin spinning={assetsLoading}>
-              <PageToolbar
-                variant="panel"
-                filters={
-                  <>
-                    <FilterField label="资产分类" width={220}>
-                      <Select
-                        value={assetsCategoryId || undefined}
-                        loading={categoryLoading}
-                        onChange={(v) => setAssetsCategoryId(String(v || ""))}
-                        style={{ width: "100%" }}
-                        placeholder="请选择资产分类"
-                      >
-                        {categories.map((item) => (
-                          <Option value={item.id} key={item.id}>
-                            <span aria-label={item.name}>{item.name}</span>
-                          </Option>
-                        ))}
-                      </Select>
-                    </FilterField>
-                    <FilterField label="关键字" width={260}>
-                      <Input
-                        value={assetsKeyword}
-                        allowClear
-                        placeholder="请输入固定资产名称/代码关键字"
-                        onChange={(e) => setAssetsKeyword(e.target.value)}
-                        onPressEnter={() => {
-                          void loadAssetsPage({ current: 1, keyword: assetsKeyword || undefined });
-                        }}
-                      />
-                    </FilterField>
-                    <Button
-                      type="primary"
-                      action="search"
-                      onClick={() => {
-                        void loadAssetsPage({ current: 1, keyword: assetsKeyword || undefined });
-                      }}
-                    >
-                      查询
-                    </Button>
-                  </>
                 }
-                actions={
-                  <Space>
-                    <Button
-                      action="reset"
-                      onClick={() => {
-                        void loadCategories();
-                      }}
-                    >
-                      刷新分类
-                    </Button>
-                    <Button
-                      action="reset"
-                      onClick={() => {
-                        setAssetsKeyword("");
-                        void loadAssetsPage({ current: 1, keyword: undefined });
-                      }}
-                    >
-                      重置筛选
-                    </Button>
-                  </Space>
-                }
-              />
-
-              <div className="theme-panel p-6 h-[520px]">
-                <div className="text-base font-semibold mb-4">固定资产列表</div>
+                title="易耗品列表"
+                pagination={{
+                  current: pageParams.current,
+                  pageSize: pageParams.size,
+                  total: pageData.total || 0,
+                  onChange: (current, pageSize) => {
+                    void loadPage({ current, size: pageSize });
+                  },
+                }}
+              >
                 <MorTable
+                  auto
+                  rowKey="id"
+                  columns={columns as any}
+                  dataSource={pageData.records || []}
+                  pagination={false}
+                />
+              </UserTablePanel>
+            ),
+          },
+          {
+            key: "my-consumables-applies",
+            label: "我的易耗品申请",
+            children: (
+              <div className="h-full min-h-0">
+                <MyConsumablesApplyPanel />
+              </div>
+            ),
+          },
+          {
+            key: "assets",
+            label: "申请固定资产",
+            children: (
+              <UserTablePanel
+                loading={assetsLoading}
+                toolbarPlacement="inline"
+                toolbar={
+                  <PageToolbar
+                    filters={
+                      <Space align="end" size={16} wrap>
+                        <FilterField label="资产分类" width={220}>
+                          <Select
+                            value={assetsCategoryId || undefined}
+                            loading={categoryLoading}
+                            onChange={(v) => setAssetsCategoryId(String(v || ""))}
+                            style={{ width: "100%" }}
+                            placeholder="请选择资产分类"
+                          >
+                            {categories.map((item) => (
+                              <Option value={item.id} key={item.id}>
+                                <span aria-label={item.name}>{item.name}</span>
+                              </Option>
+                            ))}
+                          </Select>
+                        </FilterField>
+                        <FilterField label="关键字" width={260}>
+                          <Input
+                            value={assetsKeyword}
+                            allowClear
+                            placeholder="请输入固定资产名称/代码关键字"
+                            onChange={(e) => setAssetsKeyword(e.target.value)}
+                            onPressEnter={() => {
+                              void loadAssetsPage({ current: 1, keyword: assetsKeyword || undefined });
+                            }}
+                          />
+                        </FilterField>
+                        <Button
+                          type="primary"
+                          action="search"
+                          onClick={() => {
+                            void loadAssetsPage({ current: 1, keyword: assetsKeyword || undefined });
+                          }}
+                        >
+                          查询
+                        </Button>
+                      </Space>
+                    }
+                    actions={
+                      <Space>
+                        <Button action="reset" onClick={() => void loadCategories()}>
+                          刷新分类
+                        </Button>
+                        <Button
+                          action="reset"
+                          onClick={() => {
+                            setAssetsKeyword("");
+                            void loadAssetsPage({ current: 1, keyword: undefined });
+                          }}
+                        >
+                          重置筛选
+                        </Button>
+                      </Space>
+                    }
+                  />
+                }
+                title="固定资产列表"
+                pagination={{
+                  current: assetsPageParams.current,
+                  pageSize: assetsPageParams.size,
+                  total: assetsPageData.total || 0,
+                  onChange: (current, pageSize) => {
+                    void loadAssetsPage({ current, size: pageSize });
+                  },
+                }}
+              >
+                <MorTable
+                  auto
                   rowKey="id"
                   columns={assetsColumns as any}
                   dataSource={assetsPageData.records || []}
                   pagination={false}
                 />
-                <div className="flex justify-end mt-4">
-                  <Pagination
-                    current={assetsPageParams.current}
-                    pageSize={assetsPageParams.size}
-                    total={assetsPageData.total || 0}
-                    showSizeChanger
-                    showQuickJumper
-                    onChange={(current, pageSize) => {
-                      void loadAssetsPage({ current, size: pageSize });
-                    }}
-                  />
-                </div>
+              </UserTablePanel>
+            ),
+          },
+          {
+            key: "my-assets-applies",
+            label: "我的固定资产申请",
+            children: (
+              <div className="h-full min-h-0">
+                <MyAssetsItemApplyPanel />
               </div>
-            </Spin>
-          ),
-        },
-        {
-          key: "my-assets-applies",
-          label: "我的固定资产申请",
-          children: <MyAssetsItemApplyPanel />,
-        },
-      ]}
-    />
+            ),
+          },
+        ]}
+      />
+    </UserPageTabs>
   );
 };
 
