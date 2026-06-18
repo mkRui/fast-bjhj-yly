@@ -132,16 +132,16 @@ const MorTable = forwardRef<MorTableRef, MorTableTypes>((props, tableRef) => {
 
   useEffect(() => {
     const { height = 0 } = resizeObserverEntry.contentRect || {};
-    if (height !== boxHeight) {
-      setBoxHeight(height - 55 - offset);
-    }
-  });
+    const nextHeight = Math.max(0, height - 55 - offset);
+    setBoxHeight(nextHeight);
+  }, [offset, resizeObserverEntry.contentRect?.height]);
 
   const debounced = (): void => {
     clearTimeout(time.current);
     time.current = setTimeout(() => {
       const { height = 0 } = resizeObserverEntry.contentRect || {};
-      setBoxHeight(height - 55 - offset);
+      const nextHeight = Math.max(0, height - 55 - offset);
+      setBoxHeight(nextHeight);
     }, 300);
   };
 
@@ -150,7 +150,7 @@ const MorTable = forwardRef<MorTableRef, MorTableTypes>((props, tableRef) => {
     return () => {
       window.removeEventListener("resize", debounced);
     };
-  }, []);
+  }, [offset, resizeObserverEntry.contentRect?.height]);
 
   const sortableColumns = useMemo(() => {
     const cols = (resetProps.columns || []) as any[];
@@ -193,6 +193,8 @@ const MorTable = forwardRef<MorTableRef, MorTableTypes>((props, tableRef) => {
     });
   };
 
+  const scrollY = boxHeight > 0 ? boxHeight : undefined;
+
   const tableNode = (
     <Table
       {...resetProps}
@@ -200,9 +202,11 @@ const MorTable = forwardRef<MorTableRef, MorTableTypes>((props, tableRef) => {
       components={sortableComponents}
       dataSource={rowSortable ? innerDataSource : resetProps.dataSource}
       size="small"
-      scroll={Object.assign(scroll ?? {}, {
-        y: auto ? "100%" : boxHeight,
-      })}
+      scroll={
+        scrollY !== undefined
+          ? Object.assign(scroll ?? {}, { y: scrollY })
+          : scroll
+      }
     >
       {props.children}
     </Table>
@@ -221,7 +225,7 @@ const MorTable = forwardRef<MorTableRef, MorTableTypes>((props, tableRef) => {
   return (
     <div
       className="mor-table"
-      style={style}
+      style={{ minHeight: 0, ...(auto ? { height: "100%" } : null), ...style }}
       ref={(node) => {
         rootRef.current = node;
         if (typeof resizeRef === "function") resizeRef(node);

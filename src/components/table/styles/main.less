@@ -1,8 +1,21 @@
 .mor-table {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 100%;
+  min-height: 0;
+  overflow: hidden;
+
+  .ant-table-wrapper {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .ant-spin-nested-loading,
+  .ant-spin-container {
+    height: 100%;
+  }
+
   .ant-table-tbody{
     > tr:hover:not(.ant-table-expanded-row) > td,.ant-table-row-hover,.ant-table-cell-row-hover>td{
         background: var(--theme-table-row-hover)!important;
