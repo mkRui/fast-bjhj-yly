@@ -227,7 +227,7 @@ const PersonalInfoMain: FC = () => {
         <Content.Header>
           <HeaderTitle>教师信息</HeaderTitle>
         </Content.Header>
-        <Content.Main style={{ overflow: "unset" }}>
+        <Content.Main style={{ overflow: "unset", padding: 0 }}>
           <Spin spinning={store.loading}>
             <div className="theme-panel p-6">
               <Form
