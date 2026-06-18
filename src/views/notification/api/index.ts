@@ -8,6 +8,11 @@ import {
 } from "../mock";
 import { API } from "../types/api";
 
+const toUnreadCount = (value: unknown): number => {
+  const count = Number(value);
+  return Number.isFinite(count) ? Math.max(0, Math.floor(count)) : 0;
+};
+
 export class Api extends Request {
   public async getList(params: API.List.Params): Promise<API.List.Response> {
     if (NOTIFICATION_USE_MOCK) {
@@ -34,6 +39,9 @@ export class Api extends Request {
     if (NOTIFICATION_USE_MOCK) {
       return mockGetUnreadCount();
     }
-    return await this.get<API.UnreadCount.Data>("/msg/message/count");
+    const response = await this.get<unknown>("/msg/message/count");
+    const [err, data] = response;
+    if (err) return response as unknown as API.UnreadCount.Response;
+    return [null, toUnreadCount(data)];
   }
 }
