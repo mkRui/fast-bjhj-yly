@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
-import MorTable from "@/components/table";
+import MorTable, { TABLE_MAIN_STYLE, TABLE_SPIN_WRAPPER } from "@/components/table";
 import Button from "@/components/button";
 import RootContext from "@/stores/root-context";
 import { DictCode } from "@/constants/dict-code";
@@ -96,24 +96,27 @@ const WorkDetail: FC = () => {
             课时详情{teacherName ? ` - ${teacherName}` : ""}
           </HeaderTitle>
         </Content.Header>
-        <Content.Main style={{ overflow: "unset" }}>
-          <Spin spinning={store.detailLoading}>
-            <div className="theme-panel p-6 mb-4">
-              <div className="text-gray-600 mb-4">
+        <Content.Main style={TABLE_MAIN_STYLE}>
+          <Spin
+            spinning={store.detailLoading}
+            wrapperClassName={TABLE_SPIN_WRAPPER}
+          >
+            <div className="theme-panel mb-4 shrink-0 p-6">
+              <div className="mb-4 text-gray-600">
                 {teacherName || "教师"} · {year}年{month}月
               </div>
               <WorkStatisticsChart title="当前用户课时统计（按科目）" data={statisticsData} />
             </div>
 
-            <div className="theme-panel p-6">
-              <div className="text-base font-semibold mb-4">课时记录</div>
+            <div className="theme-panel flex min-h-0 flex-1 flex-col overflow-hidden p-6">
+              <div className="mb-4 shrink-0 text-base font-semibold">课时记录</div>
               <MorTable
                 bordered
                 rowKey={(record) => record.id}
                 columns={columns as any}
                 dataSource={store.detailData.records || []}
                 pagination={false}
-                auto={true}
+                auto
               />
             </div>
           </Spin>

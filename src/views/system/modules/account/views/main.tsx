@@ -6,7 +6,7 @@ import { Content } from "@/components/container";
 import RunComponents from "@/components/run-component";
 import HeaderTitle from "@/components/card-header";
 import PageToolbar from "@/components/page-toolbar";
-import MorTable from "@/components/table";
+import MorTable, { TablePageMain } from "@/components/table";
 import { fullDateFormat } from "@/utils/common/time-format";
 import Button from "@/components/button";
 import { toastActionResult } from "@/utils/common/mutation-success";
@@ -164,8 +164,8 @@ const AccountMain: FC = () => {
   }, []);
 
   return (
-    <Content>
-      <Content.Layout>
+    <Content style={{ flex: 1 }}>
+      <Content.Layout style={{ height: "100%" }}>
         <Content.Header>
           <HeaderTitle>用户管理</HeaderTitle>
         </Content.Header>
@@ -189,7 +189,7 @@ const AccountMain: FC = () => {
             }
           />
         </Content.Header>
-        <Content.Main>
+        <TablePageMain loading={store.loading}>
           <MorTable
             bordered
             pagination={false}
@@ -197,32 +197,33 @@ const AccountMain: FC = () => {
             columns={columns}
             rowKey={(record) => record.id}
             loading={store.loading}
+            auto
           />
-        </Content.Main>
+        </TablePageMain>
+        <Content.Footer>
+          <div
+            style={{
+              height: "49px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "0px 12px",
+              boxSizing: "border-box",
+            }}
+          >
+            <div></div>
+            <Pagination
+              showTotal={(total) => `共有 ${total} 条`}
+              showSizeChanger={true}
+              showQuickJumper={true}
+              onChange={handleChange}
+              onShowSizeChange={handlePageSize}
+              total={store.data.total}
+              current={store.data.current}
+            />
+          </div>
+        </Content.Footer>
       </Content.Layout>
-      <Content.Footer>
-        <div
-          style={{
-            height: "49px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "0px 12px",
-            boxSizing: "border-box",
-          }}
-        >
-          <div></div>
-          <Pagination
-            showTotal={(total) => `共有 ${total} 条`}
-            showSizeChanger={true}
-            showQuickJumper={true}
-            onChange={handleChange}
-            onShowSizeChange={handlePageSize}
-            total={store.data.total}
-            current={store.data.current}
-          />
-        </div>
-      </Content.Footer>
     </Content>
   );
 };

@@ -5,7 +5,7 @@ import { Radio, Space } from "antd";
 import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
 import PageToolbar from "@/components/page-toolbar";
-import MorTable from "@/components/table";
+import MorTable, { TablePageMain } from "@/components/table";
 import Button from "@/components/button";
 import { EnumLabel } from "@/micro/select-enum";
 import { DictCode } from "@/constants/dict-code";
@@ -116,7 +116,7 @@ const NotificationMain: FC = () => {
             }
           />
         </Content.Header>
-        <Content.Main>
+        <TablePageMain loading={store.loading}>
           <MorTable
             auto
             bordered
@@ -126,7 +126,7 @@ const NotificationMain: FC = () => {
             rowKey={(record) => record.id}
             loading={store.loading}
           />
-        </Content.Main>
+        </TablePageMain>
       </Content.Layout>
     </Content>
   );

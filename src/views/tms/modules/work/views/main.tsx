@@ -1,12 +1,12 @@
 import { FC, useContext, useEffect } from "react";
 import { observer } from "mobx-react";
-import { Input, InputNumber, Pagination, Space, Spin } from "antd";
+import { Input, InputNumber, Pagination, Space } from "antd";
 import { useNavigate } from "react-router-dom";
 
 import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
 import PageToolbar, { FilterField } from "@/components/page-toolbar";
-import MorTable from "@/components/table";
+import MorTable, { TablePageMain } from "@/components/table";
 import Button from "@/components/button";
 import { TmsFullPath } from "@/views/tms/router/path";
 
@@ -165,20 +165,16 @@ const WorkMain: FC = () => {
             }
           />
         </Content.Header>
-        <Content.Main style={{ overflow: "unset" }}>
-          <Spin spinning={store.loading}>
-            <div className="theme-panel ">
-              <MorTable
-                bordered
-                rowKey={(record, index) => String(record.teacher?.id ?? index)}
-                columns={columns as any}
-                dataSource={store.list}
-                pagination={false}
-                auto={true}
-              />
-            </div>
-          </Spin>
-        </Content.Main>
+        <TablePageMain loading={store.loading}>
+          <MorTable
+            bordered
+            rowKey={(record, index) => String(record.teacher?.id ?? index)}
+            columns={columns as any}
+            dataSource={store.list}
+            pagination={false}
+            auto
+          />
+        </TablePageMain>
         <Content.Footer>
           <div
             style={{

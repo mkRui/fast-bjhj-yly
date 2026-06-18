@@ -5,7 +5,7 @@ import { Input, Pagination, Space } from "antd";
 import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
 import PageToolbar from "@/components/page-toolbar";
-import MorTable from "@/components/table";
+import MorTable, { TablePageMain } from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
 import { toast } from "@/components/message";
@@ -147,7 +147,7 @@ const TeacherMain: FC = () => {
             }
           />
         </Content.Header>
-        <Content.Main>
+        <TablePageMain loading={store.loading}>
           <MorTable
             bordered
             pagination={false}
@@ -155,10 +155,10 @@ const TeacherMain: FC = () => {
             columns={columns}
             rowKey={(record: any) => record.id}
             loading={store.loading}
+            auto
           />
-        </Content.Main>
-      </Content.Layout>
-      <Content.Footer>
+        </TablePageMain>
+        <Content.Footer>
         <div
           style={{
             height: "49px",
@@ -180,7 +180,8 @@ const TeacherMain: FC = () => {
             current={store.data.current}
           />
         </div>
-      </Content.Footer>
+        </Content.Footer>
+      </Content.Layout>
     </Content>
   );
 };

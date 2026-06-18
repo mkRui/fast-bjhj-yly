@@ -6,7 +6,7 @@ import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
 import PageToolbar, { FilterField } from "@/components/page-toolbar";
 import CheckStatusTag, { isCheckFlagSet } from "@/components/check-status-tag";
-import MorTable from "@/components/table";
+import MorTable, { TablePageMain } from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
 import { toastActionResult } from "@/utils/common/mutation-success";
@@ -142,7 +142,7 @@ const ConsumablesCheckMain: FC = () => {
             }
           />
         </Content.Header>
-        <Content.Main>
+        <TablePageMain loading={store.loading}>
           <MorTable
             bordered
             pagination={false}
@@ -152,7 +152,7 @@ const ConsumablesCheckMain: FC = () => {
             loading={store.loading}
             auto
           />
-        </Content.Main>
+        </TablePageMain>
         <Content.Footer>
           <div
             style={{

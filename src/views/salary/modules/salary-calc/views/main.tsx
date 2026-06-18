@@ -1,11 +1,11 @@
 import { FC, useContext, useEffect } from "react";
 import { observer } from "mobx-react";
-import { InputNumber, Pagination, Space, Spin } from "antd";
+import { InputNumber, Pagination, Space } from "antd";
 
 import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
 import PageToolbar, { FilterField } from "@/components/page-toolbar";
-import MorTable from "@/components/table";
+import MorTable, { TablePageMain } from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
 import { toast } from "@/components/message";
@@ -130,43 +130,41 @@ const SalaryCalcMain: FC = () => {
             }
           />
         </Content.Header>
-        <Content.Main>
-          <Spin spinning={store.loading}>
-            <MorTable
-              bordered
-              pagination={false}
-              dataSource={store.page.records || []}
-              columns={columns as any}
-              rowKey={(record: API.Page.RecordItem) => record.id}
-              loading={store.loading}
-              auto
-            />
-          </Spin>
-        </Content.Main>
-      </Content.Layout>
-      <Content.Footer>
-        <div
-          style={{
-            height: "49px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "0px 12px",
-            boxSizing: "border-box",
-          }}
-        >
-          <div></div>
-          <Pagination
-            showTotal={(total) => `共有 ${total} 条`}
-            showSizeChanger={true}
-            showQuickJumper={true}
-            onChange={handleChange}
-            onShowSizeChange={handlePageSize}
-            total={store.page.total || 0}
-            current={uiCurrent}
+        <TablePageMain loading={store.loading}>
+          <MorTable
+            bordered
+            pagination={false}
+            dataSource={store.page.records || []}
+            columns={columns as any}
+            rowKey={(record: API.Page.RecordItem) => record.id}
+            loading={store.loading}
+            auto
           />
-        </div>
-      </Content.Footer>
+        </TablePageMain>
+        <Content.Footer>
+          <div
+            style={{
+              height: "49px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "0px 12px",
+              boxSizing: "border-box",
+            }}
+          >
+            <div></div>
+            <Pagination
+              showTotal={(total) => `共有 ${total} 条`}
+              showSizeChanger={true}
+              showQuickJumper={true}
+              onChange={handleChange}
+              onShowSizeChange={handlePageSize}
+              total={store.page.total || 0}
+              current={uiCurrent}
+            />
+          </div>
+        </Content.Footer>
+      </Content.Layout>
     </Content>
   );
 };

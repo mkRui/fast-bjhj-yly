@@ -5,7 +5,7 @@ import { Content } from "@/components/container";
 import RunComponents from "@/components/run-component";
 import HeaderTitle from "@/components/card-header";
 import PageToolbar from "@/components/page-toolbar";
-import MorTable from "@/components/table";
+import MorTable, { TablePageMain } from "@/components/table";
 import Button from "@/components/button";
 import { toastActionResult } from "@/utils/common/mutation-success";
 
@@ -140,7 +140,7 @@ const AccountMain: FC = () => {
   }, []);
 
   return (
-    <Content>
+    <Content style={{ flex: 1 }}>
       <Content.Layout style={{ height: "100%" }}>
         <Content.Header>
           <HeaderTitle>角色管理</HeaderTitle>
@@ -154,7 +154,7 @@ const AccountMain: FC = () => {
             }
           />
         </Content.Header>
-        <Content.Main>
+        <TablePageMain loading={store.loading}>
           <MorTable
             bordered
             pagination={false}
@@ -162,8 +162,9 @@ const AccountMain: FC = () => {
             columns={columns}
             rowKey={(record) => record.id}
             loading={store.loading}
+            auto
           />
-        </Content.Main>
+        </TablePageMain>
       </Content.Layout>
     </Content>
   );

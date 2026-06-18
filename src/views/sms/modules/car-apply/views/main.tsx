@@ -7,7 +7,7 @@ import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
 import PageToolbar, { FilterField } from "@/components/page-toolbar";
 import CheckStatusTag, { isCheckFlagSet } from "@/components/check-status-tag";
-import MorTable from "@/components/table";
+import MorTable, { TablePageMain } from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
 import { toastActionResult } from "@/utils/common/mutation-success";
@@ -127,7 +127,7 @@ const CarApplyMain: FC = () => {
   };
 
   return (
-    <Content>
+    <Content style={{ flex: 1 }}>
       <Content.Layout style={{ height: "100%" }}>
         <Content.Header>
           <HeaderTitle>用车审核</HeaderTitle>
@@ -153,7 +153,7 @@ const CarApplyMain: FC = () => {
             }
           />
         </Content.Header>
-        <Content.Main>
+        <TablePageMain loading={store.loading}>
           <MorTable
             bordered
             pagination={false}
@@ -161,8 +161,9 @@ const CarApplyMain: FC = () => {
             columns={columns}
             rowKey={(record) => record.id}
             loading={store.loading}
+            auto
           />
-        </Content.Main>
+        </TablePageMain>
         <Content.Footer>
           <div
             style={{

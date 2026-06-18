@@ -1,12 +1,12 @@
 import { FC, useContext, useEffect } from "react";
 import { observer } from "mobx-react";
-import { Pagination, Select, Space, Spin } from "antd";
+import { Pagination, Select, Space } from "antd";
 
 import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
 import PageToolbar, { FilterField } from "@/components/page-toolbar";
 import CheckStatusTag, { isCheckFlagSet } from "@/components/check-status-tag";
-import MorTable from "@/components/table";
+import MorTable, { TablePageMain } from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
 import { toastActionResult } from "@/utils/common/mutation-success";
@@ -82,11 +82,22 @@ const LeaveMain: FC = () => {
       width: 120,
       render: (val: unknown) => leaveTypeDict.label(val),
     },
-    { title: "请假事由", dataIndex: "leaveReason" },
-    { title: "审核人", dataIndex: "checkedUserName", width: 140 },
+    { title: "请假事由", dataIndex: "leaveReason", width: 240, ellipsis: true },
+    {
+      title: "审核人",
+      dataIndex: "checkedUserName",
+      width: 140,
+      ellipsis: true,
+      render: (val: unknown) => {
+        if (val == null || val === "") return "-";
+        if (Array.isArray(val)) return val.join(", ");
+        return String(val);
+      },
+    },
     {
       title: "操作",
       width: 120,
+      fixed: "right" as const,
       render: (_: any, record: API.Page.RecordItem) =>
         !isCheckFlagSet(record.checkedFlag) ? (
           <Button
@@ -166,43 +177,41 @@ const LeaveMain: FC = () => {
             }
           />
         </Content.Header>
-        <Content.Main>
-          <Spin spinning={store.loading}>
-            <MorTable
-              bordered
-              pagination={false}
-              dataSource={store.page.records || []}
-              columns={columns as any}
-              rowKey={(record: any) => record.id}
-              loading={store.loading}
-              auto
-            />
-          </Spin>
-        </Content.Main>
-      </Content.Layout>
-      <Content.Footer>
-        <div
-          style={{
-            height: "49px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "0px 12px",
-            boxSizing: "border-box",
-          }}
-        >
-          <div></div>
-          <Pagination
-            showTotal={(total) => `共有 ${total} 条`}
-            showSizeChanger={true}
-            showQuickJumper={true}
-            onChange={handleChange}
-            onShowSizeChange={handlePageSize}
-            total={store.page.total || 0}
-            current={uiCurrent}
+        <TablePageMain loading={store.loading}>
+          <MorTable
+            bordered
+            pagination={false}
+            dataSource={store.page.records || []}
+            columns={columns as any}
+            rowKey={(record: any) => record.id}
+            loading={store.loading}
+            auto
           />
-        </div>
-      </Content.Footer>
+        </TablePageMain>
+        <Content.Footer>
+          <div
+            style={{
+              height: "49px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "0px 12px",
+              boxSizing: "border-box",
+            }}
+          >
+            <div></div>
+            <Pagination
+              showTotal={(total) => `共有 ${total} 条`}
+              showSizeChanger={true}
+              showQuickJumper={true}
+              onChange={handleChange}
+              onShowSizeChange={handlePageSize}
+              total={store.page.total || 0}
+              current={uiCurrent}
+            />
+          </div>
+        </Content.Footer>
+      </Content.Layout>
     </Content>
   );
 };

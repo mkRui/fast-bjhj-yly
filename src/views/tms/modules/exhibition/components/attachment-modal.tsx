@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from "react";
-import { Modal, Spin } from "antd";
+import { Modal } from "antd";
 import type { ModalProps } from "antd/lib/modal";
 
 import AttachmentFilenameCell from "@/components/attachment-filename-cell";
-import MorTable from "@/components/table";
+import MorTable, { TableModalBody } from "@/components/table";
 import { API } from "../types/api";
 
 interface AttachmentModalProps {
@@ -53,7 +53,7 @@ const AttachmentModal: FC<AttachmentModalProps> = (props) => {
       onCancel={onCancel}
       footer={null}
     >
-      <Spin spinning={loading}>
+      <TableModalBody loading={loading}>
         <MorTable
           bordered
           pagination={false}
@@ -62,7 +62,7 @@ const AttachmentModal: FC<AttachmentModalProps> = (props) => {
           rowKey={(record) => record.id}
           auto
         />
-      </Spin>
+      </TableModalBody>
     </Modal>
   );
 };

@@ -1,8 +1,8 @@
 import { FC, useCallback, useEffect, useState } from "react";
-import { Modal } from "antd";
+import { Modal, Spin } from "antd";
 import type { ModalProps } from "antd/lib/modal";
 
-import MorTable from "@/components/table";
+import MorTable, { TABLE_MODAL_BODY_STYLE, TABLE_SPIN_WRAPPER } from "@/components/table";
 import Button from "@/components/button";
 import RunComponents from "@/components/run-component";
 import { toastActionResult, type MutationResult } from "@/utils/common/mutation-success";
@@ -98,20 +98,26 @@ const SubjectModal: FC<SubjectModalProps> = (props) => {
       onCancel={onCancel}
       footer={null}
     >
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
-        <Button type="primary" action="add" onClick={openAddModal}>
-          新增明细
-        </Button>
+      <div style={{ ...TABLE_MODAL_BODY_STYLE, height: 460 }}>
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12, flexShrink: 0 }}>
+          <Button type="primary" action="add" onClick={openAddModal}>
+            新增明细
+          </Button>
+        </div>
+        <div style={{ flex: 1, minHeight: 0 }}>
+          <Spin spinning={loading} wrapperClassName={TABLE_SPIN_WRAPPER}>
+            <MorTable
+              bordered
+              pagination={false}
+              dataSource={list}
+              columns={columns as any}
+              rowKey={(item) => item.id}
+              loading={loading}
+              auto
+            />
+          </Spin>
+        </div>
       </div>
-      <MorTable
-        bordered
-        pagination={false}
-        dataSource={list}
-        columns={columns as any}
-        rowKey={(item) => item.id}
-        loading={loading}
-        auto
-      />
     </Modal>
   );
 };

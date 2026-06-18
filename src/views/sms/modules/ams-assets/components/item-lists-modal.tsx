@@ -6,7 +6,7 @@ import type { ModalProps } from "antd/lib/modal";
 import axios from "@/api";
 import Button from "@/components/button";
 import CheckStatusTag from "@/components/check-status-tag";
-import MorTable from "@/components/table";
+import MorTable, { TableModalBody } from "@/components/table";
 import { DictCode } from "@/constants/dict-code";
 import { useDict } from "@/hooks/use-dict";
 import { Api } from "../api";
@@ -204,7 +204,7 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
                       重置
                     </Button>
                   </div>
-                  <div style={{ height: 480 }}>
+                  <TableModalBody loading={itemLoading}>
                     <MorTable
                       bordered
                       pagination={false}
@@ -224,8 +224,9 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
                       onRow={(record: API.ItemPage.RecordItem) => ({
                         onDoubleClick: () => void openApplyTabByItem(record.id),
                       })}
+                      auto
                     />
-                  </div>
+                  </TableModalBody>
                   <div style={{ display: "flex", justifyContent: "flex-end" }}>
                     <Pagination
                       showTotal={(total) => `共有 ${total} 条`}
@@ -261,7 +262,7 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
                       刷新
                     </Button>
                   </div>
-                  <div style={{ height: 480 }}>
+                  <TableModalBody loading={applyLoading}>
                     <MorTable
                       bordered
                       pagination={false}
@@ -269,8 +270,9 @@ const AssetsItemListsModal: FC<AssetsItemListsModalProps> = (props) => {
                       columns={applyColumns as any}
                       rowKey={(record: any) => record.id}
                       loading={applyLoading}
+                      auto
                     />
-                  </div>
+                  </TableModalBody>
                   <div style={{ display: "flex", justifyContent: "flex-end" }}>
                     <Pagination
                       showTotal={(total) => `共有 ${total} 条`}

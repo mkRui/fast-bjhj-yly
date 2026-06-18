@@ -6,7 +6,7 @@ import type { ModalProps } from "antd/lib/modal";
 import axios from "@/api";
 import Button from "@/components/button";
 import CheckStatusTag from "@/components/check-status-tag";
-import MorTable from "@/components/table";
+import MorTable, { TableModalBody } from "@/components/table";
 import { Api } from "../api";
 import { API } from "../types/api";
 
@@ -60,7 +60,7 @@ const ConsumablesApplyListModal: FC<ConsumablesApplyListModalProps> = (props) =>
             刷新
           </Button>
         </div>
-        <div style={{ height: 520 }}>
+        <TableModalBody loading={loading}>
           <MorTable
             bordered
             pagination={false}
@@ -68,8 +68,9 @@ const ConsumablesApplyListModal: FC<ConsumablesApplyListModalProps> = (props) =>
             columns={columns as any}
             rowKey={(record: any) => record.id}
             loading={loading}
+            auto
           />
-        </div>
+        </TableModalBody>
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
           <Pagination
             showTotal={(total) => `共有 ${total} 条`}

@@ -1,10 +1,10 @@
 import { FC, useEffect, useMemo, useState } from "react";
 import { observer } from "mobx-react";
-import { Form, Input, InputNumber, Modal } from "antd";
+import { Form, Input, InputNumber, Modal, Spin } from "antd";
 import type { ModalProps } from "antd/lib/modal";
 
 import axios from "@/api";
-import MorTable from "@/components/table";
+import MorTable, { TABLE_SPIN_WRAPPER } from "@/components/table";
 import Button from "@/components/button";
 import { toastRequestResult } from "@/utils/common/mutation-success";
 import { useFormInitialValues } from "@/hooks/use-form-initial-values";
@@ -172,15 +172,18 @@ const CarPurposeModal: FC<CarPurposeModalProps> = (props) => {
             新增用途
           </Button>
         </div>
-        <div style={{ height: "calc(100vh - 190px)" }}>
-          <MorTable
-            bordered
-            pagination={false}
-            dataSource={list}
-            columns={columns as any}
-            rowKey={(record: any) => record.id}
-            loading={loading}
-          />
+        <div style={{ height: "calc(100vh - 190px)", display: "flex", flexDirection: "column", minHeight: 0 }}>
+          <Spin spinning={loading} wrapperClassName={TABLE_SPIN_WRAPPER}>
+            <MorTable
+              bordered
+              pagination={false}
+              dataSource={list}
+              columns={columns as any}
+              rowKey={(record: any) => record.id}
+              loading={loading}
+              auto
+            />
+          </Spin>
         </div>
       </Modal>
 
