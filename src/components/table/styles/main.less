@@ -1,3 +1,12 @@
+.mor-table-host {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .mor-table {
   display: flex;
   flex-direction: column;
@@ -9,6 +18,14 @@
   .ant-table-wrapper {
     flex: 1;
     min-height: 0;
+  }
+
+  .ant-table-header {
+    flex-shrink: 0;
+  }
+
+  .ant-table-cell {
+    word-break: break-word;
   }
 
   .ant-spin-nested-loading,

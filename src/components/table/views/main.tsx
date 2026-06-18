@@ -88,6 +88,33 @@ const SortableRow: FC<SortableRowProps> = (props) => {
   );
 };
 
+const TABLE_HEADER_HEIGHT = 39;
+
+const parseColumnWidth = (width: unknown): number => {
+  if (typeof width === "number") return width;
+  if (typeof width === "string") {
+    const parsed = Number.parseInt(width, 10);
+    if (!Number.isNaN(parsed)) return parsed;
+  }
+  return 0;
+};
+
+const getColumnsScrollWidth = (columns: any[]): number =>
+  columns.reduce((total, column) => {
+    if (Array.isArray(column.children) && column.children.length > 0) {
+      return total + getColumnsScrollWidth(column.children);
+    }
+    const width = parseColumnWidth(column.width);
+    return total + (width > 0 ? width : 120);
+  }, 0);
+
+const hasFixedColumn = (columns: any[]): boolean =>
+  columns.some(
+    (column) =>
+      column.fixed ||
+      (Array.isArray(column.children) && column.children.length > 0 && hasFixedColumn(column.children))
+  );
+
 const MorTable = forwardRef<MorTableRef, MorTableTypes>((props, tableRef) => {
   const {
     scroll,
@@ -106,9 +133,21 @@ const MorTable = forwardRef<MorTableRef, MorTableTypes>((props, tableRef) => {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [resizeRef, resizeObserverEntry] = useResizeObserver();
 
-  const [boxHeight, setBoxHeight] = useState(
-    resizeObserverEntry.contentRect?.height || 0
-  );
+  const [boxHeight, setBoxHeight] = useState(0);
+
+  const updateBoxHeight = (height: number, headerHeight = TABLE_HEADER_HEIGHT): void => {
+    const nextHeight = Math.max(0, height - headerHeight - offset);
+    setBoxHeight((prev) => (Math.abs(prev - nextHeight) < 1 ? prev : nextHeight));
+  };
+
+  const measureAndUpdateHeight = (): void => {
+    const { height = 0 } = resizeObserverEntry.contentRect || {};
+    if (height <= 0) return;
+    const headerHeight =
+      rootRef.current?.querySelector(".ant-table-thead")?.getBoundingClientRect().height ||
+      TABLE_HEADER_HEIGHT;
+    updateBoxHeight(height, headerHeight);
+  };
 
   const [innerDataSource, setInnerDataSource] = useState<any[]>(
     Array.isArray(resetProps.dataSource) ? (resetProps.dataSource as any[]) : []
@@ -130,27 +169,32 @@ const MorTable = forwardRef<MorTableRef, MorTableTypes>((props, tableRef) => {
     [rowSortable, innerDataSource, resetProps.dataSource]
   );
 
+  const attachResizeRef = (node: HTMLDivElement | null): void => {
+    rootRef.current = node;
+    if (!auto) return;
+    if (typeof resizeRef === "function") resizeRef(node);
+    else if (resizeRef && typeof resizeRef === "object") (resizeRef as any).current = node;
+  };
+
   useEffect(() => {
-    const { height = 0 } = resizeObserverEntry.contentRect || {};
-    const nextHeight = Math.max(0, height - 55 - offset);
-    setBoxHeight(nextHeight);
-  }, [offset, resizeObserverEntry.contentRect?.height]);
+    if (!auto) return;
+    measureAndUpdateHeight();
+  }, [auto, offset, resizeObserverEntry.contentRect?.height, resetProps.dataSource, resetProps.columns]);
 
   const debounced = (): void => {
     clearTimeout(time.current);
     time.current = setTimeout(() => {
-      const { height = 0 } = resizeObserverEntry.contentRect || {};
-      const nextHeight = Math.max(0, height - 55 - offset);
-      setBoxHeight(nextHeight);
+      measureAndUpdateHeight();
     }, 300);
   };
 
   useEffect(() => {
+    if (!auto) return;
     window.addEventListener("resize", debounced);
     return () => {
       window.removeEventListener("resize", debounced);
     };
-  }, [offset, resizeObserverEntry.contentRect?.height]);
+  }, [auto, offset, resizeObserverEntry.contentRect?.height]);
 
   const sortableColumns = useMemo(() => {
     const cols = (resetProps.columns || []) as any[];
@@ -193,7 +237,27 @@ const MorTable = forwardRef<MorTableRef, MorTableTypes>((props, tableRef) => {
     });
   };
 
-  const scrollY = boxHeight > 0 ? boxHeight : undefined;
+  const columnsScrollWidth = useMemo(() => getColumnsScrollWidth(sortableColumns), [sortableColumns]);
+  const fixedColumn = useMemo(() => hasFixedColumn(sortableColumns), [sortableColumns]);
+  const containerWidth = resizeObserverEntry.contentRect?.width ?? 0;
+
+  const scrollY = auto && boxHeight > 0 ? boxHeight : scroll?.y;
+
+  const tableScroll = useMemo(() => {
+    if (scrollY === undefined) return scroll;
+
+    const next: Record<string, unknown> = { ...scroll, y: scrollY };
+
+    if (scroll?.x !== undefined) {
+      next.x = scroll.x;
+    } else if (fixedColumn) {
+      next.x = columnsScrollWidth;
+    } else if (containerWidth > 0 && columnsScrollWidth > containerWidth) {
+      next.x = columnsScrollWidth;
+    }
+
+    return next;
+  }, [scroll, scrollY, scroll?.x, fixedColumn, columnsScrollWidth, containerWidth]);
 
   const tableNode = (
     <Table
@@ -202,11 +266,7 @@ const MorTable = forwardRef<MorTableRef, MorTableTypes>((props, tableRef) => {
       components={sortableComponents}
       dataSource={rowSortable ? innerDataSource : resetProps.dataSource}
       size="small"
-      scroll={
-        scrollY !== undefined
-          ? Object.assign(scroll ?? {}, { y: scrollY })
-          : scroll
-      }
+      scroll={tableScroll}
     >
       {props.children}
     </Table>
@@ -222,16 +282,16 @@ const MorTable = forwardRef<MorTableRef, MorTableTypes>((props, tableRef) => {
     tableNode
   );
 
+  if (auto) {
+    return (
+      <div className="mor-table-host" style={style} ref={attachResizeRef}>
+        <div className="mor-table">{sortableTableNode}</div>
+      </div>
+    );
+  }
+
   return (
-    <div
-      className="mor-table"
-      style={{ minHeight: 0, ...(auto ? { height: "100%" } : null), ...style }}
-      ref={(node) => {
-        rootRef.current = node;
-        if (typeof resizeRef === "function") resizeRef(node);
-        else if (resizeRef && typeof resizeRef === "object") (resizeRef as any).current = node;
-      }}
-    >
+    <div className="mor-table" style={{ minHeight: 0, ...style }}>
       {sortableTableNode}
     </div>
   );
