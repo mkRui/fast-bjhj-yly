@@ -6,6 +6,14 @@ export class Api extends Request {
     return await this.post<API.SubmitWork.Data>("/user/submit/work", params);
   }
 
+  public async editWork(params: API.WorkEdit.Params): Promise<API.WorkEdit.Response> {
+    return await this.post<API.WorkEdit.Data>("/user/submit/work/edit", params);
+  }
+
+  public async delWork(params: API.WorkDel.Params): Promise<API.WorkDel.Response> {
+    return await this.post<API.WorkDel.Data>("/user/submit/work/del", params);
+  }
+
   public async getWorkStatistics(
     params?: API.WorkStatistics.Params
   ): Promise<API.WorkStatistics.Response> {
@@ -95,10 +103,10 @@ export class Api extends Request {
   public async editExhibition(
     params: API.ExhibitionEdit.Params
   ): Promise<API.ExhibitionEdit.Response> {
-    const { id, date, name, location } = params;
+    const { id, date, name, location, distList } = params;
     return await this.post<API.ExhibitionEdit.Data>("/user/exhibition/edit", {
       id,
-      exhibition: { date, name, location },
+      exhibition: { date, name, location, distList },
     });
   }
 

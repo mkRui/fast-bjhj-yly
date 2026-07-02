@@ -6,10 +6,10 @@ export declare namespace API {
     export interface WorkItem {
       subject: string;
       num: number;
+      remark?: string;
     }
 
     export interface Params {
-      date: string;
       year: number;
       month: number;
       workList: WorkItem[];
@@ -33,6 +33,26 @@ export declare namespace API {
     export type Response = BaseRequest.Response<Data[]>;
   }
 
+  export namespace WorkEdit {
+    export interface Params {
+      id: string;
+      num: number;
+      remark?: string;
+    }
+
+    export type Data = null;
+    export type Response = BaseRequest.Response<Data>;
+  }
+
+  export namespace WorkDel {
+    export interface Params {
+      id: string;
+    }
+
+    export type Data = null;
+    export type Response = BaseRequest.Response<Data>;
+  }
+
   export namespace WorkPage {
     export interface Params {
       year: number;
@@ -49,6 +69,7 @@ export declare namespace API {
       year: number;
       month: number;
       num: number;
+      remark?: string;
     }
 
     export interface Data {
@@ -65,10 +86,8 @@ export declare namespace API {
   export namespace LeaveSubmit {
     export interface Params {
       leaveNum: number;
-      leaveDate: string;
-      leaveStartTime: string;
-      leaveEndTime: string;
-      leaveType: string;
+      leaveStartDate: string;
+      leaveEndDate: string;
       leaveReason: string;
     }
 
@@ -89,10 +108,10 @@ export declare namespace API {
       leaveYear?: number;
       leaveMonth?: number;
       leaveDate: string;
-      leaveStartTime: string;
-      leaveEndTime: string;
+      leaveStartDate: string;
+      leaveEndDate: string;
       leaveNum: number;
-      leaveType: string;
+      leaveType?: string;
       leaveReason: string;
       checkedFlag: boolean;
       checkedUserId?: string;
@@ -443,6 +462,7 @@ export declare namespace API {
       date: string;
       name: string;
       location: string;
+      distList?: string[];
     }
 
     export type Data = null;
@@ -455,12 +475,14 @@ export declare namespace API {
       date: string;
       name: string;
       location: string;
+      distList?: string[];
     }
 
     export interface Payload {
       date: string;
       name: string;
       location: string;
+      distList?: string[];
     }
 
     export type Data = null;

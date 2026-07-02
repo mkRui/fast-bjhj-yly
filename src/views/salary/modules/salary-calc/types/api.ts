@@ -42,6 +42,7 @@ export declare namespace API {
       salaryId: string;
       subject: string;
       amount: number;
+      remark?: string;
       manuallyEnteredFlag?: boolean;
     }
 
@@ -53,6 +54,7 @@ export declare namespace API {
       salaryId: string;
       subject: string;
       amount: number;
+      remark?: string;
     }
 
     export type Data = null;

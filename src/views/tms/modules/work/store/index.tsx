@@ -3,6 +3,7 @@ import { Store } from "mor-request";
 import { createContext } from "react";
 
 import axios from "@/api";
+import { resolveMutation } from "@/utils/common/mutation-success";
 import { Api } from "../api";
 import { API } from "../types/api";
 
@@ -126,6 +127,24 @@ export class WorkStore extends Store<Api> {
     if (!err) {
       this.$setDetailData(data);
     }
+  }
+
+  public async editWork(params: API.WorkEdit.Params) {
+    this.$setDetailLoading(true);
+    const [err] = await this.api.editWork(params);
+    this.$setDetailLoading(false);
+    return resolveMutation(err, () =>
+      Promise.all([this.getDetailChart(), this.getDetailList()])
+    );
+  }
+
+  public async delWork(params: API.WorkDel.Params) {
+    this.$setDetailLoading(true);
+    const [err] = await this.api.delWork(params);
+    this.$setDetailLoading(false);
+    return resolveMutation(err, () =>
+      Promise.all([this.getDetailChart(), this.getDetailList()])
+    );
   }
 }
 

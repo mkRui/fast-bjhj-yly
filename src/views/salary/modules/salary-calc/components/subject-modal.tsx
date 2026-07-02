@@ -64,8 +64,14 @@ const SubjectModal: FC<SubjectModalProps> = (props) => {
   };
 
   const columns = [
-    { title: "项目名", dataIndex: "subject" },
-    { title: "金额", dataIndex: "amount", width: 140 },
+    { title: "项目名", dataIndex: "subject", width: 140, ellipsis: true },
+    { title: "金额", dataIndex: "amount", width: 100 },
+    { title: "备注", dataIndex: "remark", width: 160, ellipsis: true, render: (val: string) => val || "-" },
+    {
+      title: "系统生成",
+      width: 90,
+      render: (_: unknown, item: API.SubjectList.Data) => (item.manuallyEnteredFlag === true ? "否" : "是"),
+    },
     {
       title: "操作",
       width: 100,
@@ -94,7 +100,7 @@ const SubjectModal: FC<SubjectModalProps> = (props) => {
     <Modal
       title={`工资明细 - ${record.teacherUserName || ""}（${record.year}年${record.month}月）`}
       open={true}
-      width={720}
+      width={900}
       onCancel={onCancel}
       footer={null}
     >

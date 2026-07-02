@@ -7,6 +7,8 @@ import { Content } from "@/components/container";
 import HeaderTitle from "@/components/card-header";
 import MorTable, { TABLE_MAIN_STYLE, TABLE_SPIN_WRAPPER } from "@/components/table";
 import Button from "@/components/button";
+import RunComponents from "@/components/run-component";
+import { toastActionResult } from "@/utils/common/mutation-success";
 import RootContext from "@/stores/root-context";
 import { DictCode } from "@/constants/dict-code";
 import { getDictLabel } from "@/utils/common/dict";
@@ -14,6 +16,8 @@ import { TmsFullPath } from "@/views/tms/router/path";
 import WorkStatisticsChart, { WorkStatisticsItem } from "@/views/welcome/components/work-statistics-chart";
 
 import StoreContext from "../store";
+import EditWorkModal from "../components/edit-work-modal";
+import { API } from "../types/api";
 
 const WorkDetail: FC = () => {
   const store = useContext(StoreContext);
@@ -60,8 +64,33 @@ const WorkDetail: FC = () => {
     }));
   }, [store.detailChartRecords, subjectDict]);
 
+  const openEditModal = (record: API.WorkPage.RecordItem): void => {
+    const modal = new RunComponents({
+      state: { loading: false },
+      render: (state) => (
+        <EditWorkModal
+          {...state}
+          title="编辑课时"
+          init={{
+            id: record.id,
+            num: record.num,
+            remark: record.remark,
+          }}
+          onCancel={() => modal.unmount()}
+          onOk={async (params) => {
+            modal.setState({ loading: true });
+            const ok = await store.editWork(params);
+            modal.setState({ loading: false });
+            if (toastActionResult(ok, "修改成功", "修改失败")) {
+              modal.unmount();
+            }
+          }}
+        />
+      ),
+    });
+  };
+
   const columns = [
-    { title: "上报日期", dataIndex: "date" },
     { title: "上报年份", dataIndex: "year", width: 120 },
     { title: "上报月份", dataIndex: "month", width: 120 },
     {
@@ -70,6 +99,30 @@ const WorkDetail: FC = () => {
       render: (val: unknown) => subjectDict.label(val),
     },
     { title: "上报数量", dataIndex: "num", width: 120 },
+    { title: "备注", dataIndex: "remark", ellipsis: true, render: (val: string) => val || "-" },
+    {
+      title: "操作",
+      width: 160,
+      fixed: "right" as const,
+      render: (_: unknown, record: API.WorkPage.RecordItem) => (
+        <Button.Group>
+          <Button type="link" linkType="warning" onClick={() => openEditModal(record)}>
+            编辑
+          </Button>
+          <Button
+            type="link"
+            linkType="danger"
+            action="del"
+            onConfirm={async () => {
+              const ok = await store.delWork({ id: record.id });
+              toastActionResult(ok, "删除成功", "删除失败");
+            }}
+          >
+            删除
+          </Button>
+        </Button.Group>
+      ),
+    },
   ];
 
   const handleChange = (page: number): void => {

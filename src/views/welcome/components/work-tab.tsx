@@ -15,6 +15,7 @@ import StoreContext from "../store";
 import { API } from "../types/api";
 import WorkStatisticsChart, { WorkStatisticsItem } from "./work-statistics-chart";
 import ReportWorkModal from "./report-work-modal";
+import EditWorkModal from "./edit-work-modal";
 import { useRegisterUserPageToolbar } from "../pages/user-page-layout";
 import UserTablePanel from "./user-table-panel";
 
@@ -49,10 +50,6 @@ const WorkTab: FC = () => {
     const now = new Date();
     const yyyy = now.getFullYear();
     const mm = now.getMonth() + 1;
-    const date = `${yyyy}-${String(mm).padStart(2, "0")}-${String(now.getDate()).padStart(
-      2,
-      "0"
-    )}`;
     const modal = new RunComponents({
       state: { loading: false },
       render: (state) => (
@@ -60,7 +57,6 @@ const WorkTab: FC = () => {
           {...state}
           title="上报课时"
           init={{
-            date,
             year: store.filter.year || yyyy,
             month: store.filter.month || mm,
             items: {},
@@ -79,8 +75,33 @@ const WorkTab: FC = () => {
     });
   };
 
+  const openEditModal = (record: API.WorkPage.RecordItem): void => {
+    const modal = new RunComponents({
+      state: { loading: false },
+      render: (state) => (
+        <EditWorkModal
+          {...state}
+          title="编辑课时"
+          init={{
+            id: record.id,
+            num: record.num,
+            remark: record.remark,
+          }}
+          onCancel={() => modal.unmount()}
+          onOk={async (params: API.WorkEdit.Params) => {
+            modal.setState({ loading: true });
+            const ok = await store.editWork(params);
+            modal.setState({ loading: false });
+            if (toastActionResult(ok, "修改成功", "修改失败")) {
+              modal.unmount();
+            }
+          }}
+        />
+      ),
+    });
+  };
+
   const columns = [
-    { title: "上报日期", dataIndex: "date" },
     { title: "上报年份", dataIndex: "year", width: 120 },
     { title: "上报月份", dataIndex: "month", width: 120 },
     {
@@ -89,6 +110,30 @@ const WorkTab: FC = () => {
       render: (val: any) => subjectDict.label(val),
     },
     { title: "时数数量", dataIndex: "num", width: 120 },
+    { title: "备注", dataIndex: "remark", ellipsis: true, render: (val: string) => val || "-" },
+    {
+      title: "操作",
+      width: 160,
+      fixed: "right" as const,
+      render: (_: unknown, record: API.WorkPage.RecordItem) => (
+        <Button.Group>
+          <Button type="link" linkType="warning" onClick={() => openEditModal(record)}>
+            编辑
+          </Button>
+          <Button
+            type="link"
+            linkType="danger"
+            action="del"
+            onConfirm={async () => {
+              const ok = await store.delWork({ id: record.id });
+              toastActionResult(ok, "删除成功", "删除失败");
+            }}
+          >
+            删除
+          </Button>
+        </Button.Group>
+      ),
+    },
   ];
 
   const toolbar = useMemo(

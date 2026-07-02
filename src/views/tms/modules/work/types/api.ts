@@ -33,6 +33,26 @@ export declare namespace API {
     export type Response = BaseRequest.Response<Data>;
   }
 
+  export namespace WorkEdit {
+    export interface Params {
+      id: string;
+      num: number;
+      remark?: string;
+    }
+
+    export type Data = null;
+    export type Response = BaseRequest.Response<Data>;
+  }
+
+  export namespace WorkDel {
+    export interface Params {
+      id: string;
+    }
+
+    export type Data = null;
+    export type Response = BaseRequest.Response<Data>;
+  }
+
   export namespace WorkPage {
     export interface Params {
       selectedTeacherId: string;
@@ -50,6 +70,7 @@ export declare namespace API {
       year: number;
       month: number;
       num: number;
+      remark?: string;
     }
 
     export interface Data {

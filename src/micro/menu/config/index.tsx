@@ -157,6 +157,14 @@ const TmsMenuList: MenuType[] = [
     parentId: "9000000000000000",
     icon: <ShopOutlined />,
   },
+  {
+    name: "竞赛管理",
+    href: TmsFullPath.COMPETITION,
+    code: MenuCode.TMS_COMPETITION,
+    id: "9000000000000005",
+    parentId: "9000000000000000",
+    icon: <FundOutlined />,
+  },
 ];
 
 const AmsMenuList: MenuType[] = [

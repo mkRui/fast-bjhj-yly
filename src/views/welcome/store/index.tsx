@@ -138,6 +138,20 @@ export class WelcomeStore extends Store<Api> {
     return resolveMutation(err, () => this.refreshWork());
   }
 
+  public async editWork(params: API.WorkEdit.Params) {
+    this.$setLoading(true);
+    const [err] = await this.api.editWork(params);
+    this.$setLoading(false);
+    return resolveMutation(err, () => this.refreshWork());
+  }
+
+  public async delWork(params: API.WorkDel.Params) {
+    this.$setLoading(true);
+    const [err] = await this.api.delWork(params);
+    this.$setLoading(false);
+    return resolveMutation(err, () => this.refreshWork());
+  }
+
   public async fetchLeavePage(): Promise<void> {
     this.$setLeaveLoading(true);
     const [err, data] = await this.api.getLeavePage({

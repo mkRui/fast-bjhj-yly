@@ -1,29 +1,23 @@
 import { FC } from "react";
 import { observer } from "mobx-react";
-import { Form, Input, Modal, Radio, TimePicker } from "antd";
+import { Form, Input, InputNumber, Modal } from "antd";
 import type { ModalProps } from "antd/lib/modal";
 import dayjs from "dayjs";
 
 import DatePicker from "@/components/date-picker";
-import SelectEnum from "@/micro/select-enum";
-import { DictCode } from "@/constants/dict-code";
 import { useFormInitialValues } from "@/hooks/use-form-initial-values";
 import { API } from "../types/api";
 
 const Item = Form.Item;
-const TIME_FORMAT = "HH:mm";
-const HALF_DAY_LEAVE_NUM = 1;
-const FULL_DAY_LEAVE_NUM = 2;
-const HALF_DAY_HOURS = 4;
+const LEAVE_NUM_STEP = 0.5;
+const LEAVE_NUM_MIN = 0.5;
 
-const toTimeValue = (value?: string) => {
-  if (!value) return null;
-  const parts = String(value).split(":");
-  const hour = Number(parts[0] || 0);
-  const minute = Number(parts[1] || 0);
-  const second = Number(parts[2] || 0);
-  if (Number.isNaN(hour) || Number.isNaN(minute) || Number.isNaN(second)) return null;
-  return dayjs().hour(hour).minute(minute).second(second);
+const isSameMonth = (startDate?: string, endDate?: string): boolean => {
+  if (!startDate || !endDate) return true;
+  const start = dayjs(startDate);
+  const end = dayjs(endDate);
+  if (!start.isValid() || !end.isValid()) return true;
+  return start.year() === end.year() && start.month() === end.month();
 };
 
 export interface LeaveSubmitModalProps {
@@ -37,51 +31,18 @@ export interface LeaveSubmitModalProps {
 const LeaveSubmitModal: FC<LeaveSubmitModalProps> = (props) => {
   const { title, loading, init, onCancel, onOk } = props;
   const [form] = Form.useForm();
-  const leaveNum = Form.useWatch("leaveNum", form);
 
   useFormInitialValues(form, {
-    leaveNum: HALF_DAY_LEAVE_NUM,
-    leaveStartTime: "08:00",
-    leaveEndTime: "12:00",
+    leaveNum: LEAVE_NUM_MIN,
     ...init,
-    leaveType:
-      init?.leaveType === null || init?.leaveType === undefined
-        ? undefined
-        : String(init.leaveType),
   });
 
-  const isHalfDay = Number(leaveNum) === HALF_DAY_LEAVE_NUM;
-
-  const handleLeaveNumChange = (value: number): void => {
-    if (value === HALF_DAY_LEAVE_NUM) {
-      form.setFieldsValue({
-        leaveStartTime: form.getFieldValue("leaveStartTime") || "08:00",
-        leaveEndTime: form.getFieldValue("leaveEndTime") || "12:00",
-      });
-    } else {
-      form.setFieldsValue({
-        leaveStartTime: undefined,
-        leaveEndTime: undefined,
-      });
-    }
-  };
-
-  const handleStartTimeChange = (time: dayjs.Dayjs | null): void => {
-    if (time) {
-      form.setFieldValue("leaveEndTime", time.add(HALF_DAY_HOURS, "hour").format(TIME_FORMAT));
-    }
-  };
-
   const handleOk = (): void => {
-    void form.validateFields().then(async (values: any) => {
-      const isHalfDayLeave = Number(values.leaveNum) === HALF_DAY_LEAVE_NUM;
-
+    void form.validateFields().then(async (values: Record<string, unknown>) => {
       await onOk({
         leaveNum: Number(values.leaveNum || 0),
-        leaveDate: String(values.leaveDate || ""),
-        leaveStartTime: isHalfDayLeave ? `${values.leaveStartTime || ""}:00` : "",
-        leaveEndTime: isHalfDayLeave ? `${values.leaveEndTime || ""}:00` : "",
-        leaveType: String(values.leaveType || ""),
+        leaveStartDate: String(values.leaveStartDate || ""),
+        leaveEndDate: String(values.leaveEndDate || ""),
         leaveReason: String(values.leaveReason || ""),
       });
     });
@@ -99,84 +60,77 @@ const LeaveSubmitModal: FC<LeaveSubmitModalProps> = (props) => {
     >
       <Form form={form} layout="vertical">
         <Item
-          label="请假数量"
+          label="请假天数"
           name="leaveNum"
-          rules={[{ required: true, message: "请选择请假数量" }]}
+          rules={[{ required: true, message: "请设置请假天数" }]}
         >
-          <Radio.Group
-            options={[
-              { label: "半天", value: HALF_DAY_LEAVE_NUM },
-              { label: "全天", value: FULL_DAY_LEAVE_NUM },
-            ]}
-            onChange={(e) => handleLeaveNumChange(e.target.value)}
+          <InputNumber
+            min={LEAVE_NUM_MIN}
+            step={LEAVE_NUM_STEP}
+            style={{ width: "100%" }}
+            controls
+            keyboard={false}
+            changeOnWheel={false}
+            onKeyDown={(e) => e.preventDefault()}
+            onPaste={(e) => e.preventDefault()}
           />
         </Item>
 
         <Item
-          label="请假日期"
-          name="leaveDate"
-          rules={[{ required: true, message: "请选择请假日期" }]}
+          label="请假起始日期"
+          name="leaveStartDate"
+          rules={[
+            { required: true, message: "请选择请假起始日期" },
+            {
+              validator: async (_rule, value) => {
+                const endDate = form.getFieldValue("leaveEndDate");
+                if (!value || !endDate) return;
+                if (dayjs(value).isAfter(dayjs(endDate), "day")) {
+                  throw new Error("起始日期不能晚于结束日期");
+                }
+                if (!isSameMonth(value, endDate)) {
+                  throw new Error("请假起始日期与结束日期不能跨月");
+                }
+              },
+            },
+          ]}
         >
-          <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} placeholder="请选择请假日期" />
+          <DatePicker
+            format="YYYY-MM-DD"
+            style={{ width: "100%" }}
+            placeholder="请选择请假起始日期"
+            onChange={() => {
+              void form.validateFields(["leaveEndDate"]);
+            }}
+          />
         </Item>
 
-        {isHalfDay ? (
-          <>
-            <Item
-              label="开始时间"
-              name="leaveStartTime"
-              rules={[{ required: true, message: "请选择开始时间" }]}
-              getValueProps={(value) => ({ value: toTimeValue(value) })}
-              getValueFromEvent={(_time: any, timeString: string) => timeString || ""}
-            >
-              <TimePicker
-                format={TIME_FORMAT}
-                placeholder="请选择开始时间"
-                style={{ width: "100%" }}
-                onChange={handleStartTimeChange}
-              />
-            </Item>
-
-            <Item
-              label="结束时间"
-              name="leaveEndTime"
-              rules={[
-                { required: true, message: "请选择结束时间" },
-                {
-                  validator: async (_rule, value) => {
-                    const start = form.getFieldValue("leaveStartTime");
-                    if (!start || !value) return;
-                    const startTime = toTimeValue(start);
-                    const endTime = toTimeValue(value);
-                    if (!startTime || !endTime) return;
-                    if (endTime.diff(startTime, "hour", true) !== HALF_DAY_HOURS) {
-                      throw new Error("半天请假时间范围固定为4小时");
-                    }
-                  },
-                },
-              ]}
-              getValueProps={(value) => ({ value: toTimeValue(value) })}
-              getValueFromEvent={(_time: any, timeString: string) => timeString || ""}
-            >
-              <TimePicker
-                format={TIME_FORMAT}
-                placeholder="请选择结束时间"
-                style={{ width: "100%" }}
-              />
-            </Item>
-          </>
-        ) : null}
-
         <Item
-          label="请假类型"
-          name="leaveType"
-          rules={[{ required: true, message: "请选择请假类型" }]}
+          label="请假结束日期"
+          name="leaveEndDate"
+          rules={[
+            { required: true, message: "请选择请假结束日期" },
+            {
+              validator: async (_rule, value) => {
+                const startDate = form.getFieldValue("leaveStartDate");
+                if (!value || !startDate) return;
+                if (dayjs(startDate).isAfter(dayjs(value), "day")) {
+                  throw new Error("结束日期不能早于起始日期");
+                }
+                if (!isSameMonth(startDate, value)) {
+                  throw new Error("请假起始日期与结束日期不能跨月");
+                }
+              },
+            },
+          ]}
         >
-          <SelectEnum
-            name={DictCode.LEAVE_TYPE}
-            allowClear
-            handleInitChange={(v) => form.setFieldValue("leaveType", v)}
-            onChange={(v) => form.setFieldValue("leaveType", v)}
+          <DatePicker
+            format="YYYY-MM-DD"
+            style={{ width: "100%" }}
+            placeholder="请选择请假结束日期"
+            onChange={() => {
+              void form.validateFields(["leaveStartDate"]);
+            }}
           />
         </Item>
 

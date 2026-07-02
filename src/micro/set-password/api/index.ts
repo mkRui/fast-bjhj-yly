@@ -6,9 +6,6 @@ export default class Api extends Request {
   public async changePassword(
     params: API.ChangePassword.Params
   ): Promise<API.ChangePassword.Response> {
-    return await this.post<API.ChangePassword.Data>(
-      "/auth/changePassword",
-      params
-    );
+    return await this.post<API.ChangePassword.Data>("/auth/changePwd", params);
   }
 }

@@ -8,8 +8,6 @@ import CheckStatusTag from "@/components/check-status-tag";
 import MorTable from "@/components/table";
 import RunComponents from "@/components/run-component";
 import { toastActionResult } from "@/utils/common/mutation-success";
-import { DictCode } from "@/constants/dict-code";
-import { useDict } from "@/hooks/use-dict";
 
 import StoreContext from "../store";
 import { API } from "../types/api";
@@ -21,7 +19,6 @@ const Option = Select.Option;
 
 const LeaveTab: FC = () => {
   const store = useContext(StoreContext);
-  const leaveTypeDict = useDict(DictCode.LEAVE_TYPE);
 
   useEffect(() => {
     void store.fetchLeavePage();
@@ -48,7 +45,8 @@ const LeaveTab: FC = () => {
           {...state}
           title="提交请假"
           init={{
-            leaveDate: date,
+            leaveStartDate: date,
+            leaveEndDate: date,
           }}
           onCancel={() => modal.unmount()}
           onOk={async (params: API.LeaveSubmit.Params) => {
@@ -72,20 +70,16 @@ const LeaveTab: FC = () => {
       width: 120,
       render: (val: boolean | null) => <CheckStatusTag checkedFlag={val} />,
     },
-    { title: "请假日期", dataIndex: "leaveDate", width: 140 },
     {
-      title: "时间",
-      render: (_: any, record: any) =>
-        `${record.leaveStartTime || "-"} ~ ${record.leaveEndTime || "-"}`,
-      width: 180,
+      title: "请假日期",
+      width: 220,
+      render: (_: unknown, record: API.LeavePage.RecordItem) => {
+        const start = record.leaveStartDate || record.leaveDate || "-";
+        const end = record.leaveEndDate || record.leaveDate || "-";
+        return start === end ? start : `${start} ~ ${end}`;
+      },
     },
-    { title: "请假数量", dataIndex: "leaveNum", width: 120 },
-    {
-      title: "类型",
-      dataIndex: "leaveType",
-      width: 120,
-      render: (val: unknown) => leaveTypeDict.label(val),
-    },
+    { title: "请假天数", dataIndex: "leaveNum", width: 120 },
     { title: "事由", dataIndex: "leaveReason" },
   ];
 

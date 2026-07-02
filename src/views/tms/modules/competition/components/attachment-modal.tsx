@@ -9,20 +9,20 @@ import Upload from "@/components/upload";
 import { toastActionResult } from "@/utils/common/mutation-success";
 import { API } from "../types/api";
 
-interface ExhibitionAttachmentModalProps {
-  exhibitionId: string;
-  exhibitionName?: string;
+interface CompetitionAttachmentModalProps {
+  competitionId: string;
+  competitionName?: string;
   loading?: boolean;
-  fetchAttachments: (exhibitionId: string) => Promise<API.ExhibitionAttachmentList.Data[]>;
-  addAttachment: (params: API.ExhibitionAttachmentAdd.Params) => Promise<boolean>;
-  delAttachment: (id: string) => Promise<boolean>;
+  fetchAttachments: (competitionId: string) => Promise<API.AttachmentList.Data[]>;
+  addAttachment: (params: API.AttachmentAdd.Params) => Promise<unknown>;
+  delAttachment: (params: API.AttachmentDel.Params) => Promise<unknown>;
   onCancel: ModalProps["onCancel"];
 }
 
-const ExhibitionAttachmentModal: FC<ExhibitionAttachmentModalProps> = (props) => {
+const CompetitionAttachmentModal: FC<CompetitionAttachmentModalProps> = (props) => {
   const {
-    exhibitionId,
-    exhibitionName,
+    competitionId,
+    competitionName,
     loading: outerLoading,
     fetchAttachments,
     addAttachment,
@@ -32,14 +32,14 @@ const ExhibitionAttachmentModal: FC<ExhibitionAttachmentModalProps> = (props) =>
 
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [list, setList] = useState<API.ExhibitionAttachmentList.Data[]>([]);
+  const [list, setList] = useState<API.AttachmentList.Data[]>([]);
 
   const load = useCallback(async (): Promise<void> => {
     setLoading(true);
-    const data = await fetchAttachments(exhibitionId);
+    const data = await fetchAttachments(competitionId);
     setList(data);
     setLoading(false);
-  }, [exhibitionId, fetchAttachments]);
+  }, [competitionId, fetchAttachments]);
 
   useEffect(() => {
     void load();
@@ -48,9 +48,9 @@ const ExhibitionAttachmentModal: FC<ExhibitionAttachmentModalProps> = (props) =>
   const handleUpload = async (dist: string): Promise<void> => {
     if (!dist) return;
     setUploading(true);
-    const ok = await addAttachment({ exhibitionId, dist });
+    const result = await addAttachment({ competitionId, dist });
     setUploading(false);
-    if (toastActionResult(ok, "附件上传成功", "附件上传失败")) {
+    if (toastActionResult(result, "附件上传成功", "附件上传失败")) {
       await load();
     }
   };
@@ -59,7 +59,7 @@ const ExhibitionAttachmentModal: FC<ExhibitionAttachmentModalProps> = (props) =>
     {
       title: "文件名",
       dataIndex: "filename",
-      render: (_: unknown, record: API.ExhibitionAttachmentList.Data) => (
+      render: (_: unknown, record: API.AttachmentList.Data) => (
         <AttachmentFilenameCell
           filename={record.filename}
           filepath={record.filepath}
@@ -71,14 +71,14 @@ const ExhibitionAttachmentModal: FC<ExhibitionAttachmentModalProps> = (props) =>
     {
       title: "操作",
       width: 100,
-      render: (_: unknown, record: API.ExhibitionAttachmentList.Data) => (
+      render: (_: unknown, record: API.AttachmentList.Data) => (
         <Button
           type="link"
           linkType="danger"
           action="del"
           onConfirm={async () => {
-            const ok = await delAttachment(record.id);
-            if (toastActionResult(ok, "删除成功", "删除失败")) {
+            const result = await delAttachment({ id: record.id });
+            if (toastActionResult(result, "删除成功", "删除失败")) {
               await load();
             }
           }}
@@ -91,7 +91,7 @@ const ExhibitionAttachmentModal: FC<ExhibitionAttachmentModalProps> = (props) =>
 
   return (
     <Modal
-      title={`展会附件${exhibitionName ? ` - ${exhibitionName}` : ""}`}
+      title={`竞赛附件${competitionName ? ` - ${competitionName}` : ""}`}
       open={true}
       width={760}
       onCancel={onCancel}
@@ -99,7 +99,7 @@ const ExhibitionAttachmentModal: FC<ExhibitionAttachmentModalProps> = (props) =>
     >
       <div style={{ ...TABLE_MODAL_BODY_STYLE, height: 480 }}>
         <div className="mb-4 flex shrink-0 items-center justify-between">
-          <div className="text-sm text-gray-600">上传附件后将自动关联到当前展会</div>
+          <div className="text-sm text-gray-600">上传附件后将自动关联到当前竞赛</div>
           <Upload
             inline
             action="/common/upload"
@@ -108,7 +108,7 @@ const ExhibitionAttachmentModal: FC<ExhibitionAttachmentModalProps> = (props) =>
               void handleUpload(dist);
             }}
           >
-            <Button type="primary" action="add">
+            <Button type="primary" action="add" loading={uploading}>
               上传附件
             </Button>
           </Upload>
@@ -129,4 +129,4 @@ const ExhibitionAttachmentModal: FC<ExhibitionAttachmentModalProps> = (props) =>
   );
 };
 
-export default ExhibitionAttachmentModal;
+export default CompetitionAttachmentModal;

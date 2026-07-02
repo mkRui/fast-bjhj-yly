@@ -24,6 +24,7 @@ export const MenuCode = {
   TMS_LEAVE: "tms:leave",
   TMS_WORK: "tms:work",
   TMS_EXHIBITION: "tms:exhibition",
+  TMS_COMPETITION: "tms:competition",
 
   // 资产管理 ams
   AMS_ASSETS: "ams:assets",

@@ -10,14 +10,20 @@ import { CSSProperties, FC, useEffect, useState } from "react";
 import { baseURL } from "@/api";
 import { toast } from "@/components/message";
 import morStorage from "@/utils/common/local-storage";
+import { getFileSuffix, validateUploadFile } from "../utils/file-upload";
 import Styles from "../styles/upload.module.less";
+
+interface UploadListMeta {
+  filename: string;
+  suffix: string;
+}
 
 interface CompressionUploadProps {
   action: string;
   value?: string;
   init?: string;
   onChange?: (value: string) => void;
-  onChangeList?: (path: string, value: string) => void;
+  onChangeList?: (path: string, value: string, meta?: UploadListMeta) => void;
   onPath?: (value: string) => void;
   block?: boolean;
   inline?: boolean;
@@ -25,6 +31,7 @@ interface CompressionUploadProps {
   size?: number;
   uploadType?: string;
   isList?: boolean;
+  fileMode?: boolean;
 }
 
 const CompressionUpload: FC<
@@ -41,6 +48,7 @@ const CompressionUpload: FC<
     size = 10,
     uploadType = "img",
     isList = false,
+    fileMode = false,
     ...resetProps
   } = props;
 
@@ -68,6 +76,15 @@ const CompressionUpload: FC<
   // 上传之前
   const beforeUpload = (file: RcFile) => {
     setLoading(true);
+    if (fileMode) {
+      const error = validateUploadFile(file);
+      if (error) {
+        toast("error", error);
+        setLoading(false);
+        return false;
+      }
+      return true;
+    }
     if (file.size / 1024 / 1024 > size) {
       toast("error", "超出文件大小");
       setLoading(false);
@@ -85,7 +102,11 @@ const CompressionUpload: FC<
       if (isList) {
         props.onChangeList?.(
           `${uploadData.previewDomain}/${uploadData.filePath}`,
-          data.file.response.data.dist
+          data.file.response.data.dist,
+          {
+            filename: data.file.name,
+            suffix: getFileSuffix(data.file.name),
+          }
         );
       } else {
         setUploadedUrl(`${uploadData.previewDomain}/${uploadData.filePath}`);

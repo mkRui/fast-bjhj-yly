@@ -6,6 +6,7 @@ import Work from "../modules/work";
 import WorkDetail from "../modules/work/detail";
 import Leave from "../modules/leave";
 import Exhibition from "../modules/exhibition";
+import Competition from "../modules/competition";
 
 const Routes: RouteTypes[] = [
   {
@@ -37,6 +38,12 @@ const Routes: RouteTypes[] = [
     component: Exhibition,
     title: "展会信息",
     fullPath: TmsFullPath.EXHIBITION,
+  },
+  {
+    path: TmsPath.COMPETITION,
+    component: Competition,
+    title: "竞赛管理",
+    fullPath: TmsFullPath.COMPETITION,
   },
 ];
 

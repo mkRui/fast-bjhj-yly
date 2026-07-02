@@ -55,7 +55,8 @@ const ExhibitionTab: FC = () => {
         <ExhibitionFormModal
           {...state}
           title="新增展会"
-          init={{ date: "", name: "", location: "" }}
+          showAttachments
+          init={{ date: "", name: "", location: "", distList: [] }}
           onCancel={() => modal.unmount()}
           onOk={async (values) => {
             modal.setState({ loading: true });

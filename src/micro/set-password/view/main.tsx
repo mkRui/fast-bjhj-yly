@@ -29,6 +29,7 @@ const RoleResourceModal: FC<ModalContainer> = (props) => {
       const { confirmPassword, newPassword, oldPassword } = data;
       if (confirmPassword !== newPassword) {
         toast("error", "确认密码与新密码不一致");
+        return;
       }
       const res = await store.changePassword({
         newPassword,
@@ -41,7 +42,7 @@ const RoleResourceModal: FC<ModalContainer> = (props) => {
   };
 
   return (
-    <Modal title={"修改密码"} onCancel={onCancel} onOk={handleOk}>
+    <Modal title="修改密码" open onCancel={onCancel} onOk={handleOk}>
       <Form form={form} layout="vertical">
         <Item
           rules={[

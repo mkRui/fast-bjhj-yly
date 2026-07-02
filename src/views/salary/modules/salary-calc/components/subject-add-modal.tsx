@@ -26,6 +26,7 @@ const SubjectAddModal: FC<SubjectAddModalProps> = (props) => {
       teacherKey: defaultSalaryId,
       subject: "",
       amount: 0,
+      remark: "",
     });
   }, [form, salaryId, records]);
 
@@ -35,6 +36,7 @@ const SubjectAddModal: FC<SubjectAddModalProps> = (props) => {
         salaryId: String(values.salaryId),
         subject: String(values.subject || ""),
         amount: Number(values.amount || 0),
+        remark: String(values.remark || ""),
       });
     });
   };
@@ -77,6 +79,9 @@ const SubjectAddModal: FC<SubjectAddModalProps> = (props) => {
         </Item>
         <Item label="金额" name="amount" rules={[{ required: true, message: "请输入金额" }]}>
           <InputNumber style={{ width: "100%" }} min={0} precision={2} />
+        </Item>
+        <Item label="备注" name="remark">
+          <Input.TextArea rows={3} placeholder="请输入备注" maxLength={200} showCount />
         </Item>
       </Form>
     </Modal>

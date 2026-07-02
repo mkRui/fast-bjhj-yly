@@ -5,6 +5,7 @@ enum TmsPath {
   WORK_DETAIL = "/work/detail",
   LEAVE = "/leave",
   EXHIBITION = "/exhibition",
+  COMPETITION = "/competition",
 }
 
 enum TmsFullPath {
@@ -13,6 +14,7 @@ enum TmsFullPath {
   WORK_DETAIL = "/tms/work/detail",
   LEAVE = "/tms/leave",
   EXHIBITION = "/tms/exhibition",
+  COMPETITION = "/tms/competition",
 }
 
 export { TmsPath, TmsFullPath };
